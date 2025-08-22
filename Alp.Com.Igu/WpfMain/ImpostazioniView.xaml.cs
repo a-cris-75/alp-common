@@ -16,7 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace AlpTlc.Pre.Igu.Views
+namespace Alp.Com.Igu.WpfMain
 {
     /// <summary>
     /// Logica di interazione per HomeView.xaml

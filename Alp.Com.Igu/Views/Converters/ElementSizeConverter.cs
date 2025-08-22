@@ -7,7 +7,7 @@ using System.Windows.Data;
 using System.Globalization;
 using System.Diagnostics;
 
-namespace AlpTlc.Pre.Igu.Views.Converters
+namespace Alp.Com.Igu.Views.Converters
 {
     class ElementSizeConverter : IValueConverter
     {

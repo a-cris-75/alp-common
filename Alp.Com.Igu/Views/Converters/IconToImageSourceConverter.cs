@@ -12,7 +12,7 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace AlpTlc.Pre.Igu.Views.Converters
+namespace Alp.Com.Igu.Views.Converters
 {
     public class IconToImageSourceConverter : IValueConverter
     {

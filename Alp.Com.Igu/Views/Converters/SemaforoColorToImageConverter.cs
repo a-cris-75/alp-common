@@ -13,7 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using AlpTlc.Domain.StatoMacchina;
 
-namespace AlpTlc.Pre.Igu.Views.Converters
+namespace Alp.Com.Igu.Views.Converters
 {
     public class SemaforoColorToImageConverter : IValueConverter
     {

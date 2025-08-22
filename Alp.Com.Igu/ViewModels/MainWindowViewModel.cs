@@ -185,7 +185,7 @@ namespace Alp.Com.Igu.ViewModels
             try
             {
                 // NB: Se il Rabbit è fermo, il seguente metodo dà un'eccezione e quindi la coda in StatoRabbitMq.WatchDogSent non viene riempita (bene così!).
-                ConnessoneRabbitMq.SendTagInvoke("FromIgu", "RabbitMqAutoWatchdog", (auto_watchdog_value == Int32.MaxValue ? 0 : ++auto_watchdog_value).ToString());
+                RabbitMq.SendTagInvoke("FromIgu", "RabbitMqAutoWatchdog", (auto_watchdog_value == Int32.MaxValue ? 0 : ++auto_watchdog_value).ToString());
                 StatoRabbitMq.WatchDogSent(auto_watchdog_value);
             }
             catch (Exception ex)
@@ -365,9 +365,9 @@ namespace Alp.Com.Igu.ViewModels
 
                         _logger.LogInformation("Impostazoni Dia modificate.");
                         // Notifica al Dia
-                        ConnessoneRabbitMq.SendTagInvoke("FromIgu", "AggiornamentoImpostazioniDia", "True");
+                        RabbitMq.SendTagInvoke("FromIgu", "AggiornamentoImpostazioniDia", "True");
                         ImpostazioniDia.Instance.ResetModified();
-                        ConnessoneRabbitMq.SendTagInvoke("FromIgu", "AggiornamentoImpostazioniDia", "False");
+                        RabbitMq.SendTagInvoke("FromIgu", "AggiornamentoImpostazioniDia", "False");
 
                     }
 
@@ -379,15 +379,15 @@ namespace Alp.Com.Igu.ViewModels
                         _logger.LogInformation("Impostazoni Generali modificate.");
                         (value as AnalisiBilletteViewModel).ApplicaImpostazioniGenerali();
                         // Notifica al Dia
-                        ConnessoneRabbitMq.SendTagInvoke("FromIgu", "AggiornamentoImpostazioniGenerali", "True");
+                        RabbitMq.SendTagInvoke("FromIgu", "AggiornamentoImpostazioniGenerali", "True");
                         ImpostazioniGenerali.Instance.ResetModified();
-                        ConnessoneRabbitMq.SendTagInvoke("FromIgu", "AggiornamentoImpostazioniGenerali", "False");
+                        RabbitMq.SendTagInvoke("FromIgu", "AggiornamentoImpostazioniGenerali", "False");
 
                     }
                     else if(!ImpostazioniGenerali.Instance.ModalitaAutomatica)
                     {
                         // Se era già in modalità manuale, riprendi ad acquisire:
-                        ConnessoneRabbitMq.SendTagInvoke("FromIgu", "StartAcq", "True");
+                        RabbitMq.SendTagInvoke("FromIgu", "StartAcq", "True");
                     }
 
                 }
@@ -395,7 +395,7 @@ namespace Alp.Com.Igu.ViewModels
                 {
                     // Se è in modalità manuale, sospendi l'aquisizione:
                     if (AreImmaginiInAcquisizione)
-                        ConnessoneRabbitMq.SendTagInvoke("FromIgu", "StopAcq", "True");
+                        RabbitMq.SendTagInvoke("FromIgu", "StopAcq", "True");
                 }
 
                 _currentView = value;

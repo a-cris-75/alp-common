@@ -1,4 +1,4 @@
-﻿using AlpTlc.App.Igu.ViewModels;
+﻿using Alp.Com.Igu.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
@@ -16,7 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace AlpTlc.Pre.Igu.Views
+namespace Alp.Com.Igu.WpfMain
 {
     /// <summary>
     /// Interaction logic for MainWindowView.xaml

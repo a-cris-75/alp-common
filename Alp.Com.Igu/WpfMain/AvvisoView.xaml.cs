@@ -1,5 +1,5 @@
-﻿using AlpTlc.App.Igu.Core;
-using AlpTlc.App.Igu.ViewModels;
+﻿using Alp.Com.Igu.Core;
+using Alp.Com.Igu.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -15,7 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace AlpTlc.Pre.Igu.Views
+namespace Alp.Com.Igu.WpfMain
 {
     /// <summary>
     /// Interaction logic for Avviso.xaml

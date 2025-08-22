@@ -197,7 +197,7 @@ namespace AlpTlc.Pre.Igu
 
                 try
                 {
-                    ConnessoneRabbitMq.GetInstance.Init();
+                    RabbitMq.GetInstance.Init();
 
 
                 }

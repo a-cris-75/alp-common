@@ -1,6 +1,6 @@
 ﻿using Alp.Com.Igu.Connections;
-using AlpTlc.Biz.AppSettings;
-using AlpTlc.Connessione.SettingsFile;
+//using AlpTlc.Biz.AppSettings;
+//using AlpTlc.Connessione.SettingsFile;
 using System;
 using System.IO;
 

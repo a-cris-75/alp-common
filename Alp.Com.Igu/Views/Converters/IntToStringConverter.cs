@@ -7,7 +7,7 @@ using System.Windows.Data;
 using System.Globalization;
 
 
-namespace AlpTlc.Pre.Igu.Views.Converters
+namespace Alp.Com.Igu.Views.Converters
 {
     class IntToStringConverter : IValueConverter
     {

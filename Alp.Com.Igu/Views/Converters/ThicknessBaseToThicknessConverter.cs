@@ -7,7 +7,7 @@ using System.Windows.Data;
 using System.Globalization;
 using System.Windows;
 
-namespace AlpTlc.Pre.Igu.Views.Converters
+namespace Alp.Com.Igu.Views.Converters
 {
     // Se il valore passato è true, ritona "Visible", altrimenti ritorna "Collapsed" (oppure Hidden se il ConverterParameter vale ShowOrHide)
     class ThicknessBaseToThicknessConverter : IValueConverter

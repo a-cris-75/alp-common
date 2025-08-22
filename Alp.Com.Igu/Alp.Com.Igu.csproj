@@ -8,12 +8,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Utils\Touch.cs" />
     <Compile Remove="ViewModels\AnalisiBilletteViewModel.cs" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="KSociety.Base.EventBus" Version="1.5.11" />
+    <PackageReference Include="KSociety.Base.EventBusRabbitMQ" Version="1.5.11" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.8" />
+    <PackageReference Include="protobuf-net.Core" Version="3.2.56" />
   </ItemGroup>
 
   <ItemGroup>

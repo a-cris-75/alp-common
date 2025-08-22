@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using AlpTlc.Biz.RemotaInOut;
 using AlpTlc.Connessione.Broker.RabbitMq;
 using Alp.Com.Igu.Core;
+using Alp.Com.Igu.DataTypes;
 //using AlpTlc.Biz.RemotaInOut;
 
 namespace Alp.Com.Igu.ViewModels
