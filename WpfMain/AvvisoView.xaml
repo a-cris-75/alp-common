@@ -1,0 +1,145 @@
+﻿<Window x:Class="AlpTlc.Pre.Igu.Views.AvvisoView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AlpTlc.Pre.Igu.Views"
+        xmlns:localConverters="clr-namespace:AlpTlc.Pre.Igu.Views.Converters"
+        mc:Ignorable="d"
+        WindowStyle="None"
+        WindowStartupLocation="CenterScreen"
+        AllowsTransparency="True" 
+        Background="Transparent"
+        Title="Avviso" Height="560" Width="800"
+        Topmost="True">
+    <!--DataContext="{Binding Mode=OneWay, RelativeSource={RelativeSource Self}}">-->
+
+    <Window.Resources>
+        <Brush x:Key="ColoreTesto">DimGray</Brush>
+        <localConverters:BoolToVisibilityConverter x:Key="BoolToVisibility" />
+        <localConverters:IconToImageSourceConverter x:Key="IconToImageSource" />
+    </Window.Resources>
+
+    <!--Background="#272537"-->
+    <Border CornerRadius="20"
+            Padding="20">
+        <!--<Border.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="2,3">
+                <GradientStop Color="LightYellow" Offset="0"/>
+                <GradientStop Color="white" Offset="1"/>
+            </LinearGradientBrush>
+        </Border.Background>-->
+        <Border.Background>
+            <SolidColorBrush Opacity="0.95" Color="White"/>
+            <!--<SolidColorBrush Opacity="0.95" Color="red"/>-->
+        </Border.Background>
+        <Grid>
+            <!--<Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>-->
+            
+            <Button x:Name="btnChiudi"
+                        Background="Transparent"
+                        BorderBrush="Transparent"
+                        HorizontalAlignment="Right" 
+                        HorizontalContentAlignment="Center"
+                        VerticalAlignment="Top"
+                        VerticalContentAlignment="Center"
+                        Margin="10"
+                        FontSize="24"
+                        Foreground="{StaticResource ColoreTesto}" Click="btnChiudi_Click">
+                &#x2573;
+            </Button>
+            <!--<TextBlock Foreground="White" 
+                       HorizontalAlignment="Right" 
+                       VerticalAlignment="Top"
+                       FontSize="32">
+                Avviso
+            </TextBlock>-->
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="4*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition>
+                        <RowDefinition.Style>
+                            <Style TargetType="{x:Type RowDefinition}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Path=CiSonoAnomalieValidazionePerScansioneSelezionata}" Value="true">
+                                        <Setter Property="Height" Value="2*" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Path=CiSonoAnomalieValidazionePerScansioneSelezionata}" Value="false">
+                                        <Setter Property="Height" Value="0" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </RowDefinition.Style>
+                    </RowDefinition>
+                    <RowDefinition Height="16*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="3*"/>
+                </Grid.ColumnDefinitions>
+
+                
+                <TextBlock Grid.Row="0" 
+                           Grid.Column="1" 
+                           Grid.RowSpan="2"
+                           Margin="0,20,0,0"
+                           HorizontalAlignment="Left" 
+                           VerticalAlignment="Center"
+                           TextAlignment="Center"
+                           FontSize="36"
+                           FontWeight="Bold"
+                           Foreground="{StaticResource ColoreTesto}" 
+                           TextWrapping="WrapWithOverflow"
+                           Text="ATTENZIONE"/>
+
+                <Image  Grid.Row="0"
+                        Grid.Column="0"
+                        Grid.RowSpan="2"
+                        Margin="40,40,20,20"
+                        HorizontalAlignment="Right" 
+                        VerticalAlignment="Center"
+                        MaxWidth="40"
+                        Source="{Binding Icona, Converter={StaticResource IconToImageSource}, Mode=OneWay}" />
+
+                <TextBlock Grid.Row="1" 
+                           Grid.Column="0" 
+                           Grid.ColumnSpan="2"
+                           Grid.RowSpan="2"
+                           Visibility="{Binding Path=CiSonoAnomalieValidazionePerScansioneSelezionata, Converter={StaticResource BoolToVisibility}, ConverterParameter='ShowOrHide', FallbackValue=Hidden, Mode=OneWay}"
+                           Margin="0,0,0,0"
+                           HorizontalAlignment="Center" 
+                           VerticalAlignment="Center"
+                           TextAlignment="Center"
+                           FontSize="36"
+                           FontWeight="Bold"
+                           Foreground="{StaticResource ColoreTesto}" 
+                           TextWrapping="WrapWithOverflow"
+                           Text="SCANSIONE NON VALIDA"/>
+
+                <ScrollViewer Grid.Row="3" 
+                              Grid.Column="0"
+                              Grid.ColumnSpan="2"
+                              HorizontalAlignment="Center" 
+                              VerticalAlignment="Center"
+                              HorizontalScrollBarVisibility="Disabled"  VerticalScrollBarVisibility="Auto">
+                    <TextBlock HorizontalAlignment="Center" 
+                               VerticalAlignment="Center"
+                               TextAlignment="Center"
+                               FontSize="32"
+                               Foreground="{StaticResource ColoreTesto}" 
+                               TextWrapping="WrapWithOverflow"
+                               Text="{Binding TestoAvviso}"/>
+                </ScrollViewer>
+            </Grid>
+
+        </Grid>
+    </Border>
+    
+</Window>
