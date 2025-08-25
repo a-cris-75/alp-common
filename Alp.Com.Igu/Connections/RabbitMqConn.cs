@@ -25,20 +25,20 @@ using System.Windows;
 
 namespace Alp.Com.Igu.Connections
 {
-    public class RabbitMq
+    public class RabbitMqConn
     {
 
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger
                            ("Alp.Com.Igu.Connections.Rabbimq");
 
 
-        private static readonly RabbitMq connessoneRabbitMq = new RabbitMq();
+        private static readonly RabbitMqConn connessoneRabbitMq = new RabbitMqConn();
 
         //IRabbitMqPersistentConnection PersistentConnection;
 
         //static ConnessoneRabbitMq() { }
 
-        public static RabbitMq GetInstance => connessoneRabbitMq;
+        public static RabbitMqConn GetInstance => connessoneRabbitMq;
 
         ConnectionFactory factory = new ConnectionFactory() { HostName = ApplicationSettingsStatic.ServerIP, UserName = "KSociety", Password = "KSociety" };
         //ConnectionFactory factory = new ConnectionFactory() { HostName = "localhost", UserName = "KSociety", Password = "KSociety" };
@@ -89,7 +89,7 @@ namespace Alp.Com.Igu.Connections
         }
 
 
-        private RabbitMq()
+        private RabbitMqConn()
         {
         }
 
@@ -120,7 +120,7 @@ namespace Alp.Com.Igu.Connections
 
             // TODO FINE
 
-            Handler RAB = new Handler(hostname, 5672, "","");
+            Crs.Base.SendReceiveRabbit.RabbitMq RAB = new Crs.Base.SendReceiveRabbit.RabbitMq(hostname, 5672, "","");
             RAB.Receive(ReceiveCallback);
 
             // Questo è NECESSARIO per il corretto funzionamento della serializzazione / deserializzazione!!
@@ -400,7 +400,7 @@ namespace Alp.Com.Igu.Connections
         private static Type ByName(string name)
         {
 
-            Assembly assem = typeof(RabbitMq).Assembly;
+            Assembly assem = typeof(RabbitMqConn).Assembly;
 
             //_logger.Verbose("TYPES:");
             foreach (Type type in assem.GetTypes())
