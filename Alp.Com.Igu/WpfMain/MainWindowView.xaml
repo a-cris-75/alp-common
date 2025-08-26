@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Alp.Com.Igu.Views"
+        xmlns:local="clr-namespace:Alp.Com.Igu.WpfMain"
         xmlns:localConverters="clr-namespace:Alp.Com.Igu.Views.Converters"
         xmlns:custCtrls="clr-namespace:Alp.Com.Igu.CustomControls"
         mc:Ignorable="d"
@@ -37,7 +37,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="18*"/>
-                <RowDefinition.Height="23*"/>
+                <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
 
             <DockPanel x:Name="dckBarTitle" Grid.Row="0" >
@@ -253,6 +253,7 @@
                             Margin="10"
                             Content="{Binding CurrentView}"/>
 
+            <ContentControl Grid.Row="0"/>
             <ContentControl Grid.Row="2"/>
         </Grid>
     </Border>

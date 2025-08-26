@@ -13,7 +13,7 @@ namespace Alp.Com.Igu.Connections
     internal class WebApiRequest
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger
-                           ("Alp.Com.Igu.Connections.WebApiConn");
+                           ("Alp.Com.Igu.Connections.WebApiRequest");
 
         private static readonly HttpClient httpClient;
         private static readonly WebApiRequest webApiConn = new WebApiRequest();
