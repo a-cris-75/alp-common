@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Alp.Com.Igu")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e73021a6c172334e708fbf1ce2d4644262b1dcd9")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7eb3ac9e7f290e7362624c76099bb7fea6a45446")]
 [assembly: System.Reflection.AssemblyProductAttribute("Alp.Com.Igu")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Alp.Com.Igu")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
