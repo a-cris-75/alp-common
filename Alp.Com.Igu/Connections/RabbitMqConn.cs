@@ -1,10 +1,10 @@
 ﻿using Alp.Com.Igu.DataTypes;
-using AlpTlc.Connessione;
-using AlpTlc.Connessione.Broker.RabbitMq.Event;
-using AlpTlc.Connessione.Broker.RabbitMq.Event.Com;
-using AlpTlc.Connessione.Broker.RabbitMq.ProtoModel;
-using AlpTlc.Domain.Impostazioni;
-using AlpTlc.Domain.StatoMacchina;
+//using AlpTlc.Connessione;
+//using AlpTlc.Connessione.Broker.RabbitMq.Event;
+//using AlpTlc.Connessione.Broker.RabbitMq.Event.Com;
+//using AlpTlc.Connessione.Broker.RabbitMq.ProtoModel;
+//using AlpTlc.Domain.Impostazioni;
+//using AlpTlc.Domain.StatoMacchina;
 using Crs.Base.RabbitParsingHelper;
 using Crs.Base.SendReceiveRabbit;
 using KSociety.Base.EventBusRabbitMQ;
@@ -12,7 +12,9 @@ using ProtoBuf;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -29,7 +31,7 @@ namespace Alp.Com.Igu.Connections
     {
 
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger
-                           ("Alp.Com.Igu.Connections.Rabbimq");
+                           ("Alp.Com.Igu.Connections.RabbiMqConn");
 
 
         private static readonly RabbitMqConn connessoneRabbitMq = new RabbitMqConn();
@@ -40,12 +42,12 @@ namespace Alp.Com.Igu.Connections
 
         public static RabbitMqConn GetInstance => connessoneRabbitMq;
 
-        ConnectionFactory factory = new ConnectionFactory() { HostName = ApplicationSettingsStatic.ServerIP, UserName = "KSociety", Password = "KSociety" };
-        //ConnectionFactory factory = new ConnectionFactory() { HostName = "localhost", UserName = "KSociety", Password = "KSociety" };
-        IConnection connection = null;
-        static IModel channel = null;
+        //ConnectionFactory factory = new ConnectionFactory() { HostName = ApplicationSettingsStatic.ServerIP, UserName = "KSociety", Password = "KSociety" };
+        
+        //IConnection connection = null;
+        //tatic IModel channel = null;
         static string exchCom = "";
-        EventingBasicConsumer consumer = null;
+        //EventingBasicConsumer consumer = null;
         static int FrameNumberDia = 0;
 
         static string hostname;
@@ -121,11 +123,11 @@ namespace Alp.Com.Igu.Connections
             // TODO FINE
 
             Crs.Base.SendReceiveRabbit.RabbitMq RAB = new Crs.Base.SendReceiveRabbit.RabbitMq(hostname, 5672, "","");
-            RAB.Receive(ReceiveCallback);
+            
 
             // Questo è NECESSARIO per il corretto funzionamento della serializzazione / deserializzazione!!
             // Per via dell'ereditarietà (buona parte dei tipi serializzati sono classi derivate)
-            Configuration.ProtoBufConfiguration();
+            //Configuration.ProtoBufConfiguration();
 
             //string exch = "direct-logs";
             exchCom = "k-society_com_direct";
@@ -133,63 +135,71 @@ namespace Alp.Com.Igu.Connections
             string exchDip = "alping_dip_direct";
             string exchLog = "k-society_log_direct";
 
-            connection = factory.CreateConnection();
-            channel = connection.CreateModel();
+            string queue = "CodaPerIgu_" + hostname;
+            string queueDia = "CodaImmagineDiaPerIgu_" + hostname;
+            string queueDip = "CodaImmagineDipPerIgu_" + hostname;
 
-            channel.ExchangeDeclare(exchange: exchLog, type: ExchangeType.Direct, durable: false, autoDelete: true);
-            channel.ExchangeDeclare(exchange: exchCom, type: ExchangeType.Direct, durable: false, autoDelete: true);
-            channel.ExchangeDeclare(exchange: exchDia, type: ExchangeType.Direct, durable: false, autoDelete: true);
-            channel.ExchangeDeclare(exchange: exchDip, type: ExchangeType.Direct, durable: false, autoDelete: true);
+            RAB.AddKeyExchange("ImageIntegrationEvent.Dalsa_1.imagelive", exchDia, queueDia, true);
+            RAB.AddKeyExchange("ImageIntegrationEvent.Dalsa_2.imagelive", exchDia, queueDia, true);
+            RAB.AddKeyExchange("ImageIntegrationEvent.Dalsa_1.image", exchDia, queueDia, true);
+            RAB.AddKeyExchange("ImageIntegrationEvent.Dalsa_2.image", exchDia, queueDia, true);
+            RAB.AddKeyExchange("CamStatusIntegrationEvent.StatusMonitor.camstatus", exchDia, queueDia, true);
 
-            var queueName = channel.QueueDeclare(queue: "CodaPerIgu_" + hostname).QueueName;
-            var queueImageDiaName = channel.QueueDeclare(queue: "CodaImmagineDiaPerIgu_" + hostname).QueueName;
-            var queueImageDipName = channel.QueueDeclare(queue: "CodaImmagineDipPerIgu_" + hostname).QueueName;
+            RAB.AddKeyExchange("ImageProcessedIntegrationEvent.Dalsa_1.imageprocessed", exchDip, queueDip, true);
+            RAB.AddKeyExchange("ImageProcessedIntegrationEvent.Dalsa_2.imageprocessed", exchDip, queueDip, true);
+            List<string> lstqueue = new List<string>();
+            lstqueue.Add(queue);
+            lstqueue.Add(queueDia);
+            lstqueue.Add(queueDip);
+            RAB.Receive(ConsumerReceived, lstqueue);
 
-            channel.QueueBind(queue: queueImageDiaName, exchange: exchDia, routingKey: "ImageIntegrationEvent.Dalsa_1.imagelive");
-            channel.QueueBind(queue: queueImageDiaName, exchange: exchDia, routingKey: "ImageIntegrationEvent.Dalsa_2.imagelive");
+            //connection = factory.CreateConnection();
+            //channel = connection.CreateModel();
 
-            // Queste immagini sono destinate al Dip, ma le rileviamo solo per ricavare il numero di immagine emesso dal Dia e vedere se il Dip rimane indietro
-            channel.QueueBind(queue: queueImageDiaName, exchange: exchDia, routingKey: "ImageIntegrationEvent.Dalsa_1.image");
-            channel.QueueBind(queue: queueImageDiaName, exchange: exchDia, routingKey: "ImageIntegrationEvent.Dalsa_2.image");
+            //channel.ExchangeDeclare(exchange: exchLog, type: ExchangeType.Direct, durable: false, autoDelete: true);
+            //channel.ExchangeDeclare(exchange: exchCom, type: ExchangeType.Direct, durable: false, autoDelete: true);
+            //channel.ExchangeDeclare(exchange: exchDia, type: ExchangeType.Direct, durable: false, autoDelete: true);
+            //channel.ExchangeDeclare(exchange: exchDip, type: ExchangeType.Direct, durable: false, autoDelete: true);
 
-            channel.QueueBind(queue: queueImageDipName, exchange: exchDip, routingKey: "ImageProcessedIntegrationEvent.Dalsa_1.imageprocessed");
-            channel.QueueBind(queue: queueImageDipName, exchange: exchDip, routingKey: "ImageProcessedIntegrationEvent.Dalsa_2.imageprocessed");
+            //var queueName = channel.QueueDeclare(queue: "CodaPerIgu_" + hostname).QueueName;
+            //var queueImageDiaName = channel.QueueDeclare(queue: "CodaImmagineDiaPerIgu_" + hostname).QueueName;
+            //var queueImageDipName = channel.QueueDeclare(queue: "CodaImmagineDipPerIgu_" + hostname).QueueName;
 
-            // MB + PER NOTIFICA STATO TELECAMERE A IGU :
-            channel.QueueBind(queue: queueName, exchange: exchDia, routingKey: "CamStatusIntegrationEvent.StatusMonitor.camstatus");
+            //channel.QueueBind(queue: queueImageDiaName, exchange: exchDia, routingKey: "ImageIntegrationEvent.Dalsa_1.imagelive");
+            //channel.QueueBind(queue: queueImageDiaName, exchange: exchDia, routingKey: "ImageIntegrationEvent.Dalsa_2.imagelive");
 
-            // Intercettiamo gli invoke che arrivano dal Plc:
-            channel.QueueBind(queue: queueName, exchange: exchCom, routingKey: "TagIntegrationEvent.FromPlc.automation.invoke");
+            //// Queste immagini sono destinate al Dip, ma le rileviamo solo per ricavare il numero di immagine emesso dal Dia e vedere se il Dip rimane indietro
+            //channel.QueueBind(queue: queueImageDiaName, exchange: exchDia, routingKey: "ImageIntegrationEvent.Dalsa_1.image");
+            //channel.QueueBind(queue: queueImageDiaName, exchange: exchDia, routingKey: "ImageIntegrationEvent.Dalsa_2.image");
 
-            channel.QueueBind(queue: queueName, exchange: exchCom, routingKey: "TagWriteIntegrationEvent.ToPlc.automation.write.server"); //Intercettiamo quello che il Dia o il Dip mandano al Plc
-            // ... usiamo gli stessi messaggi e poi li smistiamo sia verso il Plc che verso l'Igu (coda CodaPerIgu) per avere il watchdog dal Dia e dal Dip e il systemready dal Dip (si potevano anche creare messaggi separati dedicati all'Igu...)
+            //channel.QueueBind(queue: queueImageDipName, exchange: exchDip, routingKey: "ImageProcessedIntegrationEvent.Dalsa_1.imageprocessed");
+            //channel.QueueBind(queue: queueImageDipName, exchange: exchDip, routingKey: "ImageProcessedIntegrationEvent.Dalsa_2.imageprocessed");
 
-            // Per ricevere indietro un proprio stesso messaggio (loop per verificare il funzionamento del RabbitMq):
-            channel.QueueBind(queue: queueName, exchange: exchCom, routingKey: "TagIntegrationEvent.FromIgu.igu.invoke");
+            //// MB + PER NOTIFICA STATO TELECAMERE A IGU :
+            //channel.QueueBind(queue: queueName, exchange: exchDia, routingKey: "CamStatusIntegrationEvent.StatusMonitor.camstatus");
 
-            // Per ricevere messaggi dagli altri servizi:
-            channel.QueueBind(queue: queueName, exchange: exchCom, routingKey: "TagIntegrationEvent.ToIgu.igu.invoke");
+            //// Intercettiamo gli invoke che arrivano dal Plc:
+            //channel.QueueBind(queue: queueName, exchange: exchCom, routingKey: "TagIntegrationEvent.FromPlc.automation.invoke");
 
-            var consumer = new EventingBasicConsumer(channel);
+            //channel.QueueBind(queue: queueName, exchange: exchCom, routingKey: "TagWriteIntegrationEvent.ToPlc.automation.write.server"); //Intercettiamo quello che il Dia o il Dip mandano al Plc
+            //// ... usiamo gli stessi messaggi e poi li smistiamo sia verso il Plc che verso l'Igu (coda CodaPerIgu) per avere il watchdog dal Dia e dal Dip e il systemready dal Dip (si potevano anche creare messaggi separati dedicati all'Igu...)
 
-            consumer.Received += ConsumerReceived;
+            //// Per ricevere indietro un proprio stesso messaggio (loop per verificare il funzionamento del RabbitMq):
+            //channel.QueueBind(queue: queueName, exchange: exchCom, routingKey: "TagIntegrationEvent.FromIgu.igu.invoke");
 
-            //consumer.Received += (model, ea) =>
-            //{
-            //	var body = ea.Body.ToArray();
-            //	var message = Encoding.UTF8.GetString(body);
-            //	var routingKey = ea.RoutingKey;
-            //	Debug.WriteLine(" [x] Received '{0}':'{1}'", routingKey, message);
-            //};
+            //// Per ricevere messaggi dagli altri servizi:
+            //channel.QueueBind(queue: queueName, exchange: exchCom, routingKey: "TagIntegrationEvent.ToIgu.igu.invoke");
 
-            channel.BasicConsume(queue: queueName, autoAck: true, consumer: consumer);
-            channel.BasicConsume(queue: queueImageDiaName, autoAck: true, consumer: consumer);
-            channel.BasicConsume(queue: queueImageDipName, autoAck: true, consumer: consumer);
+            //var consumer = new EventingBasicConsumer(channel);
+
+            //consumer.Received += ConsumerReceived;
+
+            //channel.BasicConsume(queue: queueName, autoAck: true, consumer: consumer);
+            //channel.BasicConsume(queue: queueImageDiaName, autoAck: true, consumer: consumer);
+            //channel.BasicConsume(queue: queueImageDipName, autoAck: true, consumer: consumer);
 
             log.Debug("In attesa di messaggi da coda Rabbit.");
-            //Debug.WriteLine(" Press [enter] to exit.");
-            //Console.ReadLine();
-
+            
             log.Info("Init.");
         }
 
@@ -418,7 +428,7 @@ namespace Alp.Com.Igu.Connections
         public static void SendTagInvoke(string nomeTagGroup, string nomeTag, string valoreTag)
         {
 
-            if (channel == null) return;
+            //if (channel == null) return;
 
             Tag tg = new Tag() { Name = nomeTag, Value = valoreTag, TagGroup = new TagGroup() { Name = nomeTagGroup } };
             TagValueChanged notification = new TagValueChanged() { Tag = tg, Timestamp = DateTime.Now };
@@ -451,29 +461,27 @@ namespace Alp.Com.Igu.Connections
         public void ReceiveCallback(int headerValue, string message, DateTime dateTime)
         {
             // message contiene L1L2_CFG_EX
-            ParsingType type = (ParsingType)headerValue;
+            //ParsingType type = (ParsingType)headerValue;
+            //ITM_IMG_DEBUG msg = CrsSerializer.Deserialize<ITM_IMG_DEBUG>(type, message);
 
-            // normalmente type è 2 (identifica la formattazione in json di message)
-            ITM_IMG_DEBUG msg = CrsSerializer.Deserialize<ITM_IMG_DEBUG>(type, message);
-
-            switch (msg.COMMAND)
-            {
-                // richiesta di invio informazioni di debug al configuratore: giro quanto ricevuto al configuratore
-                // questo posso implementarlo direttamente su configuratore
-                case MDW_COMMAND.REQ_SEND_DEBUG:
-                    if (!PAUSE_DEBUG)
-                    {
-                        try
-                        {
+            //switch (msg.COMMAND)
+            //{
+            //    // richiesta di invio informazioni di debug al configuratore: giro quanto ricevuto al configuratore
+            //    // questo posso implementarlo direttamente su configuratore
+            //    case MDW_COMMAND.REQ_SEND_DEBUG:
+            //        if (!PAUSE_DEBUG)
+            //        {
+            //            try
+            //            {
                             
-                        }
-                        catch (Exception ex)
-                        {
+            //            }
+            //            catch (Exception ex)
+            //            {
                             
-                        }
-                    }
-                    break;
-            }
+            //            }
+            //        }
+            //        break;
+            //}
         }
 
     }
