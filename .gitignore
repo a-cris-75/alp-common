@@ -1,0 +1,6 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/Alp.Com.Igu/obj/Debug/net6.0-windows
+/Alp.Com.Igu/obj
