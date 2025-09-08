@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Utils\Touch.cs" />
+    <Compile Remove="ViewModels\AnalisiBilletteViewModel.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="KSociety.Base.EventBus" Version="1.5.11" />
+    <PackageReference Include="KSociety.Base.EventBusRabbitMQ" Version="1.5.11" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.8" />
+    <PackageReference Include="protobuf-net.Core" Version="3.2.56" />
+    <PackageReference Include="Serilog" Version="4.3.1-dev-02385" />
+    <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Include="App.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\crs-base\Crs.Base.SendReceiveRabbit\Crs.Base.SendReceiveRabbit.csproj" />
+  </ItemGroup>
+
+</Project>
