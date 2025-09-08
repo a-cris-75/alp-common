@@ -24,6 +24,9 @@ using AlpTlc.Biz.Strumenti;
 using AlpTlc.Biz.RemotaInOut;
 using AlpTlc.Connessione.WebAPI.AppSettings;
 using Newtonsoft.Json.Linq;
+using Alp.Com.Igu.Core;
+using Alp.Com.Igu.DataTypes;
+using Alp.Com.Igu.Connections;
 
 namespace Alp.Com.Igu.ViewModels
 {
@@ -185,7 +188,7 @@ namespace Alp.Com.Igu.ViewModels
             try
             {
                 // NB: Se il Rabbit è fermo, il seguente metodo dà un'eccezione e quindi la coda in StatoRabbitMq.WatchDogSent non viene riempita (bene così!).
-                RabbitMq.SendTagInvoke("FromIgu", "RabbitMqAutoWatchdog", (auto_watchdog_value == Int32.MaxValue ? 0 : ++auto_watchdog_value).ToString());
+                RabbitMqConn.SendTagInvoke("FromIgu", "RabbitMqAutoWatchdog", (auto_watchdog_value == Int32.MaxValue ? 0 : ++auto_watchdog_value).ToString());
                 StatoRabbitMq.WatchDogSent(auto_watchdog_value);
             }
             catch (Exception ex)
@@ -387,7 +390,7 @@ namespace Alp.Com.Igu.ViewModels
                     else if(!ImpostazioniGenerali.Instance.ModalitaAutomatica)
                     {
                         // Se era già in modalità manuale, riprendi ad acquisire:
-                        RabbitMq.SendTagInvoke("FromIgu", "StartAcq", "True");
+                        RabbitMqConn.SendTagInvoke("FromIgu", "StartAcq", "True");
                     }
 
                 }
@@ -395,7 +398,7 @@ namespace Alp.Com.Igu.ViewModels
                 {
                     // Se è in modalità manuale, sospendi l'aquisizione:
                     if (AreImmaginiInAcquisizione)
-                        RabbitMq.SendTagInvoke("FromIgu", "StopAcq", "True");
+                        RabbitMqConn.SendTagInvoke("FromIgu", "StopAcq", "True");
                 }
 
                 _currentView = value;
