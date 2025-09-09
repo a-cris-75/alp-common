@@ -34,6 +34,10 @@
     </Window.Resources>
 
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="369*"/>
+            <RowDefinition Height="65*"/>
+        </Grid.RowDefinitions>
         <!-- Header -->
         <Grid Height="60" VerticalAlignment="Top" Background="#FF2D2D2D">
             <Grid.ColumnDefinitions>
@@ -68,7 +72,7 @@
         </Grid>
 
         <!-- Main Content -->
-        <Grid Margin="0,60,0,80">
+        <Grid Margin="0,60,0,15">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="400"/>
@@ -283,7 +287,7 @@
         </Grid>
 
         <!-- Bottom Navigation -->
-        <Grid Height="80" VerticalAlignment="Bottom" Background="#FF2D2D2D">
+        <Grid Height="80" VerticalAlignment="Top" Background="#FF2D2D2D" Margin="0,354,0,0" Grid.RowSpan="2">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Button Style="{StaticResource ModernButtonStyle}" Width="80" Height="50" Margin="10">
                     <StackPanel>
