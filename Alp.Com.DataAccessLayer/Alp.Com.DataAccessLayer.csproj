@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="KSociety.Base.EventBus" Version="1.5.11" />
+    <PackageReference Include="log4net" Version="3.2.0" />
+    <PackageReference Include="protobuf-net.Core" Version="3.2.56" />
+  </ItemGroup>
+
+</Project>

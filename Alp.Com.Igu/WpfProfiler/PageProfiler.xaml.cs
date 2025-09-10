@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Crs.Com.GuiWpfLayer.WpfProfiler
+namespace Alp.Com.Igu.WpfProfiler
 {
     /// <summary>
     /// Interaction logic for PageProfiler.xaml

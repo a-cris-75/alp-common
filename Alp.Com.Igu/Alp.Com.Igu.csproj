@@ -10,6 +10,7 @@
   <ItemGroup>
     <Compile Remove="Utils\Touch.cs" />
     <Compile Remove="ViewModels\AnalisiBilletteViewModel.cs" />
+    <Compile Remove="ViewModels\ImpostazioniViewModel.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,7 +28,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\crs-base\Crs.Base.CommonUtilsLibrary\Crs.Base.CommonUtilsLibrary.csproj" />
     <ProjectReference Include="..\..\crs-base\Crs.Base.SendReceiveRabbit\Crs.Base.SendReceiveRabbit.csproj" />
+    <ProjectReference Include="..\Alp.Com.DataAccessLayer\Alp.Com.DataAccessLayer.csproj" />
   </ItemGroup>
 
 </Project>

@@ -28,7 +28,7 @@ namespace Alp.Com.Igu.ViewModels
 
         public MainWindowViewModel mainWindowVMParent { get; set; }
 
-        static RemotaInOutAzioni _remotaInOutAzioni = RemotaInOutAzioni.GetInstance();
+        static RemotaInOutWebApi _remotaInOutAzioni = new RemotaInOutWebApi();
 
         public ImpostazioniViewModel(ILogger<ImpostazioniViewModel> logger, ApplicationSettings options)
         {
@@ -273,7 +273,7 @@ namespace Alp.Com.Igu.ViewModels
 
                 using (new WaitCursor())
                 {
-                    esito = await _remotaInOutAzioni.ResetTelecamereAsync(checkLock: true);
+                    esito = await _remotaInOutAzioni.ResetTelecameraAsync(checkLock: true);
                 }
 
                 if (!esito.Ok)

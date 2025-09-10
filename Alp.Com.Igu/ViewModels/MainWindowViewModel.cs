@@ -1,37 +1,43 @@
-﻿using AlpTlc.Connessione;
-using AlpTlc.App.Igu.Core;
+﻿using Alp.Com.Igu.Connections;
+using Alp.Com.Igu.Core;
+using Alp.Com.Igu.DataTypes;
+//using AlpTlc.App.Igu;
+//using AlpTlc.App.Igu.Core;
+//using AlpTlc.Biz;
+//using AlpTlc.Biz.Core;
+//using AlpTlc.Biz.RemotaInOut;
+//using AlpTlc.Biz.Strumenti;
+//using AlpTlc.Connessione;
+//using AlpTlc.Connessione.Broker;
+//using AlpTlc.Connessione.Broker.RabbitMq;
+//using AlpTlc.Connessione.SettingsFile;
+//using AlpTlc.Connessione.WebAPI.AppSettings;
+//using AlpTlc.Domain.Impostazioni;
+//using AlpTlc.Domain.StatoMacchina;
+using Crs.Base.CommonUtilsLibrary;
+using log4net;
+
 //using AlpTlc.Domain.Models;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Windows;
-using System.Windows.Input;
-using AlpTlc.Domain.Impostazioni;
-using AlpTlc.App.Igu;
-using AlpTlc.Biz;
-using AlpTlc.Biz.Core;
-using AlpTlc.Connessione.Broker;
-using AlpTlc.Connessione.Broker.RabbitMq;
 //using AlpTlc.Connessione.Db.DbDifetti;
 //using AlpTlc.Biz.RemotaInOut;
 using System.Threading;
-using AlpTlc.Domain.StatoMacchina;
-using AlpTlc.Connessione.SettingsFile;
 using System.Threading.Tasks;
-using AlpTlc.Biz.Strumenti;
-using AlpTlc.Biz.RemotaInOut;
-using AlpTlc.Connessione.WebAPI.AppSettings;
-using Newtonsoft.Json.Linq;
-using Alp.Com.Igu.Core;
-using Alp.Com.Igu.DataTypes;
-using Alp.Com.Igu.Connections;
+using System.Windows;
+using System.Windows.Input;
 
 namespace Alp.Com.Igu.ViewModels
 {
     public class MainWindowViewModel : ObservableObject
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger
+                           ("Alp.Com.Igu.ViewModels.MainWindowViewModel");
 
         private static int _n_istanze = 0;
         private static Int32 auto_watchdog_value = 0;
@@ -43,10 +49,13 @@ namespace Alp.Com.Igu.ViewModels
         private System.Timers.Timer _checkDipStatusTimer;
         private System.Timers.Timer _checkDatabaseAndFolderReachableTimer;
 
+        private List<RemotaInOutWebApi> LST_REMOTE = new List<RemotaInOutWebApi>();
+        private List<PlcInOutWebApi> LST_PLC = new List<PlcInOutWebApi>();
+
         public string Titolo { get; set; }
 
-        private readonly AnalisiBilletteViewModel _analisiBilletteVM;
-        private readonly ImpostazioniViewModel _impostazioniVM;
+        private readonly GetDataDeviceViewModel _getDataDeviceVM;
+        //private readonly ImpostazioniViewModel _impostazioniVM;
         private readonly ILogger<MainWindowViewModel> _logger;
         private readonly ApplicationSettings _options;
 
@@ -83,59 +92,95 @@ namespace Alp.Com.Igu.ViewModels
             _checkRemoteInOutTimer.Elapsed -= OnCheckRemoteInOutEvent;
         }
 
+        private void InitDevices()
+        {
+            log.Info("Step read from config..START");
+            ConfigManager ConfigurationManager = new ConfigManager("", "AppSettings");
+
+            for (int i = 1; i < 10; i++)
+            {
+                SetDeviceConfig(ConfigurationManager, "API_REQ_IDX_DEV_", i, "DEV");
+            }
+
+            for (int i = 1; i < 10; i++)
+            {
+                SetDeviceConfig(ConfigurationManager, "API_REQ_IDX_PLC_", i, "PLC");
+            }
+        }
+
+        private void SetDeviceConfig(ConfigManager ConfigurationManager, string lbldev, int idx, string typedev)
+        {
+            string namedev = string.Empty;
+            string? rem1 = ConfigurationManager.GetValue(lbldev + idx.ToString());
+            string name1 = (!string.IsNullOrEmpty(rem1) && rem1.Contains("/") ? rem1.Substring(rem1.IndexOf("/") + 1) : typedev + "_" + idx.ToString());
+            if (!string.IsNullOrEmpty(rem1))
+            {
+                if (typedev.Contains("DEV")) 
+                    LST_REMOTE.Add(new RemotaInOutWebApi(1, name1));
+                else
+                    LST_PLC.Add(new PlcInOutWebApi(1, name1));
+            }
+        }
+        
         private async void OnCheckRemoteInOutEvent(object sender, System.Timers.ElapsedEventArgs e)
         {
             try
             {
 
-                Esito esitoIllum = await RemotaInOutAzioni.GetInstance().VerificaEAggiornaStatoIlluminatoriAsync();
+                //Esito esitoIllum = await RemotaInOutWebApi.GetInstance().VerificaEAggiornaStatoIlluminatoriAsync();
 
-                if (!esitoIllum.Ok)
+                foreach (RemotaInOutWebApi rem in this.LST_REMOTE)
                 {
-                    //_logger.LogError(esito.Eccezione, GetType().FullName + "." + System.Reflection.MethodBase.GetCurrentMethod()?.Name + " - " + esito.Titolo + ": " + esito.Messaggio);
-                    _logger.LogError(esitoIllum.Eccezione, esitoIllum.ToString());
-                    MsgStatoAccensioneIlluminatori = esitoIllum.Titolo + ".";  // "ATTENZIONE! " + esito.Titolo + ".";
-                }
-                else if (esitoIllum.Icona == System.Drawing.SystemIcons.Exclamation)
-                {
-                    _logger.LogWarning(GetType().FullName + "." + System.Reflection.MethodBase.GetCurrentMethod()?.Name + " - " + esitoIllum.Titolo + ": " + esitoIllum.Messaggio);
-                    MsgStatoAccensioneIlluminatori = esitoIllum.Messaggio + ".";  // "ATTENZIONE! " + esito.Messaggio + ".";
-                }
-                else
-                {
-                    MsgStatoAccensioneIlluminatori = null;
+                    Esito esito = await rem.GetStatusEsito();
+
+
+                    if (!esito.Ok)
+                    {
+                        //_logger.LogError(esito.Eccezione, GetType().FullName + "." + System.Reflection.MethodBase.GetCurrentMethod()?.Name + " - " + esito.Titolo + ": " + esito.Messaggio);
+                        _logger.LogError(esito.Eccezione, esito.ToString());
+                        MsgStatoDevices = esito.Titolo + ".";  // "ATTENZIONE! " + esito.Titolo + ".";
+                    }
+                    else if (esito.Icona == System.Drawing.SystemIcons.Exclamation)
+                    {
+                        _logger.LogWarning(GetType().FullName + "." + System.Reflection.MethodBase.GetCurrentMethod()?.Name + " - " + esito.Titolo + ": " + esito.Messaggio);
+                        MsgStatoDevices = esito.Messaggio + ".";  // "ATTENZIONE! " + esito.Messaggio + ".";
+                    }
+                    else
+                    {
+                        MsgStatoDevices = null;
+                    }
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError(GetType().FullName + "." + System.Reflection.MethodBase.GetCurrentMethod()?.Name + " - " + ex.Message + " - " + ex.StackTrace);
-                MsgStatoAccensioneIlluminatori = "Errore remota I/O durante verifica stato accensione illuminatori";
+                MsgStatoDevices = "Errore remota I/O durante verifica stato accensione illuminatori";
             }
 
             try
             {
 
-                Esito esitoTlc = await RemotaInOutAzioni.GetInstance().VerificaEAggiornaStatoTelecamereAsync();
+                //Esito esitoTlc = await RemotaInOutWebApi.GetInstance().VerificaEAggiornaStatoTelecamereAsync();
 
-                if (!esitoTlc.Ok)
-                {
-                    _logger.LogError(esitoTlc.Eccezione, esitoTlc.ToString());
-                    MsgStatoAccensioneTelecamere = esitoTlc.Titolo + ".";
-                }
-                else if (esitoTlc.Icona == System.Drawing.SystemIcons.Exclamation)
-                {
-                    _logger.LogWarning(GetType().FullName + "." + System.Reflection.MethodBase.GetCurrentMethod()?.Name + " - " + esitoTlc.Titolo + ": " + esitoTlc.Messaggio);
-                    MsgStatoAccensioneTelecamere = esitoTlc.Messaggio + ".";
-                }
-                else
-                {
-                    MsgStatoAccensioneTelecamere = null;
-                }
+                //if (!esitoTlc.Ok)
+                //{
+                //    _logger.LogError(esitoTlc.Eccezione, esitoTlc.ToString());
+                //    MsgStatoAccensioneTelecamere = esitoTlc.Titolo + ".";
+                //}
+                //else if (esitoTlc.Icona == System.Drawing.SystemIcons.Exclamation)
+                //{
+                //    _logger.LogWarning(GetType().FullName + "." + System.Reflection.MethodBase.GetCurrentMethod()?.Name + " - " + esitoTlc.Titolo + ": " + esitoTlc.Messaggio);
+                //    MsgStatoAccensioneTelecamere = esitoTlc.Messaggio + ".";
+                //}
+                //else
+                //{
+                //    MsgStatoAccensioneTelecamere = null;
+                //}
             }
             catch (Exception ex)
             {
-                _logger.LogError(GetType().FullName + "." + System.Reflection.MethodBase.GetCurrentMethod()?.Name + " - " + ex.Message + " - " + ex.StackTrace);
-                MsgStatoAccensioneTelecamere = "Errore remota I/O durante verifica stato accensione telecamere";
+                //_logger.LogError(GetType().FullName + "." + System.Reflection.MethodBase.GetCurrentMethod()?.Name + " - " + ex.Message + " - " + ex.StackTrace);
+                //MsgStatoAccensioneTelecamere = "Errore remota I/O durante verifica stato accensione telecamere";
             }
         }
 
@@ -219,7 +264,7 @@ namespace Alp.Com.Igu.ViewModels
                 {
                     _logger.LogTrace(GetType().FullName + "." + System.Reflection.MethodBase.GetCurrentMethod()?.Name + " - Anomalia stato connessione con PLC: " + StatoServizioAutomazione.MsgAnomalia);// RIESUMARE..?
                     MsgStatoPlc = StatoServizioAutomazione.MsgAnomalia;
-                    AutomationDontTouch.DoTouch(); //Per forzare il riavvio del KSociety.Com (purché l'IP sia raggiungibile)
+                    //AutomationDontTouch.DoTouch(); //Per forzare il riavvio del KSociety.Com (purché l'IP sia raggiungibile)
                 }
                 else
                 {
@@ -352,53 +397,60 @@ namespace Alp.Com.Igu.ViewModels
             get { return _currentView; }
             set
             {
-                if (_currentView is ImpostazioniViewModel)
+                #region OLD
+                //if (_currentView is ImpostazioniViewModel)
+                //{
+                //    (_currentView as ImpostazioniViewModel).AssengnaNuoveImpostazioni();
+
+                //    if (ImpostazioniDia.Instance.AreSomeValuesModified)
+                //    {
+
+                //        //GestioneImpostazioni<ImpostazioniDia, ImpostazioneDia>.GetInstance.RegistraImpostazioniSuFile(ApplicationSettingsStatic.PercorsoFileImpostazioniDia);
+                //        // Non va. Facciamo così:
+                //        //_ = GestioneImpostazioniDia.GetInstance.RegistraImpostazioniSuFileAsync(ApplicationSettingsStatic.PercorsoFileImpostazioniDia);
+
+                //        // Meglio sincrono:
+                //        GestioneImpostazioniDia.GetInstance.RegistraImpostazioniSuFile();
+
+                //        _logger.LogInformation("Impostazoni Dia modificate.");
+                //        // Notifica al Dia
+                //        RabbitMq.SendTagInvoke("FromIgu", "AggiornamentoImpostazioniDia", "True");
+                //        ImpostazioniDia.Instance.ResetModified();
+                //        RabbitMq.SendTagInvoke("FromIgu", "AggiornamentoImpostazioniDia", "False");
+
+                //    }
+
+                //    if (ImpostazioniGenerali.Instance.AreSomeValuesModified)
+                //    {
+
+                //        GestioneImpostazioniGenerali.GetInstance.RegistraImpostazioniSuFile();
+
+                //        _logger.LogInformation("Impostazoni Generali modificate.");
+                //        (value as AnalisiBilletteViewModel).ApplicaImpostazioniGenerali();
+                //        // Notifica al Dia
+                //        RabbitMq.SendTagInvoke("FromIgu", "AggiornamentoImpostazioniGenerali", "True");
+                //        ImpostazioniGenerali.Instance.ResetModified();
+                //        RabbitMq.SendTagInvoke("FromIgu", "AggiornamentoImpostazioniGenerali", "False");
+
+                //    }
+                //    else if(!ImpostazioniGenerali.Instance.ModalitaAutomatica)
+                //    {
+                //        // Se era già in modalità manuale, riprendi ad acquisire:
+                //        RabbitMqConn.SendTagInvoke("FromIgu", "StartAcq", "True");
+                //    }
+
+                //}
+                //else if (_currentView is AnalisiBilletteViewModel)
+                //{
+                //    // Se è in modalità manuale, sospendi l'aquisizione:
+                //    if (AreImmaginiInAcquisizione)
+                //        RabbitMqConn.SendTagInvoke("FromIgu", "StopAcq", "True");
+                //}
+                #endregion
+
+                if (_currentView is GetDataDeviceViewModel)
                 {
-                    (_currentView as ImpostazioniViewModel).AssengnaNuoveImpostazioni();
 
-                    if (ImpostazioniDia.Instance.AreSomeValuesModified)
-                    {
-
-                        //GestioneImpostazioni<ImpostazioniDia, ImpostazioneDia>.GetInstance.RegistraImpostazioniSuFile(ApplicationSettingsStatic.PercorsoFileImpostazioniDia);
-                        // Non va. Facciamo così:
-                        //_ = GestioneImpostazioniDia.GetInstance.RegistraImpostazioniSuFileAsync(ApplicationSettingsStatic.PercorsoFileImpostazioniDia);
-
-                        // Meglio sincrono:
-                        GestioneImpostazioniDia.GetInstance.RegistraImpostazioniSuFile();
-
-                        _logger.LogInformation("Impostazoni Dia modificate.");
-                        // Notifica al Dia
-                        RabbitMq.SendTagInvoke("FromIgu", "AggiornamentoImpostazioniDia", "True");
-                        ImpostazioniDia.Instance.ResetModified();
-                        RabbitMq.SendTagInvoke("FromIgu", "AggiornamentoImpostazioniDia", "False");
-
-                    }
-
-                    if (ImpostazioniGenerali.Instance.AreSomeValuesModified)
-                    {
-
-                        GestioneImpostazioniGenerali.GetInstance.RegistraImpostazioniSuFile();
-
-                        _logger.LogInformation("Impostazoni Generali modificate.");
-                        (value as AnalisiBilletteViewModel).ApplicaImpostazioniGenerali();
-                        // Notifica al Dia
-                        RabbitMq.SendTagInvoke("FromIgu", "AggiornamentoImpostazioniGenerali", "True");
-                        ImpostazioniGenerali.Instance.ResetModified();
-                        RabbitMq.SendTagInvoke("FromIgu", "AggiornamentoImpostazioniGenerali", "False");
-
-                    }
-                    else if(!ImpostazioniGenerali.Instance.ModalitaAutomatica)
-                    {
-                        // Se era già in modalità manuale, riprendi ad acquisire:
-                        RabbitMqConn.SendTagInvoke("FromIgu", "StartAcq", "True");
-                    }
-
-                }
-                else if (_currentView is AnalisiBilletteViewModel)
-                {
-                    // Se è in modalità manuale, sospendi l'aquisizione:
-                    if (AreImmaginiInAcquisizione)
-                        RabbitMqConn.SendTagInvoke("FromIgu", "StopAcq", "True");
                 }
 
                 _currentView = value;
@@ -432,15 +484,15 @@ namespace Alp.Com.Igu.ViewModels
             {
                 msgStatoRabbitMq = value;
                 OnPropertyChanged();
-                _analisiBilletteVM.OnPropertyChangedPerAvvisi();
-                _analisiBilletteVM.OnPropertyChanged(nameof(_analisiBilletteVM.MsgStatoRabbitMq));
-                _analisiBilletteVM.OnPropertyChanged(nameof(_analisiBilletteVM.IsMsgStatoRabbitMqVisibile));
-                _analisiBilletteVM.OnPropertyChanged(nameof(_analisiBilletteVM.SemaforoRabbitMq));
-                _analisiBilletteVM.OnPropertyChanged(nameof(_analisiBilletteVM.SemaforoPlc));
-                _analisiBilletteVM.OnPropertyChanged(nameof(_analisiBilletteVM.SemaforoStatoTelecamera1));
-                _analisiBilletteVM.OnPropertyChanged(nameof(_analisiBilletteVM.SemaforoStatoTelecamera2));
-                _analisiBilletteVM.OnPropertyChanged(nameof(_analisiBilletteVM.SemaforoDipSystem));
-                _analisiBilletteVM.RefreshAvvisi();
+                _getDataDeviceVM.OnPropertyChangedPerAvvisi();
+                _getDataDeviceVM.OnPropertyChanged(nameof(_getDataDeviceVM.MsgStatoRabbitMq));
+                _getDataDeviceVM.OnPropertyChanged(nameof(_getDataDeviceVM.IsMsgStatoRabbitMqVisibile));
+                _getDataDeviceVM.OnPropertyChanged(nameof(_getDataDeviceVM.SemaforoRabbitMq));
+                _getDataDeviceVM.OnPropertyChanged(nameof(_getDataDeviceVM.SemaforoPlc));
+                _getDataDeviceVM.OnPropertyChanged(nameof(_getDataDeviceVM.SemaforoStatoTelecamera1));
+                _getDataDeviceVM.OnPropertyChanged(nameof(_getDataDeviceVM.SemaforoStatoTelecamera2));
+                _getDataDeviceVM.OnPropertyChanged(nameof(_getDataDeviceVM.SemaforoDipSystem));
+                _getDataDeviceVM.RefreshAvvisi();
             }
         }
 
@@ -452,27 +504,27 @@ namespace Alp.Com.Igu.ViewModels
             {
                 msgStatoPlc = value;
                 OnPropertyChanged();
-                _analisiBilletteVM.OnPropertyChangedPerAvvisi();
-                _analisiBilletteVM.OnPropertyChanged(nameof(_analisiBilletteVM.MsgStatoPlc));
-                _analisiBilletteVM.OnPropertyChanged(nameof(_analisiBilletteVM.IsMsgStatoPlcVisibile));
-                _analisiBilletteVM.OnPropertyChanged(nameof(_analisiBilletteVM.SemaforoPlc));
-                _analisiBilletteVM.RefreshAvvisi();
+                _getDataDeviceVM.OnPropertyChangedPerAvvisi();
+                _getDataDeviceVM.OnPropertyChanged(nameof(_getDataDeviceVM.MsgStatoPlc));
+                _getDataDeviceVM.OnPropertyChanged(nameof(_getDataDeviceVM.IsMsgStatoPlcVisibile));
+                _getDataDeviceVM.OnPropertyChanged(nameof(_getDataDeviceVM.SemaforoPlc));
+                _getDataDeviceVM.RefreshAvvisi();
             }
         }
 
         private string msgStatoAccensioneIlluminatori = null;
-        public string MsgStatoAccensioneIlluminatori
+        public string MsgStatoDevices
         {
             get { return msgStatoAccensioneIlluminatori; }
             set
             {
                 msgStatoAccensioneIlluminatori = value;
                 OnPropertyChanged();
-                _analisiBilletteVM.RefreshAvvisi();
-                _analisiBilletteVM.OnPropertyChangedPerAvvisi();
-                _analisiBilletteVM.OnPropertyChanged(nameof(_analisiBilletteVM.MsgStatoRemota));
-                _analisiBilletteVM.OnPropertyChanged(nameof(_analisiBilletteVM.IsMsgStatoRemotaVisibile));
-                _analisiBilletteVM.OnPropertyChanged(nameof(_analisiBilletteVM.SemaforoRemota));
+                _getDataDeviceVM.RefreshAvvisi();
+                _getDataDeviceVM.OnPropertyChangedPerAvvisi();
+                _getDataDeviceVM.OnPropertyChanged(nameof(_getDataDeviceVM.MsgStatoRemota));
+                _getDataDeviceVM.OnPropertyChanged(nameof(_getDataDeviceVM.IsMsgStatoRemotaVisibile));
+                _getDataDeviceVM.OnPropertyChanged(nameof(_getDataDeviceVM.SemaforoRemota));
             }
         }
 
@@ -484,13 +536,13 @@ namespace Alp.Com.Igu.ViewModels
             {
                 msgStatoAccensioneTelecamere = value;
                 OnPropertyChanged();
-                _analisiBilletteVM.RefreshAvvisi();
-                _analisiBilletteVM.OnPropertyChangedPerAvvisi();
-                _analisiBilletteVM.OnPropertyChanged(nameof(_analisiBilletteVM.MsgStatoRemota));
-                _analisiBilletteVM.OnPropertyChanged(nameof(_analisiBilletteVM.IsMsgStatoRemotaVisibile));
-                _analisiBilletteVM.OnPropertyChanged(nameof(_analisiBilletteVM.IsMsgStatoTelecamereVisibile));
-                _analisiBilletteVM.OnPropertyChanged(nameof(_analisiBilletteVM.SemaforoStatoTelecamera1));
-                _analisiBilletteVM.OnPropertyChanged(nameof(_analisiBilletteVM.SemaforoStatoTelecamera2));
+                _getDataDeviceVM.RefreshAvvisi();
+                _getDataDeviceVM.OnPropertyChangedPerAvvisi();
+                _getDataDeviceVM.OnPropertyChanged(nameof(_getDataDeviceVM.MsgStatoRemota));
+                _getDataDeviceVM.OnPropertyChanged(nameof(_getDataDeviceVM.IsMsgStatoRemotaVisibile));
+                _getDataDeviceVM.OnPropertyChanged(nameof(_getDataDeviceVM.IsMsgStatoTelecamereVisibile));
+                _getDataDeviceVM.OnPropertyChanged(nameof(_getDataDeviceVM.SemaforoStatoTelecamera1));
+                _getDataDeviceVM.OnPropertyChanged(nameof(_getDataDeviceVM.SemaforoStatoTelecamera2));
             }
         }
 
@@ -502,12 +554,12 @@ namespace Alp.Com.Igu.ViewModels
             {
                 msgStatoConnessioneTelecamere = value;
                 OnPropertyChanged();
-                _analisiBilletteVM.OnPropertyChangedPerAvvisi();
-                _analisiBilletteVM.OnPropertyChanged(nameof(_analisiBilletteVM.MsgStatoTelecamere));
-                _analisiBilletteVM.OnPropertyChanged(nameof(_analisiBilletteVM.IsMsgStatoTelecamereVisibile));
-                _analisiBilletteVM.OnPropertyChanged(nameof(_analisiBilletteVM.SemaforoStatoTelecamera1));
-                _analisiBilletteVM.OnPropertyChanged(nameof(_analisiBilletteVM.SemaforoStatoTelecamera2));
-                _analisiBilletteVM.RefreshAvvisi();
+                _getDataDeviceVM.OnPropertyChangedPerAvvisi();
+                _getDataDeviceVM.OnPropertyChanged(nameof(_getDataDeviceVM.MsgStatoTelecamere));
+                _getDataDeviceVM.OnPropertyChanged(nameof(_getDataDeviceVM.IsMsgStatoTelecamereVisibile));
+                _getDataDeviceVM.OnPropertyChanged(nameof(_getDataDeviceVM.SemaforoStatoTelecamera1));
+                _getDataDeviceVM.OnPropertyChanged(nameof(_getDataDeviceVM.SemaforoStatoTelecamera2));
+                _getDataDeviceVM.RefreshAvvisi();
             }
         }
 
@@ -522,11 +574,11 @@ namespace Alp.Com.Igu.ViewModels
             {
                 msgStatoDipSystem = value;
                 OnPropertyChanged();
-                _analisiBilletteVM.OnPropertyChangedPerAvvisi();
-                _analisiBilletteVM.OnPropertyChanged(nameof(_analisiBilletteVM.MsgStatoDipSystem));
-                _analisiBilletteVM.OnPropertyChanged(nameof(_analisiBilletteVM.IsMsgStatoDipSystemVisibile));
-                _analisiBilletteVM.OnPropertyChanged(nameof(_analisiBilletteVM.SemaforoDipSystem));
-                _analisiBilletteVM.RefreshAvvisi();
+                _getDataDeviceVM.OnPropertyChangedPerAvvisi();
+                _getDataDeviceVM.OnPropertyChanged(nameof(_getDataDeviceVM.MsgStatoDipSystem));
+                _getDataDeviceVM.OnPropertyChanged(nameof(_getDataDeviceVM.IsMsgStatoDipSystemVisibile));
+                _getDataDeviceVM.OnPropertyChanged(nameof(_getDataDeviceVM.SemaforoDipSystem));
+                _getDataDeviceVM.RefreshAvvisi();
             }
         }
 
@@ -537,7 +589,7 @@ namespace Alp.Com.Igu.ViewModels
             set
             {
                 areImmaginiInAcquisizione = value;
-                _impostazioniVM.IsFreqAcquisizioneModificabile = !value;
+                //_impostazioniVM.IsFreqAcquisizioneModificabile = !value;
                 OnPropertyChanged();
             }
         }
@@ -581,11 +633,15 @@ namespace Alp.Com.Igu.ViewModels
 
         //public bool ModalitaManuale => !ModalitaAutomatica;
 
-        public MainWindowViewModel(AnalisiBilletteViewModel analisiBilletteViewModel, ImpostazioniViewModel impostazioniViewModel, ILogger<MainWindowViewModel> logger, ApplicationSettings options)
+        public MainWindowViewModel(GetDataDeviceViewModel analisiBilletteViewModel
+            //, ImpostazioniViewModel impostazioniViewModel
+            , ILogger<MainWindowViewModel> logger
+            , ApplicationSettings options
+            )
         {
 
-            _analisiBilletteVM = analisiBilletteViewModel;
-            _impostazioniVM = impostazioniViewModel;
+            _getDataDeviceVM = analisiBilletteViewModel;
+            //_impostazioniVM = impostazioniViewModel;
 
             //_logger = _loggerFactory.CreateLogger<MainWindowViewModel>();
             _logger = logger;
@@ -595,11 +651,10 @@ namespace Alp.Com.Igu.ViewModels
 
             RegolazioneImpostazioniAbilitata = _options.RegolazioneImpostazioniAbilitata;
 
-            _analisiBilletteVM.mainWindowVMParent = this;
-            _impostazioniVM.mainWindowVMParent = this;
+            _getDataDeviceVM.mainWindowVMParent = this;
+            //_impostazioniVM.mainWindowVMParent = this;
 
-            //GestioneImpostazioniGenerali.GetInstance.RecuperaImpostazioniDaFile();
-
+            
             try
             {
 
@@ -608,37 +663,39 @@ namespace Alp.Com.Igu.ViewModels
                 else
                     Titolo = " Alping Italia - Taglio a Misura Tondoni";
 
-                CurrentView = _analisiBilletteVM;
+                CurrentView = _getDataDeviceVM;
 
                 ChangeViewCommand = new RelayCommand(o =>
                 {
                     // ... se si usano HandleCheck e HandleUnCheck, questo non serve...:
-                    if (IsSettingsActive)
-                    {
-                        CurrentView = _analisiBilletteVM;
-                        (CurrentView as AnalisiBilletteViewModel).mainWindowVMParent = this;
-                    }
-                    else
-                    {
-                        CurrentView = _impostazioniVM;
-                        (CurrentView as ImpostazioniViewModel).mainWindowVMParent = this;
-                    }
+                    //if (IsSettingsActive)
+                    //{
+                    //    CurrentView = _getDataDeviceVM;
+                    //    (CurrentView as AnalisiBilletteViewModel).mainWindowVMParent = this;
+                    //}
+                    //else
+                    //{
+                    //    CurrentView = _impostazioniVM;
+                    //    (CurrentView as ImpostazioniViewModel).mainWindowVMParent = this;
+                    //}
                 });
 
                 HomeViewCommand = new RelayCommand(o =>
                 {
-                    CurrentView = _analisiBilletteVM;
+                    CurrentView = _getDataDeviceVM;
                 });
 
-                DiscoveryViewCommand = new RelayCommand(o =>
-                {
-                    CurrentView = _impostazioniVM;
-                });
+                //DiscoveryViewCommand = new RelayCommand(o =>
+                //{
+                //    CurrentView = _impostazioniVM;
+                //});
 
                 OpenHelpCommand = new RelayCommand(o =>
                 {
                     IsHelpPopupOpen = true;
                 });
+
+                InitDevices();
 
                 SetCheckRemoteInOutTimer();
                 SetCheckRabbitMqStatusTimer();
@@ -679,8 +736,8 @@ namespace Alp.Com.Igu.ViewModels
                 if (isLandscape != value)
                 {
                     isLandscape = value;
-                    if (_analisiBilletteVM != null) _analisiBilletteVM.IsLandscape = value;
-                    if (_impostazioniVM != null) _impostazioniVM.IsLandscape = value;
+                    if (_getDataDeviceVM != null) _getDataDeviceVM.IsLandscape = value;
+                    //if (_impostazioniVM != null) _impostazioniVM.IsLandscape = value;
                     OnPropertyChanged();
                     OnPropertyChanged(nameof(IsPortrait));
                 }
@@ -715,7 +772,7 @@ namespace Alp.Com.Igu.ViewModels
 
         public void CaricaPaginaPrincipale(object sender, RoutedEventArgs e)
         {
-            CurrentView = _analisiBilletteVM;
+            CurrentView = _getDataDeviceVM;
         }
 
     }
