@@ -94,6 +94,13 @@ namespace Alp.Com.Igu.ViewModels
             _checkRemoteInOutTimer.Elapsed -= OnCheckRemoteInOutEvent;
         }
 
+        /// <summary>
+        /// Init dei devices su cui voglio fare monitoraggio.I dati si trovano su appsettings.json in sezione AppSetting.
+        /// Troviamo questa voci:
+        /// - per devices: API_REQ_IDX_DEV__1, _2..: lita con indice dei devices
+        /// - per PLC: API_REQ_IDX_PLC_1..: lista plc
+        /// Il metodo SetDeviceConfig riempie le liste che saranno usate per inviare a WebApi la richiesta di stato (bool)
+        /// </summary>
         private void InitDevices()
         {
             log.Info("Step read from config..START");
@@ -124,6 +131,11 @@ namespace Alp.Com.Igu.ViewModels
             }
         }
         
+        /// <summary>
+        /// Evento che richiede stato devices
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void OnCheckRemoteInOutEvent(object sender, System.Timers.ElapsedEventArgs e)
         {
             try
@@ -138,7 +150,6 @@ namespace Alp.Com.Igu.ViewModels
 
                     if (!esito.Ok)
                     {
-                        //_logger.LogError(esito.Eccezione, GetType().FullName + "." + System.Reflection.MethodBase.GetCurrentMethod()?.Name + " - " + esito.Titolo + ": " + esito.Messaggio);
                         _logger.LogError(esito.Eccezione, esito.ToString());
                         MsgStatoDevices = esito.Titolo + ".";  // "ATTENZIONE! " + esito.Titolo + ".";
                     }

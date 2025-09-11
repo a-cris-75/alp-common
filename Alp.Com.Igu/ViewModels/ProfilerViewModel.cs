@@ -3,6 +3,8 @@ using Alp.Com.Igu.Connections;
 using Alp.Com.Igu.Core;
 using Alp.Com.Igu.Utils;
 using Alp.Com.Igu.Views.Converters;
+using KSociety.Base.EventBus.Abstractions;
+using KSociety.Base.EventBus.Events;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -24,33 +26,29 @@ namespace Alp.Com.Igu.ViewModels
 
         public MainWindowViewModel mainWindowVMParent { get; set; }
 
-        //static RemotaInOutWebApi remotaInOutAzioni = new RemotaInOutWebApi(0,);
-
-        
 
         [System.Runtime.InteropServices.DllImport("kernel32.dll")]
         static extern int GetCurrentThreadId();
 
-        private static int _n_istanze = 0;
+        //private static int _n_istanze = 0;
 
         //private readonly ILogger<AnalisiBilletteViewModel> _logger;
-        private readonly ApplicationSettings _options;
+        //private readonly ApplicationSettings _options;
 
-        System.Windows.Threading.DispatcherTimer timerVerificaSeStannoArrivandoImmagini = new System.Windows.Threading.DispatcherTimer();
+        System.Windows.Threading.DispatcherTimer TIMER_NEW_DATA = new System.Windows.Threading.DispatcherTimer();
 
-        private const double TEMPO_MASSIMO_ATTESA_IMMAGINI_SEC = 3;
+        private const double TIMER_MAX_WAIT_SEC = 3;
 
-        private const int N_IMMGINI_IN_BUFFER_MAX_ALARM = 10; // TODO parametrizzare nelle impostazioni?
-
-        
-        int NSottoscrizioniaImmagineDaDiaEvent = 0;
-
-        public float FrameRateFromImg { get; set; }
+        #region GESTIONE IMMAGINI DA DIA DIP
+        //private const int N_IMMGINI_IN_BUFFER_MAX_ALARM = 10; // TODO parametrizzare nelle impostazioni?
+        //int NSottoscrizioniaImmagineDaDiaEvent = 0;
+        //public float FrameRateFromImg { get; set; }
 
         //public double? FramePeriodSec => FrameRateFromImg == 0 ? FramePeriodSec : (1 / FrameRateFromImg);
-        public double? FramePeriodSec => FrameRateFromImg == 0 ? null : (1 / FrameRateFromImg);
+        //public double? FramePeriodSec => FrameRateFromImg == 0 ? null : (1 / FrameRateFromImg);
 
-        public const int attesaPeriodiMaxImmagineSuccessiva = 10; // Numero di perodi massimi dopo i quali dichiarare interrotta l'acquisizione delle immagini se non ne arrivano più // TODO parametrizzare
+        //public const int attesaPeriodiMaxImmagineSuccessiva = 10; // Numero di perodi massimi dopo i quali dichiarare interrotta l'acquisizione delle immagini se non ne arrivano più // TODO parametrizzare
+        #endregion
 
         private static object _locker = new object();
 
@@ -67,13 +65,6 @@ namespace Alp.Com.Igu.ViewModels
             Init();
         }
 
-        public ProfilerViewModel(ApplicationSettings options)
-        {
-            //_logger = logger;
-            _options = options;
-
-            Init();
-        }
 
         /// <summary>
         /// Recupera parametri da appsettings.json: qua trovo gli idx dei dispositivi:
@@ -84,89 +75,84 @@ namespace Alp.Com.Igu.ViewModels
 
         private void Init()
         {
-            _logger.Info($"AnalisiBilletteViewModel ctor Init... istanza N. {++_n_istanze}");
+            //_logger.Info($"AnalisiBilletteViewModel ctor Init... istanza N. {++_n_istanze}");
 
-            //GestioneImpostazioniGenerali.GetInstance.RecuperaImpostazioniDaFile();
-            //ApplicaImpostazioniGenerali();
-            //ImpostazioniGenerali.Instance.ResetModified();
+            #region IN CASO DI IMMAGINI DA DIA DIP
+            // NSottoscrizioniaImmagineDaDiaEvent = 0;
 
-            NSottoscrizioniaImmagineDaDiaEvent = 0;
+            //RabbitMqConn.GetInstance.ImmagineDaDiaEvent -= ConnessoneRabbitMq_ImmagineDaDiaEvent;
+            //// Registrazione agli eventi di arrivo immagini
+            //RabbitMqConn.GetInstance.ImmagineDaDiaEvent -= ConnessoneRabbitMq_ImmagineDaDiaEvent;
+            //RabbitMqConn.GetInstance.ImmagineDaDiaEvent += ConnessoneRabbitMq_ImmagineDaDiaEvent;
 
-            RabbitMqConn.GetInstance.ImmagineDaDiaEvent -= ConnessoneRabbitMq_ImmagineDaDiaEvent;
-            // Registrazione agli eventi di arrivo immagini
-            RabbitMqConn.GetInstance.ImmagineDaDiaEvent -= ConnessoneRabbitMq_ImmagineDaDiaEvent;
-            RabbitMqConn.GetInstance.ImmagineDaDiaEvent += ConnessoneRabbitMq_ImmagineDaDiaEvent;
+            //RabbitMqConn.GetInstance.ImmagineDaDipEvent -= ConnessoneRabbitMq_ImmagineDaDipEvent;
+            //RabbitMqConn.GetInstance.ImmagineDaDipEvent += ConnessoneRabbitMq_ImmagineDaDipEvent;
 
-            RabbitMqConn.GetInstance.ImmagineDaDipEvent -= ConnessoneRabbitMq_ImmagineDaDipEvent;
-            RabbitMqConn.GetInstance.ImmagineDaDipEvent += ConnessoneRabbitMq_ImmagineDaDipEvent;
+            //RabbitMqConn.GetInstance.ResetImmaginiEvent -= ConnessoneRabbitMq_ResetImmaginiEvent;
+            //RabbitMqConn.GetInstance.ResetImmaginiEvent += ConnessoneRabbitMq_ResetImmaginiEvent;
+            #endregion
 
-            RabbitMqConn.GetInstance.ResetImmaginiEvent -= ConnessoneRabbitMq_ResetImmaginiEvent;
-            RabbitMqConn.GetInstance.ResetImmaginiEvent += ConnessoneRabbitMq_ResetImmaginiEvent;
+            RabbitMqConn.GetInstance.DatiLamieraEvent -= ConnessoneRabbitMq_DatiLamieraEvent;
+            RabbitMqConn.GetInstance.DatiLamieraEvent += ConnessoneRabbitMq_DatiLamieraEvent;
 
-            InitTimerVerificaSeStannoArrivandoImmagini();
+            InitTimerNewData();
 
             System.Threading.Thread thread = System.Threading.Thread.CurrentThread;
             int threadId = GetCurrentThreadId();
 
-            _logger.Info($"AnalisiBilletteViewModel Init: Thread [{thread.ManagedThreadId}], Current Thread Id: [{threadId}], N. sottoscrizioni a ImmagineDaDiaEvent: [{(++NSottoscrizioniaImmagineDaDiaEvent)}]");
-
-            _logger.Info($"AnalisiBilletteViewModel Init.");
+            _logger.Info($"ProfilerViewModel Init: Thread [{thread.ManagedThreadId}], Current Thread Id: [{threadId}]");
         }
 
-        public void InitTimerVerificaSeStannoArrivandoImmagini()
+        public void InitTimerNewData()
         {
-            timerVerificaSeStannoArrivandoImmagini.Tick += new EventHandler(timerVerificaSeStannoArrivandoImmagini_Tick);
-            timerVerificaSeStannoArrivandoImmagini.Interval = TimeSpan.FromMilliseconds(1000); // Il tempo oltre il quale, se non arriva alcuna immagine, si mostra l'immagine vuota.
-            _logger.Info("timerVerificaSeStannoArrivandoImmagini: inizializzato.");
+            TIMER_NEW_DATA.Tick += new EventHandler(timerNewData_Tick);
+            TIMER_NEW_DATA.Interval = TimeSpan.FromMilliseconds(1000); // Il tempo oltre il quale, se non arriva alcuna immagine, si mostra l'immagine vuota.
         }
 
-        public void EnableTimerVerificaSeStannoArrivandoImmagini(bool enable)
-        {
-            if (timerVerificaSeStannoArrivandoImmagini.IsEnabled == enable) return;
-
-            LastImageReceived = DateTime.Now;
-            LastImage1Received = DateTime.Now;
-            LastImage2Received = DateTime.Now;
-
-            timerVerificaSeStannoArrivandoImmagini.IsEnabled = enable;
-            _logger.Info("timerVerificaSeStannoArrivandoImmagini: enable " + enable);
-        }
-
-        private void timerVerificaSeStannoArrivandoImmagini_Tick(object sender, EventArgs e)
+        private void timerNewData_Tick(object sender, EventArgs e)
         {
 
             try
             {
-                if (FramePeriodSec != null)
-                {
-                    double attesaMassimaSec = (double)FramePeriodSec + TEMPO_MASSIMO_ATTESA_IMMAGINI_SEC;
+                //DatiLamieraIntegrationEvent al = (DatiLamieraIntegrationEvent)integrationEvent;
+                //AnalisiLamiera.Larghezza = al.Larghezza;
+                //AnalisiLamiera.Lunghezza = al.Lunghezza;
+                //AnalisiLamiera.Omega_L1 = al.Omega_L1;
+                //AnalisiLamiera.Omega_L2 = al.Omega_L2;
+                //AnalisiLamiera.Spessore = al.Spessore;
+                //AnalisiLamiera.CoordinateTaglio = al.CoordinateTaglio;
 
-                    TimeSpan delayImage = (DateTime.Now - LastImageReceived);
-                    TimeSpan delayImage1 = (DateTime.Now - LastImage1Received);
-                    TimeSpan delayImage2 = (DateTime.Now - LastImage2Received);
 
-                    if (delayImage.TotalSeconds > attesaMassimaSec && !LastImageIsModalitaAutomatica)
-                    {
-                        _logger.Warn($"Siamo in modalità manuale e non stanno arrivando immagini da più di {attesaMassimaSec} secondi.");
-                        Immagine1MostrataSourceObject = null;
-                        Immagine2MostrataSourceObject = null;
-                        mainWindowVMParent.AreImmaginiInAcquisizione = false;
-                    }
-                    if (delayImage1.TotalSeconds > attesaMassimaSec && !LastImageIsModalitaAutomatica)
-                    {
-                        _logger.Warn($"Siamo in modalità manuale e non stanno arrivando immagini dalla telecamera 1 da più di {attesaMassimaSec} secondi.");
-                        Immagine1MostrataSourceObject = null;
-                    }
-                    if (delayImage2.TotalSeconds > attesaMassimaSec && !LastImageIsModalitaAutomatica)
-                    {
-                        _logger.Warn($"Siamo in modalità manuale e non stanno arrivando immagini dalla telecamera 2 da più di {attesaMassimaSec} secondi.");
-                        Immagine2MostrataSourceObject = null;
-                    }
-                }
-                else
-                {
-                    mainWindowVMParent.AreImmaginiInAcquisizione = false;
-                }
+                //if (FramePeriodSec != null)
+                //{
+                //    double attesaMassimaSec = (double)FramePeriodSec + TIMER_MAX_WAIT_SEC;
+
+                //    TimeSpan delayImage = (DateTime.Now - LastImageReceived);
+                //    TimeSpan delayImage1 = (DateTime.Now - LastImage1Received);
+                //    TimeSpan delayImage2 = (DateTime.Now - LastImage2Received);
+
+                //    if (delayImage.TotalSeconds > attesaMassimaSec && !LastImageIsModalitaAutomatica)
+                //    {
+                //        _logger.Warn($"Siamo in modalità manuale e non stanno arrivando immagini da più di {attesaMassimaSec} secondi.");
+                //        Immagine1MostrataSourceObject = null;
+                //        Immagine2MostrataSourceObject = null;
+                //        mainWindowVMParent.AreImmaginiInAcquisizione = false;
+                //    }
+                //    if (delayImage1.TotalSeconds > attesaMassimaSec && !LastImageIsModalitaAutomatica)
+                //    {
+                //        _logger.Warn($"Siamo in modalità manuale e non stanno arrivando immagini dalla telecamera 1 da più di {attesaMassimaSec} secondi.");
+                //        Immagine1MostrataSourceObject = null;
+                //    }
+                //    if (delayImage2.TotalSeconds > attesaMassimaSec && !LastImageIsModalitaAutomatica)
+                //    {
+                //        _logger.Warn($"Siamo in modalità manuale e non stanno arrivando immagini dalla telecamera 2 da più di {attesaMassimaSec} secondi.");
+                //        Immagine2MostrataSourceObject = null;
+                //    }
+                //}
+                //else
+                //{
+                //    mainWindowVMParent.AreImmaginiInAcquisizione = false;
+                //}
 
             }
             catch (Exception ex)
@@ -194,6 +180,57 @@ namespace Alp.Com.Igu.ViewModels
 
         public bool IsPortrait => !IsLandscape;
 
+        public string BIND_LUNGHEZZA_TOT => AnalisiLamiera.Lunghezza.ToString() + " mm";
+        public string BIND_LUNGHEZZA_TOT_LBL => "X0-X" + AnalisiLamiera.CoordinateTaglio.Count.ToString();
+        public string BIND_LARGHEZZA_TOT => AnalisiLamiera.Larghezza.ToString() + " mm";
+        public string BIND_LARGHEZZA_TOT_LBL => "Y0-Y" + AnalisiLamiera.CoordinateTaglio.Count.ToString() ;
+        public string BIND_SPESSOE => AnalisiLamiera.Spessore.ToString() + " mm";
+        public string BIND_OMEGA_L1 => AnalisiLamiera.Omega_L1.ToString() + " mm";
+        public string BIND_OMEGA_L2 => AnalisiLamiera.Omega_L2.ToString() + " mm";
+        public List<(string, string)> BIND_LST_TAGLI {
+            get
+            {
+                List<(string, string)> res = new List<(string, string)>();
+
+                if (AnalisiLamiera.CoordinateTaglio.Count > 0)
+                {
+                    int idxL = 1;
+                    float firstlen = AnalisiLamiera.CoordinateTaglio.First().Item1;
+                    foreach ((float, string) o in AnalisiLamiera.CoordinateTaglio.Skip(1))
+                    {
+                        float len = o.Item1 - firstlen;
+                        string lbl = "X" + idxL.ToString();
+                        res.Add(new(lbl, len.ToString() + " mm"));
+                        idxL++;
+                    }
+                }
+                return res;
+            }
+        }//=> AnalisiLamiera.CoordinateTaglio.Select(X => (X.Item2, X.Item1.ToString())).ToList();
+        public List<(string, string)> BIND_LST_LUNGH { 
+            get {
+                List<(string, string)> res = new List<(string, string)>();
+                
+                if (AnalisiLamiera.CoordinateTaglio.Count > 0)
+                {
+                    float firstlen = AnalisiLamiera.CoordinateTaglio.First().Item1;
+                    int idxL = 1;
+                    int idxC = 1;
+                    foreach ((float, string) o in AnalisiLamiera.CoordinateTaglio.Skip(1))
+                    {
+                        float len = o.Item1 - firstlen;
+                        bool islam = o.Item2.Equals("L");
+                        string lbl = islam ? "L" + idxL.ToString() : "C"+idxC.ToString(); 
+                        res.Add(new(lbl, len.ToString() + " mm"));
+
+                        if(islam) idxL++;
+                        else idxC++;
+                    }
+                }
+                return res;
+            } 
+        }
+
         public string MsgStatoRabbitMq => mainWindowVMParent.MsgStatoRabbitMq;
         public string MsgStatoPlc => mainWindowVMParent.MsgStatoPlc;
         //public string MsgStatoAccensioneIlluminatori => mainWindowVMParent.MsgStatoAccensioneIlluminatori;
@@ -212,13 +249,13 @@ namespace Alp.Com.Igu.ViewModels
         public bool IsMsgStatoDipSystemVisibile => MsgStatoDipSystem != null && MsgStatoDipSystem != "";
 
         // RabbitMq (Rosso = non va , Verde = va, Giallo = le immagini si stanno accumulando nella coda BizDipImageQueue_Dalsa_1 perché il Dip non riesce a smaltirle)
-        public bool AllarmeRitardoAnalisi => NImmaginiInBuffer > N_IMMGINI_IN_BUFFER_MAX_ALARM;
+        //public bool AllarmeRitardoAnalisi => NImmaginiInBuffer > N_IMMGINI_IN_BUFFER_MAX_ALARM;
 
         // Stato di accensione di telecamere e/o illuminatori (Rosso = comunicazione con remota non funziona, Verde = tutto acceso, Giallo = gli altri casi)
         public SemaforoColor SemaforoRemota => StatoRemota.SemaforoColore;
 
         // RabbitMq (Rosso = non va , Verde = va)
-        public SemaforoColor SemaforoRabbitMq => StatoRabbitMq.SemaforoColore == SemaforoColor.Rosso ? StatoRabbitMq.SemaforoColore : (AllarmeRitardoAnalisi ? SemaforoColor.Giallo : SemaforoColor.Verde);
+        public SemaforoColor SemaforoRabbitMq => StatoRabbitMq.SemaforoColore;// == SemaforoColor.Rosso ? StatoRabbitMq.SemaforoColore : (AllarmeRitardoAnalisi ? SemaforoColor.Giallo : SemaforoColor.Verde);
 
         // Comunicazione con PLC (Rosso = non va , Verde = va)
         public SemaforoColor SemaforoPlc => StatoRabbitMq.IsRabbitMqAlive ? StatoServizioAutomazione.SemaforoColore : SemaforoColor.Grigio;
@@ -249,378 +286,119 @@ namespace Alp.Com.Igu.ViewModels
 
         public bool CiSonoAnomalieGenerali => !string.IsNullOrWhiteSpace(AvvisiGenerali);
 
-        public bool DataOralUltimaFotoVisibility => LastImageIsModalitaAutomatica && ModalitaAutomatica && ((Immagine1Visibility ?? false) || (Immagine2Visibility ?? false));
-        //public bool DataOralUltimaFotoVisibility => ModalitaAutomatica;
-
+        //public bool DataOralUltimaFotoVisibility => LastImageIsModalitaAutomatica && ModalitaAutomatica && ((Immagine1Visibility ?? false) || (Immagine2Visibility ?? false));
+        
         public void RefreshAvvisi()
         {
             OnPropertyChanged(nameof(IsAvvisiVisibile));
             OnIsAvvisiVisibleChangedEvent();
         }
 
-        private DateTime lastImageReceived;
+        #region GESTIONE IMMAGINI
 
-        public DateTime LastImageReceived
-        {
-            get { return lastImageReceived; }
-
-            set
-            {
-                lastImageReceived = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(LabeDataOralUltimaFoto));
-            }
-        }
-
-        private DateTime lastImage1Received;
-        public DateTime LastImage1Received
-        {
-            get { return lastImage1Received; }
-
-            set
-            {
-                lastImage1Received = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private DateTime lastImage2Received;
-        public DateTime LastImage2Received
-        {
-            get { return lastImage2Received; }
-
-            set
-            {
-                lastImage2Received = value;
-                OnPropertyChanged();
-            }
-        }
-
-
-        public string LabeDataOralUltimaFoto => "Ultima acquisizione: " + LastImageReceived.ToString("HH:mm:ss");
-
-        private bool lastImageIsModalitaAutomatica = false;
-
-        public bool LastImageIsModalitaAutomatica
-        {
-            get
-            {
-                return lastImageIsModalitaAutomatica;
-            }
-            set
-            {
-                lastImageIsModalitaAutomatica = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(DataOralUltimaFotoVisibility));
-            }
-        }
-
-        private bool modalitaAutomatica = false;
-
-        public bool ModalitaAutomatica
-        {
-            get
-            {
-                return modalitaAutomatica;
-            }
-            set
-            {
-                modalitaAutomatica = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(DataOralUltimaFotoVisibility));
-            }
-        }
-
-
-        public MainWindowViewModel mwvmParent { get; set; }
-
-
-        private void ConnessoneRabbitMq_ImmagineDaDiaEvent(object sender, ImmagineDaDiaEventArgs e)
-        {
-
-            Application.Current.Dispatcher.Invoke((Action)delegate
-            {
-
-                _logger.Info("ConnessoneRabbitMq_ImmagineDaDiaEvent: ImageIntegrationEvent: " + e.ImageIntegrationEvent.ToString());
-
-                System.Threading.Thread thread = System.Threading.Thread.CurrentThread;
-                int threadId = GetCurrentThreadId();
-
-                //_logger.LogTrace($"ConnessoneRabbitMq_ImmagineDaDiaEvent Thread: [{thread?.ManagedThreadId}], Current Thread Id: [{threadId}]"); // TODO ... CANCELLARE..??
-
-                try
-                {
-                    ImageIntegrationEvent iie = e.ImageIntegrationEvent;
-                    if (iie != null)
-                    {
-                        FrameRateFromImg = iie.CurrentFrameRate;
-                        LastImageReceived = DateTime.Now;
-                        if (iie.DeviceName.Equals("Dalsa_1"))
-                            LastImage1Received = DateTime.Now;
-                        else if (iie.DeviceName.Equals("Dalsa_2"))
-                            LastImage2Received = DateTime.Now;
-                        LastImageIsModalitaAutomatica = iie.ModalitaAutomatica;
-                        _logger.Info("ConnessoneRabbitMq_ImmagineDaDiaEvent: ImageIntegrationEvent: iie.ModalitaAutomatica [" + iie.ModalitaAutomatica.ToString() + "]");
-                        EnableTimerVerificaSeStannoArrivandoImmagini(true);
-                        this.SetImmagine(iie.DeviceName, iie.FrameNumber, iie.ModalitaAutomatica, iie.ImageWidth, iie.ImageHeight, iie.ImageBytes, daDia: true);  //, flDemosaic:true); // Il demosaico lo facciamo nel Dia
-                    }
-                    else
-                    {
-                        _logger.Warn($"ConnessoneRabbitMq_ImmagineDaDiaEvent: e.ImageIntegrationEvent is null!");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    _logger.Error("ConnessoneRabbitMq_ImmagineDaDiaEvent - Errore: " + ex.Message);
-                }
-
-                _logger.Info($"ConnessoneRabbitMq_ImmagineDaDiaEvent.");
-
-            });
-        }
-
-        private void ConnessoneRabbitMq_ImmagineDaDipEvent(object sender, ImmagineDaDipEventArgs e)
-        {
-
-            Application.Current.Dispatcher.Invoke((Action)delegate
-            {
-
-                _logger.Info("ConnessoneRabbitMq_ImmagineDaDipEvent: ImageProcessedIntegrationEvent: " + e.ImageIntegrationEvent.ToString());
-
-                System.Threading.Thread thread = System.Threading.Thread.CurrentThread;
-                int threadId = GetCurrentThreadId();
-
-                //_logger.LogTrace($"ConnessoneRabbitMq_ImmagineDaDiaEvent Thread: [{thread?.ManagedThreadId}], Current Thread Id: [{threadId}]"); // TODO ... CANCELLARE..??
-
-                try
-                {
-
-                    ImageProcessedIntegrationEvent ipie = e.ImageIntegrationEvent;
-
-                    if (ipie != null)
-                    {
-                        _logger.Debug($"ProcessEvent: ImageIntegrationEvent Received: ipie.DeviceName [{ipie.DeviceName}] ipie.FrameNumber [{ipie.FrameNumber}] e.FrameNumberDia [{e.FrameNumberDia}]");
-                        if (ipie.FrameNumber != Int32.MaxValue)
-                            NImmaginiInBuffer = e.FrameNumberDia - ipie.FrameNumber;
-                        FrameRateFromImg = ipie.CurrentFrameRate;
-                        LastImageReceived = DateTime.Now;
-                        if (ipie.DeviceName.Equals("Dalsa_1"))
-                            LastImage1Received = DateTime.Now;
-                        else if (ipie.DeviceName.Equals("Dalsa_2"))
-                            LastImage2Received = DateTime.Now;
-                        LastImageIsModalitaAutomatica = ipie.ModalitaAutomatica;
-                        _logger.Info("ConnessoneRabbitMq_ImmagineDaDipEvent: ImageProcessedIntegrationEvent: ipie.ModalitaAutomatica [" + ipie.ModalitaAutomatica.ToString() + "]");
-                        EnableTimerVerificaSeStannoArrivandoImmagini(true);
-                        this.SetImmagine(ipie.DeviceName, ipie.FrameNumber, ipie.ModalitaAutomatica, ipie.ImageWidth, ipie.ImageHeight, ipie.ImageBytes);
-                    }
-                    else
-                    {
-                        _logger.Warn($"ConnessoneRabbitMq_ImmagineDaDipEvent: e.ImageIntegrationEvent is null!");
-                    }
-
-                }
-                catch (Exception ex)
-                {
-                    _logger.Error( "ConnessoneRabbitMq_ImmagineDaDipEvent - Errore: " + ex.Message);
-                }
-
-                _logger.Info($"ConnessoneRabbitMq_ImmagineDaDipEvent.");
-
-            });
-        }
-
-        private void ConnessoneRabbitMq_ResetImmaginiEvent(object sender, EventArgs e)
-        {
-            Application.Current.Dispatcher.Invoke((Action)delegate
-            {
-                _logger.Info("ConnessoneRabbitMq_ResetImmaginiEvent-");
-
-                Immagine1MostrataSourceObject = null;
-                Immagine2MostrataSourceObject = null;
-            });
-        }
-
-        private BitmapSource CroppedBitmap(BitmapSource image, int? taglioSup, int? taglioInf)
-        {
-            BitmapSource croppedBitmap = image;
-
-            try
-            {
-
-                if (image != null && (taglioSup != null && taglioSup > 0) || (taglioInf != null && taglioInf > 0))
-                {
-                    croppedBitmap = new CroppedBitmap(image, new System.Windows.Int32Rect(0, (taglioSup ?? 0), image.PixelWidth, image.PixelHeight - ((taglioSup ?? 0) + (taglioInf ?? 0))));
-                }
-
-            }
-            catch (Exception ex)
-            {
-                _logger.Error("Errore CroppedBitmap.");
-            }
-
-            return croppedBitmap;
-        }
-
-        private void SetImmagine(string deviceName, int frameNumber, bool modalitaAutomatica, int imgWidth, int imgHeight, byte[] imgBytes, bool daDia = false)
-        {
-
-            _logger.Info($"SetImmagine...");
-
-            try
-            {
-
-                //if(frameNumber == Int32.MaxValue || imgBytes == null)
-                if (imgBytes == null)
-                {
-                    if (deviceName == "Dalsa_1")
-                    {
-                        Immagine1MostrataSourceObject = null;
-                    }
-                    else if (deviceName == "Dalsa_2")
-                    {
-                        Immagine2MostrataSourceObject = null;
-                    }
-                    mainWindowVMParent.AreImmaginiInAcquisizione = false;
-                    _logger.Info($"SetImmagine: immagini terminate.");
-                }
-                else
-                {
-                    if (!modalitaAutomatica)
-                        mainWindowVMParent.AreImmaginiInAcquisizione = true;
-
-                    System.Windows.Media.Imaging.BitmapSource image = null;
-
-                    if (daDia)
-                        image = ArrayToBitmapSource.ConvertGrayArrayToBitmapSource(imgBytes, imgWidth, imgHeight);
-                    else
-                        image = ArrayToBitmapSource.ConvertColorBgrArrayToBitmapSource(imgBytes, imgWidth, imgHeight);
-
-                    if (deviceName == "Dalsa_1")
-                    {
-                        Immagine1MostrataSourceObject = image; // CroppedBitmap(image, e.ImageIntegrationEvent.ImageCropTopPx, e.ImageIntegrationEvent.ImageCropBottomPx);
-                    }
-                    else if (deviceName == "Dalsa_2")
-                    {
-                        Immagine2MostrataSourceObject = image; // CroppedBitmap(image, e.ImageIntegrationEvent.ImageCropTopPx, e.ImageIntegrationEvent.ImageCropBottomPx);
-                    }
-
-                    OnPropertyChanged(nameof(DataOralUltimaFotoVisibility));
-
-                    //if (ModalitaAutomatica)
-                    //    SystemSounds.Beep.Play();
-
-
-                }
-
-            }
-            catch (Exception ex)
-            {
-                _logger.Error( "Errore in set immagine: rilanciato!");
-                throw;
-            }
-
-            _logger.Info($"SetImmagine.");
-
-        }
-
-        private int nImmaginiInBuffer = 0;
-
-        // TMP PER MOSTRARE QUALCOSA ALL'AVVIO:
-        //private object immagine1DaDiaSourceObject = new BitmapImage(new Uri(@"D:\AlpSDDSMolatriceImg\test3_TestColata_X46CR13\7357\Originali\B7357L1S01F14T2.png", UriKind.RelativeOrAbsolute));
-
-        public int NImmaginiInBuffer
-        {
-            get
-            {
-                return nImmaginiInBuffer;
-            }
-            set
-            {
-                nImmaginiInBuffer = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(AllarmeRitardoAnalisi));
-            }
-        }
-
-        private object immagine1DaDiaSourceObject = null;
-
-        // TMP PER MOSTRARE QUALCOSA ALL'AVVIO:
-        //private object immagine1DaDiaSourceObject = new BitmapImage(new Uri(@"D:\AlpSDDSMolatriceImg\test3_TestColata_X46CR13\7357\Originali\B7357L1S01F14T2.png", UriKind.RelativeOrAbsolute));
-
-        public object Immagine1MostrataSourceObject
-        {
-            get
-            {
-                return immagine1DaDiaSourceObject;
-            }
-            set
-            {
-                immagine1DaDiaSourceObject = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(Immagine1Visibility));
-            }
-        }
-
-        public bool? Immagine1Visibility
-        {
-            get
-            {
-                return immagine1DaDiaSourceObject != null;
-            }
-        }
-
-        private object immagine2DaDiaSourceObject = null;
-
-        public object Immagine2MostrataSourceObject
-        {
-            get
-            {
-                return immagine2DaDiaSourceObject;
-            }
-            set
-            {
-                immagine2DaDiaSourceObject = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(Immagine2Visibility));
-            }
-        }
-
-        public bool? Immagine2Visibility
-        {
-            get
-            {
-                return immagine2DaDiaSourceObject != null;
-            }
-        }
-
-        //public void ApplicaImpostazioniGenerali()
+        //public void EnableTimerVerificaSeStannoArrivandoImmagini(bool enable)
         //{
+        //    if (TIMER_NEW_DATA.IsEnabled == enable) return;
 
-        //    _logger.Info($"ApplicaImpostazioniIgu...");
+        //    LastImageReceived = DateTime.Now;
+        //    LastImage1Received = DateTime.Now;
+        //    LastImage2Received = DateTime.Now;
 
-        //    try
-        //    {
-        //        ModalitaAutomatica = ImpostazioniGenerali.Instance.ModalitaAutomatica;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.Error("Errore in ApplicaImpostazioniIgu.");
-        //    }
-
-        //    _logger.Info($"ApplicaImpostazioniIgu...");
+        //    TIMER_NEW_DATA.IsEnabled = enable;
+        //    _logger.Info("timerVerificaSeStannoArrivandoImmagini: enable " + enable);
         //}
 
 
-        public void OnPropertyChangedPerImmagine1Mostrata()
-        {
-            OnPropertyChanged(nameof(Immagine1MostrataSourceObject));
-            OnPropertyChanged(nameof(Immagine1Visibility));
-        }
+        //private DateTime lastImageReceived;
 
-        public void OnPropertyChangedPerImmagine2Mostrata()
+        //public DateTime LastImageReceived
+        //{
+        //    get { return lastImageReceived; }
+
+        //    set
+        //    {
+        //        lastImageReceived = value;
+        //        OnPropertyChanged();
+        //        OnPropertyChanged(nameof(LabeDataOralUltimaFoto));
+        //    }
+        //}
+
+        //private DateTime lastImage1Received;
+        //public DateTime LastImage1Received
+        //{
+        //    get { return lastImage1Received; }
+
+        //    set
+        //    {
+        //        lastImage1Received = value;
+        //        OnPropertyChanged();
+        //    }
+        //}
+
+        //private DateTime lastImage2Received;
+        //public DateTime LastImage2Received
+        //{
+        //    get { return lastImage2Received; }
+
+        //    set
+        //    {
+        //        lastImage2Received = value;
+        //        OnPropertyChanged();
+        //    }
+        //}
+
+
+        //public string LabeDataOralUltimaFoto => "Ultima acquisizione: " + LastImageReceived.ToString("HH:mm:ss");
+
+        //private bool lastImageIsModalitaAutomatica = false;
+
+        //public bool LastImageIsModalitaAutomatica
+        //{
+        //    get
+        //    {
+        //        return lastImageIsModalitaAutomatica;
+        //    }
+        //    set
+        //    {
+        //        lastImageIsModalitaAutomatica = value;
+        //        OnPropertyChanged();
+        //        OnPropertyChanged(nameof(DataOralUltimaFotoVisibility));
+        //    }
+        //}
+
+        //private bool modalitaAutomatica = false;
+
+        //public bool ModalitaAutomatica
+        //{
+        //    get
+        //    {
+        //        return modalitaAutomatica;
+        //    }
+        //    set
+        //    {
+        //        modalitaAutomatica = value;
+        //        OnPropertyChanged();
+        //        OnPropertyChanged(nameof(DataOralUltimaFotoVisibility));
+        //    }
+        //}
+
+        #endregion
+        public MainWindowViewModel mwvmParent { get; set; }
+
+        private void ConnessoneRabbitMq_DatiLamieraEvent(object sender, DatiLamieraEventArgs e)
         {
-            OnPropertyChanged(nameof(Immagine2MostrataSourceObject));
-            OnPropertyChanged(nameof(Immagine2Visibility));
+            Application.Current.Dispatcher.Invoke((Action)delegate
+            {
+                _logger.Info("ConnessoneRabbitMq_DatiLamieraEvent-");
+
+                DatiLamieraEventArgs al = (DatiLamieraEventArgs)e;
+                AnalisiLamiera.Larghezza = al.DatiLamiera.Larghezza;
+                AnalisiLamiera.Lunghezza = al.DatiLamiera.Lunghezza;
+                AnalisiLamiera.Omega_L1 = al.DatiLamiera.Omega_L1;
+                AnalisiLamiera.Omega_L2 = al.DatiLamiera.Omega_L2;
+                AnalisiLamiera.Spessore = al.DatiLamiera.Spessore;
+                AnalisiLamiera.CoordinateTaglio = al.DatiLamiera.CoordinateTaglio;
+            });
         }
 
         public void OnPropertyChangedPerAvvisi()
@@ -631,6 +409,254 @@ namespace Alp.Com.Igu.ViewModels
             OnPropertyChanged(nameof(AvvisiTotalePerBarraMessaggi));
         }
 
+        #region GESTIONE IMMAGINI
+
+        //private void ConnessoneRabbitMq_ImmagineDaDiaEvent(object sender, ImmagineDaDiaEventArgs e)
+        //{
+
+        //    Application.Current.Dispatcher.Invoke((Action)delegate
+        //    {
+
+        //        _logger.Info("ConnessoneRabbitMq_ImmagineDaDiaEvent: ImageIntegrationEvent: " + e.ImageIntegrationEvent.ToString());
+
+        //        System.Threading.Thread thread = System.Threading.Thread.CurrentThread;
+        //        int threadId = GetCurrentThreadId();
+
+        //        //_logger.LogTrace($"ConnessoneRabbitMq_ImmagineDaDiaEvent Thread: [{thread?.ManagedThreadId}], Current Thread Id: [{threadId}]"); // TODO ... CANCELLARE..??
+
+        //        try
+        //        {
+        //            ImageIntegrationEvent iie = e.ImageIntegrationEvent;
+        //            if (iie != null)
+        //            {
+        //                FrameRateFromImg = iie.CurrentFrameRate;
+        //                LastImageReceived = DateTime.Now;
+        //                if (iie.DeviceName.Equals("Dalsa_1"))
+        //                    LastImage1Received = DateTime.Now;
+        //                else if (iie.DeviceName.Equals("Dalsa_2"))
+        //                    LastImage2Received = DateTime.Now;
+        //                LastImageIsModalitaAutomatica = iie.ModalitaAutomatica;
+        //                _logger.Info("ConnessoneRabbitMq_ImmagineDaDiaEvent: ImageIntegrationEvent: iie.ModalitaAutomatica [" + iie.ModalitaAutomatica.ToString() + "]");
+        //                EnableTimerVerificaSeStannoArrivandoImmagini(true);
+        //                this.SetImmagine(iie.DeviceName, iie.FrameNumber, iie.ModalitaAutomatica, iie.ImageWidth, iie.ImageHeight, iie.ImageBytes, daDia: true);  //, flDemosaic:true); // Il demosaico lo facciamo nel Dia
+        //            }
+        //            else
+        //            {
+        //                _logger.Warn($"ConnessoneRabbitMq_ImmagineDaDiaEvent: e.ImageIntegrationEvent is null!");
+        //            }
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            _logger.Error("ConnessoneRabbitMq_ImmagineDaDiaEvent - Errore: " + ex.Message);
+        //        }
+
+        //        _logger.Info($"ConnessoneRabbitMq_ImmagineDaDiaEvent.");
+
+        //    });
+        //}
+
+
+
+        //private void ConnessoneRabbitMq_ImmagineDaDipEvent(object sender, ImmagineDaDipEventArgs e)
+        //{
+
+        //    Application.Current.Dispatcher.Invoke((Action)delegate
+        //    {
+
+        //        _logger.Info("ConnessoneRabbitMq_ImmagineDaDipEvent: ImageProcessedIntegrationEvent: " + e.ImageIntegrationEvent.ToString());
+
+        //        System.Threading.Thread thread = System.Threading.Thread.CurrentThread;
+        //        int threadId = GetCurrentThreadId();
+
+        //        //_logger.LogTrace($"ConnessoneRabbitMq_ImmagineDaDiaEvent Thread: [{thread?.ManagedThreadId}], Current Thread Id: [{threadId}]"); // TODO ... CANCELLARE..??
+
+        //        try
+        //        {
+
+        //            ImageProcessedIntegrationEvent ipie = e.ImageIntegrationEvent;
+
+        //            if (ipie != null)
+        //            {
+        //                _logger.Debug($"ProcessEvent: ImageIntegrationEvent Received: ipie.DeviceName [{ipie.DeviceName}] ipie.FrameNumber [{ipie.FrameNumber}] e.FrameNumberDia [{e.FrameNumberDia}]");
+        //                if (ipie.FrameNumber != Int32.MaxValue)
+        //                    NImmaginiInBuffer = e.FrameNumberDia - ipie.FrameNumber;
+        //                FrameRateFromImg = ipie.CurrentFrameRate;
+        //                LastImageReceived = DateTime.Now;
+        //                if (ipie.DeviceName.Equals("Dalsa_1"))
+        //                    LastImage1Received = DateTime.Now;
+        //                else if (ipie.DeviceName.Equals("Dalsa_2"))
+        //                    LastImage2Received = DateTime.Now;
+        //                LastImageIsModalitaAutomatica = ipie.ModalitaAutomatica;
+        //                _logger.Info("ConnessoneRabbitMq_ImmagineDaDipEvent: ImageProcessedIntegrationEvent: ipie.ModalitaAutomatica [" + ipie.ModalitaAutomatica.ToString() + "]");
+        //                EnableTimerVerificaSeStannoArrivandoImmagini(true);
+        //                this.SetImmagine(ipie.DeviceName, ipie.FrameNumber, ipie.ModalitaAutomatica, ipie.ImageWidth, ipie.ImageHeight, ipie.ImageBytes);
+        //            }
+        //            else
+        //            {
+        //                _logger.Warn($"ConnessoneRabbitMq_ImmagineDaDipEvent: e.ImageIntegrationEvent is null!");
+        //            }
+
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            _logger.Error("ConnessoneRabbitMq_ImmagineDaDipEvent - Errore: " + ex.Message);
+        //        }
+
+        //        _logger.Info($"ConnessoneRabbitMq_ImmagineDaDipEvent.");
+
+        //    });
+        //}
+
+        //private void ConnessoneRabbitMq_ResetImmaginiEvent(object sender, EventArgs e)
+        //{
+        //    Application.Current.Dispatcher.Invoke((Action)delegate
+        //    {
+        //        _logger.Info("ConnessoneRabbitMq_ResetImmaginiEvent-");
+
+        //        Immagine1MostrataSourceObject = null;
+        //        Immagine2MostrataSourceObject = null;
+        //    });
+        //}
+        //private void SetImmagine(string deviceName, int frameNumber, bool modalitaAutomatica, int imgWidth, int imgHeight, byte[] imgBytes, bool daDia = false)
+        //{
+
+        //    _logger.Info($"SetImmagine...");
+
+        //    try
+        //    {
+
+        //        //if(frameNumber == Int32.MaxValue || imgBytes == null)
+        //        if (imgBytes == null)
+        //        {
+        //            if (deviceName == "Dalsa_1")
+        //            {
+        //                Immagine1MostrataSourceObject = null;
+        //            }
+        //            else if (deviceName == "Dalsa_2")
+        //            {
+        //                Immagine2MostrataSourceObject = null;
+        //            }
+        //            mainWindowVMParent.AreImmaginiInAcquisizione = false;
+        //            _logger.Info($"SetImmagine: immagini terminate.");
+        //        }
+        //        else
+        //        {
+        //            if (!modalitaAutomatica)
+        //                mainWindowVMParent.AreImmaginiInAcquisizione = true;
+
+        //            System.Windows.Media.Imaging.BitmapSource image = null;
+
+        //            if (daDia)
+        //                image = ArrayToBitmapSource.ConvertGrayArrayToBitmapSource(imgBytes, imgWidth, imgHeight);
+        //            else
+        //                image = ArrayToBitmapSource.ConvertColorBgrArrayToBitmapSource(imgBytes, imgWidth, imgHeight);
+
+        //            if (deviceName == "Dalsa_1")
+        //            {
+        //                Immagine1MostrataSourceObject = image; // CroppedBitmap(image, e.ImageIntegrationEvent.ImageCropTopPx, e.ImageIntegrationEvent.ImageCropBottomPx);
+        //            }
+        //            else if (deviceName == "Dalsa_2")
+        //            {
+        //                Immagine2MostrataSourceObject = image; // CroppedBitmap(image, e.ImageIntegrationEvent.ImageCropTopPx, e.ImageIntegrationEvent.ImageCropBottomPx);
+        //            }
+
+        //            OnPropertyChanged(nameof(DataOralUltimaFotoVisibility));
+
+        //            //if (ModalitaAutomatica)
+        //            //    SystemSounds.Beep.Play();
+
+
+        //        }
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.Error( "Errore in set immagine: rilanciato!");
+        //        throw;
+        //    }
+
+        //    _logger.Info($"SetImmagine.");
+
+        //}
+
+        //private int nImmaginiInBuffer = 0;
+
+        //public int NImmaginiInBuffer
+        //{
+        //    get
+        //    {
+        //        return nImmaginiInBuffer;
+        //    }
+        //    set
+        //    {
+        //        nImmaginiInBuffer = value;
+        //        OnPropertyChanged();
+        //        OnPropertyChanged(nameof(AllarmeRitardoAnalisi));
+        //    }
+        //}
+
+        //private object immagine1DaDiaSourceObject = null;
+        //public object Immagine1MostrataSourceObject
+        //{
+        //    get
+        //    {
+        //        return immagine1DaDiaSourceObject;
+        //    }
+        //    set
+        //    {
+        //        immagine1DaDiaSourceObject = value;
+        //        OnPropertyChanged();
+        //        OnPropertyChanged(nameof(Immagine1Visibility));
+        //    }
+        //}
+
+        //public bool? Immagine1Visibility
+        //{
+        //    get
+        //    {
+        //        return immagine1DaDiaSourceObject != null;
+        //    }
+        //}
+
+        //private object immagine2DaDiaSourceObject = null;
+
+        //public object Immagine2MostrataSourceObject
+        //{
+        //    get
+        //    {
+        //        return immagine2DaDiaSourceObject;
+        //    }
+        //    set
+        //    {
+        //        immagine2DaDiaSourceObject = value;
+        //        OnPropertyChanged();
+        //        OnPropertyChanged(nameof(Immagine2Visibility));
+        //    }
+        //}
+
+        //public bool? Immagine2Visibility
+        //{
+        //    get
+        //    {
+        //        return immagine2DaDiaSourceObject != null;
+        //    }
+        //}
+
+
+        //public void OnPropertyChangedPerImmagine1Mostrata()
+        //{
+        //    OnPropertyChanged(nameof(Immagine1MostrataSourceObject));
+        //    OnPropertyChanged(nameof(Immagine1Visibility));
+        //}
+
+        //public void OnPropertyChangedPerImmagine2Mostrata()
+        //{
+        //    OnPropertyChanged(nameof(Immagine2MostrataSourceObject));
+        //    OnPropertyChanged(nameof(Immagine2Visibility));
+        //}
+
+
+        #endregion
         public System.Drawing.Icon IconaAvviso { get; set; } = System.Drawing.SystemIcons.Warning;
     }
 }

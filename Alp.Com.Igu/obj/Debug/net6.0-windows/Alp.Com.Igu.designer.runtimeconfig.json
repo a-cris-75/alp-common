@@ -12,6 +12,7 @@
       }
     ],
     "additionalProbingPaths": [
+      "C:\\Users\\c.azzolin\\.dotnet\\store\\|arch|\\|tfm|",
       "C:\\Users\\c.azzolin\\.nuget\\packages",
       "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
     ],

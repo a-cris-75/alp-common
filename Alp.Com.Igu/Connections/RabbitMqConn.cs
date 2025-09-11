@@ -63,6 +63,8 @@ namespace Alp.Com.Igu.Connections
 
         public event EventHandler<ImmagineDaDipEventArgs> ImmagineDaDipEvent;
 
+        public event EventHandler<DatiLamieraEventArgs> DatiLamieraEvent;
+
         public event EventHandler ResetImmaginiEvent;
 
         private void OnImmagineDaDiaEvent(ImageIntegrationEvent imageIntegrationEvent)
@@ -89,6 +91,19 @@ namespace Alp.Com.Igu.Connections
             {
                 log.Info($"OnResetImmagini");
                 ResetImmaginiEvent(this, EventArgs.Empty);
+            }
+        }
+
+        /// <summary>
+        /// Superfluo: in ascolto su Rabbit 
+        /// </summary>
+        /// <param name="datiLamIntegrationEvent"></param>
+        private void OnDatiLamiera(DatiLamieraIntegrationEvent datiLamIntegrationEvent)
+        {
+            if (DatiLamieraEvent != null)
+            {
+                log.Info($"OnDatiLamiera");
+                DatiLamieraEvent(this, new DatiLamieraEventArgs { DatiLamiera = datiLamIntegrationEvent });
             }
         }
 
@@ -124,8 +139,8 @@ namespace Alp.Com.Igu.Connections
 
             // TODO FINE
 
-            Crs.Base.SendReceiveRabbit.RabbitMq RAB = new Crs.Base.SendReceiveRabbit.RabbitMq(hostname, 5672, "","");
-            
+            Crs.Base.SendReceiveRabbit.RabbitMq RAB = new Crs.Base.SendReceiveRabbit.RabbitMq(hostname, 5672, "", "");
+
 
             // Questo è NECESSARIO per il corretto funzionamento della serializzazione / deserializzazione!!
             // Per via dell'ereditarietà (buona parte dei tipi serializzati sono classi derivate)
@@ -135,7 +150,7 @@ namespace Alp.Com.Igu.Connections
             exchCom = "k-society_com_direct";
             string exchDia = "alping_dia_direct";
             string exchDip = "alping_dip_direct";
-            string exchLog = "k-society_log_direct";
+            //string exchLog = "k-society_log_direct";
 
             string queue = "CodaPerIgu_" + hostname;
             string queueDia = "CodaImmagineDiaPerIgu_" + hostname;
@@ -201,7 +216,7 @@ namespace Alp.Com.Igu.Connections
             //channel.BasicConsume(queue: queueImageDipName, autoAck: true, consumer: consumer);
 
             log.Debug("In attesa di messaggi da coda Rabbit.");
-            
+
             log.Info("Init.");
         }
 
@@ -272,18 +287,6 @@ namespace Alp.Com.Igu.Connections
 
         private void ProcessEvent(string routingKey, string eventName, ReadOnlyMemory<byte> message, CancellationToken cancel = default)
         {
-            // TODO RIABILITARE LOG CON CONDIZIONE
-            //_logger.Verbose($"ProcessEvent... routingKey: [{routingKey}], eventName: [{eventName}]");
-
-            // Trovare l'event type...:
-            //var eventType = SubsManager.GetEventTypeByName(routingKey);
-            //if (eventType is null)
-            //{
-            //  _logger.Debug($"ProcessEvent... eventType is null! routingKey: [{routingKey}]");
-            //	return;
-            //}
-
-            //if (eventName.StartsWith("Tag")) return; // PER TEST, SE iL WATCHDOG DA' FASTIDIO. CANCELLARE
             Type eventType = ByName(eventName);
             // TODO RIABILITARE LOG CON CONDIZIONE
             //_logger.Verbose($"ProcessEvent... eventType: [{eventType}]");
@@ -404,6 +407,17 @@ namespace Alp.Com.Igu.Connections
 
                     break;
 
+                case "ProfilerIntgrationEvent":
+                    DatiLamieraIntegrationEvent al = (DatiLamieraIntegrationEvent)integrationEvent;
+                    AnalisiLamiera.Larghezza = al.Larghezza;
+                    AnalisiLamiera.Lunghezza = al.Lunghezza;
+                    AnalisiLamiera.Omega_L1 = al.Omega_L1;
+                    AnalisiLamiera.Omega_L2 = al.Omega_L2;
+                    AnalisiLamiera.Spessore = al.Spessore;
+                    AnalisiLamiera.Destinazione = al.Destinazione;
+                    AnalisiLamiera.CoordinateTaglio = al.CoordinateTaglio;
+                    break;
+
             }
 
 
@@ -461,33 +475,6 @@ namespace Alp.Com.Igu.Connections
             log.Info($"SendTagInvoke: routingKey [{routingKey}], nomeTag [{nomeTag}], valoreTag [{valoreTag}]");
 
         }
-
-        public void ReceiveCallback(int headerValue, string message, DateTime dateTime)
-        {
-            // message contiene L1L2_CFG_EX
-            //ParsingType type = (ParsingType)headerValue;
-            //ITM_IMG_DEBUG msg = CrsSerializer.Deserialize<ITM_IMG_DEBUG>(type, message);
-
-            //switch (msg.COMMAND)
-            //{
-            //    // richiesta di invio informazioni di debug al configuratore: giro quanto ricevuto al configuratore
-            //    // questo posso implementarlo direttamente su configuratore
-            //    case MDW_COMMAND.REQ_SEND_DEBUG:
-            //        if (!PAUSE_DEBUG)
-            //        {
-            //            try
-            //            {
-                            
-            //            }
-            //            catch (Exception ex)
-            //            {
-                            
-            //            }
-            //        }
-            //        break;
-            //}
-        }
-
     }
 
     public class Tag
@@ -587,4 +574,10 @@ namespace Alp.Com.Igu.Connections
         public ImageProcessedIntegrationEvent ImageIntegrationEvent { get; set; }
         public int FrameNumberDia { get; set; }
     }
+
+    public class DatiLamieraEventArgs : EventArgs
+    {
+        public DatiLamieraIntegrationEvent DatiLamiera{ get; set; }
+    }
+
 }

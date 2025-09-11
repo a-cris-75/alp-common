@@ -412,6 +412,87 @@ namespace Alp.Com.DataAccessLayer.DataTypes
 
     }
 
+    public static class AnalisiLamiera 
+    {
+        public static float Lunghezza { get; set; }
+        public static float Larghezza { get; set; }
+        public static float Spessore { get; set; }
+        public static float Omega_L1 { get; set; }
+        public static float Omega_L2 { get; set; }
+        // contiene X1 (distaza taglio in mm da testa), lamiera o campione
+        public static List<(float, string)> CoordinateTaglio { get; set; } 
+        public static string? Destinazione { get; set; }
+
+    }
+
+    [ProtoContract]
+    public class DatiLamieraIntegrationEvent : KSociety.Base.EventBus.Events.IntegrationEvent
+    {
+
+        [ProtoMember(1)]
+        public float Lunghezza { get; set; }
+
+        [ProtoMember(2)]
+        public float Larghezza { get; set; }
+
+        [ProtoMember(3)]
+        public float Spessore { get; set; }
+
+        [ProtoMember(4)]
+        public float Omega_L1 { get; set; }
+
+        [ProtoMember(5)]
+        public float Omega_L2 { get; set; }
+
+        [ProtoMember(5)]
+        public string Destinazione { get; set; }
+
+        [ProtoMember(6)]
+        // contiene X1 (distaza taglio in mm da testa), lamiera o campione
+        public List<(float,string)> CoordinateTaglio { get; set; }
+
+        
+
+        public DatiLamieraIntegrationEvent()
+        {
+
+        }
+
+        public DatiLamieraIntegrationEvent(
+            string routingKey,
+            string deviceName,
+            
+            float lunghezza,
+            float larghezza,
+            float spessore,
+            float omega_L1,
+            float omega_L2,
+            string destinazione,
+            List<(float,string)> lstTagli)
+        : base(routingKey)
+        {
+            Lunghezza  = lunghezza;
+            Larghezza = larghezza;
+            Spessore = spessore;
+            Omega_L1 = omega_L1;
+            Omega_L2 = omega_L2;
+            Destinazione = destinazione;
+            CoordinateTaglio = lstTagli;
+        }
+
+        public override string ToString()
+        {
+            string str = "";
+            str = "Lunghezza[" + Lunghezza + "] " +
+                  "Larghezza[" + Larghezza + "] " +
+                  "Spessore[" + Spessore + "] " +
+                  "Omega L1[" + Omega_L1 + "] " +
+                  "Omega L2[" + Omega_L2 + "] " +
+                  "Tagli[" + string.Join(" ", CoordinateTaglio.Select(X=>X.Item1.ToString() + "-" + X.Item2.Substring(0,1))) + "]";
+            return str;
+        }
+    }
+
     [ProtoContract]
     public class ImageProcessedIntegrationEvent : KSociety.Base.EventBus.Events.IntegrationEvent
     {

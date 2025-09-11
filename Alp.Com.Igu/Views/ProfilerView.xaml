@@ -5,9 +5,10 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Alp.Com.Igu.Views"
       xmlns:localConverters="clr-namespace:Alp.Com.Igu.Views.Converters"
-       xmlns:viewModels="clr-namespace:Alp.Com.Igu.ViewModels;assembly=Alp.Com.Igu"
+      xmlns:viewModels="clr-namespace:Alp.Com.Igu.ViewModels;assembly=Alp.Com.Igu"
       mc:Ignorable="d" 
-       d:DesignHeight="1080" d:DesignWidth="1920"
+      d:DesignHeight="1080" d:DesignWidth="1920"
+
       Title="PageProfiler">
     <Page.Resources>
         <Style TargetType="{x:Type Control}" x:Key="baseStyle">
@@ -191,8 +192,12 @@
                                     <Label Grid.Column="0" Grid.Row="1" Content="Valori" Foreground="White" Width="Auto" Height="Auto" FontSize="16"/>
                                     <Label Grid.Column="1"  Grid.Row="1" Content="Distanza" Foreground="White" Width="Auto" HorizontalAlignment="Right" FontSize="16"/>
 
-                                    <Label Name="lblLenVal1" Grid.Column="0" Grid.Row="2" Content="X1-X4" Foreground="White" Width="Auto" Background="Gray" FontSize="16"/>
-                                    <Label Name="lblLenDis1" Grid.Column="1" Grid.Row="2" Content="10500 mm" Foreground="White" Width="Auto" Background="Gray" Height="35" VerticalAlignment="Center" FontSize="16"/>
+                                    <Label Name="lblLenVal1" Grid.Column="0" Grid.Row="2"  Foreground="White" Width="Auto" Background="Gray" FontSize="16"
+                                           Content= "{Binding Path=BIND_LUNGHEZZA_TOT_LBL}"
+                                           />
+                                    <Label Name="lblLenDis1" Grid.Column="1" Grid.Row="2"  Foreground="White" Width="Auto" Background="Gray" Height="35" VerticalAlignment="Center" FontSize="16"
+                                           Content= "{Binding Path=BIND_LUNGHEZZA_TOT}" 
+                                           />
                           
                                 </Grid>
                             </Border>
@@ -211,8 +216,12 @@
                                     <Label Grid.Column="0" Grid.Row="1" Content="Valori" Foreground="White" Width="Auto" FontSize="16"/>
                                     <Label Grid.Column="1"  Grid.Row="1" Content="Distanza" Foreground="White" Width="Auto" HorizontalContentAlignment="Right" FontSize="16"/>
 
-                                    <Label Name="lblWdtVal2" Grid.Column="0" Grid.Row="2" Content="X1-X4" Foreground="White" Width="Auto" Background="Gray" FontSize="16"/>
-                                    <Label Name="lblWdtDis2" Grid.Column="1" Grid.Row="2" Content="10500 mm" Foreground="White" Width="Auto" Background="Gray" HorizontalContentAlignment="Right" FontSize="16"/>
+                                    <Label Name="lblWdtVal2" Grid.Column="0" Grid.Row="2" Foreground="White" Width="Auto" Background="Gray" FontSize="16"
+                                           Content= "{Binding Path=BIND_LARGHEZZA_TOT_LBL}" 
+                                           />
+                                    <Label Name="lblWdtDis2" Grid.Column="1" Grid.Row="2" Foreground="White" Width="Auto" Background="Gray" HorizontalContentAlignment="Right" FontSize="16"
+                                            Content= "{Binding Path=BIND_LARGHEZZA_TOT}" 
+                                           />
                                 </Grid>
                             </Border>
                             <Border Name="bg3" Grid.Column="2" BorderBrush="#FF2D2D2D" BorderThickness="2" Background="#FF404040" CornerRadius="5" Margin="3">
@@ -250,17 +259,16 @@
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
                             <Label Grid.Row="0" Content="LAMIERA" Foreground="White" VerticalAlignment="Center" Width="Auto" FontSize="16" HorizontalAlignment="Center" />
-                            <DataGrid Name="dgrdDimLamiera" Grid.Row="1" Background="#FF252323" Style="{StaticResource MioStileDataGrid}" ItemsSource="{Binding ListDimLamiera}">
+                            <DataGrid Name="dgrdDimLamiera" Grid.Row="1" Background="#FF252323" Style="{StaticResource MioStileDataGrid}" 
+                                      ItemsSource="{Binding BIND_LST_LUNGH}">
 
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Lamiera" 
-                                    Binding="{Binding Lamiera}"
+                                    <DataGridTextColumn Header="Lamiera"            
                                     Width="*"
                                     CellStyle="{StaticResource MioStileCella1}"
                                     HeaderStyle="{StaticResource MioStileHeader}"/>
 
                                     <DataGridTextColumn Header="Lunghezza" 
-                                    Binding="{Binding Lunghezza}"
                                     Width="*"
                                     CellStyle="{StaticResource MioStileCella2}"
                                     HeaderStyle="{StaticResource MioStileHeader}"/>
@@ -269,16 +277,21 @@
                             </DataGrid>
 
                             <Label Grid.Row="3" Content="TAGLI" Foreground="White" VerticalAlignment="Center" Width="Auto" FontSize="16" HorizontalAlignment="Center" />
-                            <DataGrid Name="dgrdTagli" Grid.Row="4" Background="#FF252323" Style="{StaticResource MioStileDataGrid}" ItemsSource="{Binding ListTagli}">
+                            <DataGrid Name="dgrdTagli" Grid.Row="4" Background="#FF252323" Style="{StaticResource MioStileDataGrid}" 
+                                      ItemsSource="{Binding BIND_LST_TAGLI}">
 
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Valore"  Binding="{Binding Valore}"
+                                    <DataGridTextColumn Header="Valore" 
                                         Width="*"
                                         CellStyle="{StaticResource MioStileCella1}"
                                         HeaderStyle="{StaticResource MioStileHeader}"/>
 
+                                    <!--DataGridTextColumn Header="Valore"  Binding="{Binding Valore}"
+                                         Width="*"
+                                         CellStyle="{StaticResource MioStileCella1}"
+                                         HeaderStyle="{StaticResource MioStileHeader}"/-->
+
                                     <DataGridTextColumn Header="Posizione Taglio" 
-                                        Binding="{Binding PosTaglio}"
                                         Width="*"
                                         CellStyle="{StaticResource MioStileCella2}"
                                         HeaderStyle="{StaticResource MioStileHeader}"/>
@@ -361,7 +374,9 @@
                                     </Grid.ColumnDefinitions>
                                     <Label Grid.Column="0" Grid.Row="0" Content="OMEGA" Foreground="White" VerticalAlignment="Center" Width="Auto" FontSize="16" />
                                     <Label Grid.Column="0" Grid.Row="2" Content="Z0-Z1" Foreground="White" Width="Auto" Background="Gray" FontSize="16"/>
-                                    <Label Name="lblOmegaL1" Grid.Column="1" Grid.Row="2" Content="10500 mm" Foreground="White" Width="Auto" Background="Gray" Height="35" VerticalAlignment="Center" HorizontalContentAlignment="Right" FontSize="16"/>
+                                    <Label Name="lblOmegaL1" Grid.Column="1" Grid.Row="2"  Foreground="White" Width="Auto" Background="Gray" Height="35" VerticalAlignment="Center" HorizontalContentAlignment="Right" FontSize="16"
+                                            Content= "{Binding Path=BIND_OMEGA_L1}" 
+                                           />
 
                                 </Grid>
                             </Border>
@@ -380,7 +395,9 @@
                                     </Grid.ColumnDefinitions>
                                     <Label Grid.Column="0" Grid.Row="0" Content="OMEGA" Foreground="White" VerticalAlignment="Center" Width="Auto" FontSize="16" />
                                     <Label Grid.Column="0" Grid.Row="2" Content="Z0-Z1" Foreground="White" Width="Auto" Background="Gray" FontSize="16"/>
-                                    <Label Name="lblOmegaL2" Grid.Column="1" Grid.Row="2" Content="10500 mm" Foreground="White" Width="Auto" Background="Gray" Height="35" VerticalAlignment="Center" HorizontalContentAlignment="Right" FontSize="16"/>
+                                    <Label Name="lblOmegaL2" Grid.Column="1" Grid.Row="2" Foreground="White" Width="Auto" Background="Gray" Height="35" VerticalAlignment="Center" HorizontalContentAlignment="Right" FontSize="16"
+                                           Content= "{Binding Path=BIND_OMEGA_L2}" 
+                                           />
 
                                 </Grid>
                             </Border>
@@ -402,7 +419,9 @@
 
                                     </Grid.ColumnDefinitions>
                                     <Label Grid.Column="0" Grid.Row="0" Content="SPESSORE" Foreground="White" VerticalAlignment="Center" Width="Auto" FontSize="16" />
-                                    <Label Name="lblSpessore" Grid.Column="0" Grid.Row="2" Content="10 mm" Foreground="White" Width="Auto" Background="Gray" FontSize="16"/>
+                                    <Label Name="lblSpessore" Grid.Column="0" Grid.Row="2" Foreground="White" Width="Auto" Background="Gray" FontSize="16"
+                                           Content= "{Binding Path=BIND_SPESSORE}" 
+                                           />
                                 </Grid>
                             </Border>
 

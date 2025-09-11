@@ -25,6 +25,8 @@
     
     <Application.Resources>
 
+        <!--local:MainViewModel x:Key="MainViewModel" />
+        <local:ProfilerViewModel x:Key="ProfilerViewModel" /-->
         <ResourceDictionary>
 
             <ResourceDictionary.MergedDictionaries>
@@ -39,6 +41,8 @@
                 <views:ImpostazioniView/>
             </DataTemplate>-->
 
+            
+
             <!--Questo qua sopra non va bene perché crea una nuova istanza di AnalisiBilletteView o di ImpostazioniView
             ogni volta che si ricarica la pagina, nonostante x:Shared="true". Questo sotto invece va bene.-->
 
@@ -48,9 +52,10 @@
             <DataTemplate DataType="{x:Type viewModels:ProfilerViewModel}">
                 <ContentPresenter Content="{StaticResource ProfilerViewInstance}" />
             </DataTemplate>
-            <DataTemplate DataType="{x:Type viewModels:StatoDevicesViewModel}">
+
+            <!--DataTemplate DataType="{x:Type viewModels:StatoDevicesViewModel}">
                 <ContentPresenter Content="{StaticResource StatoDevicesViewInstance}" />
-            </DataTemplate>
+            </DataTemplate-->
 
             <!--
             <views:AnalisiBilletteView x:Key="AnalisiBilletteViewInstance" />
