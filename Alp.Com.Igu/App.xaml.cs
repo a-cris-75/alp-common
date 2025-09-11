@@ -6,24 +6,26 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Forms;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using System.IO;
 using System.Drawing;
-using AlpTlc.Biz;
-using AlpTlc.App.Igu;
-using AlpTlc.App.Igu.ViewModels;
-using AlpTlc.Connessione.Broker.RabbitMq;
-using AlpTlc.Domain.Impostazioni;
+//using AlpTlc.Biz;
+//using AlpTlc.App.Igu;
+//using AlpTlc.App.Igu.ViewModels;
+//using AlpTlc.Connessione.Broker.RabbitMq;
+//using AlpTlc.Domain.Impostazioni;
 using System.Diagnostics;
 using System.Globalization;
 using System.Threading;
 using System.Windows.Markup;
-using AlpTlc.Biz.Strumenti;
+using Alp.Com.DataAccessLayer.DataTypes;
+using Alp.Com.Igu.ViewModels;
+using Alp.Com.Igu.Connections;
+//using AlpTlc.Biz.Strumenti;
 
-namespace AlpTlc.Pre.Igu
+namespace Alp.Com.Igu
 {
     /// <summary>
     /// Interaction logic for App.xaml
@@ -60,15 +62,13 @@ namespace AlpTlc.Pre.Igu
             // TODO: Per ora, Igu logga sul file indicato in "WriteTo" ... "Name": "File" anziché in "Name": "RabbitMq" dentro appsettings.json; occorrerebbe stabilire un'apposita connessione Rabbit, vedo il TODO nel progetto AlpTlc.Connessione.Broker
 
             // Per questo serve il pacchetto KSociety.Log.Serilog.Sinks.RabbitMq
-            Serilog.Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(_configuration).CreateLogger();
-
-            Serilog.Log.ForContext(typeof(App)).Information("App ctor (Igu init main)");
-
-            Serilog.Log.ForContext(typeof(App)).Information("Cultura corrente: Thread.CurrentThread.CurrentCulture [" + Thread.CurrentThread.CurrentCulture + "]");
-            Serilog.Log.ForContext(typeof(App)).Information("Cultura corrente: Thread.CurrentThread.CurrentUICulture [" + Thread.CurrentThread.CurrentUICulture + "]");
-            Serilog.Log.ForContext(typeof(App)).Information("Cultura corrente: CultureInfo.DefaultThreadCurrentUICulture [" + CultureInfo.DefaultThreadCurrentUICulture + "]");
-            Serilog.Log.ForContext(typeof(App)).Information("Cultura corrente: CultureInfo.CurrentCulture [" + CultureInfo.CurrentCulture + "]");
-            Serilog.Log.ForContext(typeof(App)).Information("Cultura corrente: CultureInfo.CurrentUICulture [" + CultureInfo.CurrentUICulture + "]");
+            //Serilog.Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(_configuration).CreateLogger();
+            //Serilog.Log.ForContext(typeof(App)).Information("App ctor (Igu init main)");
+            //Serilog.Log.ForContext(typeof(App)).Information("Cultura corrente: Thread.CurrentThread.CurrentCulture [" + Thread.CurrentThread.CurrentCulture + "]");
+            //Serilog.Log.ForContext(typeof(App)).Information("Cultura corrente: Thread.CurrentThread.CurrentUICulture [" + Thread.CurrentThread.CurrentUICulture + "]");
+            //Serilog.Log.ForContext(typeof(App)).Information("Cultura corrente: CultureInfo.DefaultThreadCurrentUICulture [" + CultureInfo.DefaultThreadCurrentUICulture + "]");
+            //Serilog.Log.ForContext(typeof(App)).Information("Cultura corrente: CultureInfo.CurrentCulture [" + CultureInfo.CurrentCulture + "]");
+            //Serilog.Log.ForContext(typeof(App)).Information("Cultura corrente: CultureInfo.CurrentUICulture [" + CultureInfo.CurrentUICulture + "]");
 
             #region Evita l'apertura dell'applicazione più volte
 
@@ -98,7 +98,7 @@ namespace AlpTlc.Pre.Igu
                 {
                     ConfigureServices(services);
                 })
-                .UseSerilog()
+                //.UseSerilog()
                 .Build();
 
             // Due modi per creare un serviceprovider. Se abbiamo l'host, è più facile il secondo!
@@ -129,11 +129,11 @@ namespace AlpTlc.Pre.Igu
             //services.AddSingleton<AvvisoViewModel>();
             services.AddSingleton<Views.AvvisoView>();
 
-            services.AddSingleton<AnalisiBilletteViewModel>();
-            services.AddSingleton<Views.AnalisiBilletteView>();
+            services.AddSingleton<ProfilerViewModel>();
+            services.AddSingleton<Views.ProfilerView>();
 
-            services.AddSingleton<ImpostazioniViewModel>();
-            services.AddSingleton<Views.ImpostazioniView>();
+            services.AddSingleton<StatoDevicesViewModel>();
+            services.AddSingleton<Views.StatoDevicesView>();
 
             services.AddSingleton<MainWindowViewModel>();
             services.AddSingleton<Views.MainWindowView>();
@@ -173,32 +173,32 @@ namespace AlpTlc.Pre.Igu
                 Views.MainWindowView mainWindow = _host.Services.GetRequiredService<Views.MainWindowView>();
 
 
-                var secondary = 0;
-                for (int index = 0; index < Screen.AllScreens.Length; index++)
-                {
-                    if (Screen.AllScreens[index].Primary) continue;
-                    secondary = index;
-                    break;
-                }
+                //var secondary = 0;
+                //for (int index = 0; index < Screen.AllScreens.Length; index++)
+                //{
+                //    if (Screen.AllScreens[index].Primary) continue;
+                //    secondary = index;
+                //    break;
+                //}
 
                 mainWindow.Show();
 
-                var screen = Screen.AllScreens[secondary];
-                if (screen != null)
-                {
-                    Rectangle area = screen.WorkingArea;
-                    if (!area.IsEmpty)
-                    {
-                        mainWindow.Resize(area);
-                    }
-                }
+                //var screen = Screen.AllScreens[secondary];
+                //if (screen != null)
+                //{
+                //    Rectangle area = screen.WorkingArea;
+                //    if (!area.IsEmpty)
+                //    {
+                //        mainWindow.Resize(area);
+                //    }
+                //}
 
                 #endregion Finestra principale
 
                 try
                 {
-                    RabbitMq.GetInstance.Init();
-
+                    //RabbitMq.GetInstance.Init();
+                    RabbitMqConn.GetInstance.Init();
 
                 }
                 catch (Exception ex)
@@ -210,12 +210,12 @@ namespace AlpTlc.Pre.Igu
                 try
                 {
 
-                    List<ImpostazioneGenerale> listaImpostazioneGenerale = new List<ImpostazioneGenerale>();
+                    //List<ImpostazioneGenerale> listaImpostazioneGenerale = new List<ImpostazioneGenerale>();
 
-                    listaImpostazioneGenerale.Add(new ImpostazioneGenerale() {Id="ModalitaAutomatica", Valore=""});
-                    ImpostazioniGenerali.Instance.SetImpostazioni(listaImpostazioneGenerale);
+                    //listaImpostazioneGenerale.Add(new ImpostazioneGenerale() {Id="ModalitaAutomatica", Valore=""});
+                    //ImpostazioniGenerali.Instance.SetImpostazioni(listaImpostazioneGenerale);
 
-                    AutomationDontTouch.InitTouchFile(ApplicationSettingsStatic.AutomationDontTouchFile);
+                    //AutomationDontTouch.InitTouchFile(ApplicationSettingsStatic.AutomationDontTouchFile);
 
                 }
                 catch (Exception ex)

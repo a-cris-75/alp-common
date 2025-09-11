@@ -32,12 +32,12 @@ namespace Alp.Com.Igu.Core
         }
 
   
-        public async Task<List<DataTypes.ImpostazioneGenerale>> GetSettings()
+        public async Task<List<DataAccessLayer.DataTypes.ImpostazioneGenerale>> GetSettings()
         {
             return await reqRemotaInOutWebApi.GetSettingsAsync();
         }
 
-        public async Task<bool> SetSettings(List<DataTypes.ImpostazioneGenerale> lstSettings)
+        public async Task<bool> SetSettings(List<DataAccessLayer.DataTypes.ImpostazioneGenerale> lstSettings)
         {
             if (!isInitialized) throw new Exception("Indice non inizializzato");
             return (await reqRemotaInOutWebApi.PostNewSettingsAsync(lstSettings));

@@ -1,0 +1,88 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:applicazione="clr-namespace:Alp.Com.Igu;assembly=Alp.Com.Igu"
+                    xmlns:local="clr-namespace:Alp.Com.Igu.Views"
+                    xmlns:localConverters="clr-namespace:Alp.Com.Igu.Views.Converters">
+
+    <localConverters:IconToImageSourceConverter x:Key="IconToImageSource" />
+    <localConverters:BoolToVisibilityConverter x:Key="BoolToVisibility" />
+    <BitmapImage x:Key="DeleteSign" UriSource="/Images/x_icon.png" />
+
+    <Style TargetType="{x:Type Popup}" x:Key="AnalisiPopup">
+        <Setter Property="StaysOpen" Value="False"/>
+        <Setter Property="AllowsTransparency" Value="True"/>
+        <Setter Property="IsOpen" Value="{Binding Path=DataContext.PopupOpen, RelativeSource={RelativeSource Self}}"/>
+    </Style>
+
+    <Style TargetType="{x:Type ContentControl}"  x:Key="AnalisiPopupContent" >
+        <Setter Property="ContentTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <Border Name="mask" BorderThickness="5" CornerRadius="10" Focusable = "False">
+                        <Border.Background>
+                            <SolidColorBrush Opacity="0.95" Color="LightBlue"/>
+                        </Border.Background>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <!--  Info  -->
+                                <RowDefinition Height="auto" />
+                                <!--  Exception details  -->
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <StackPanel Grid.Row="0" Orientation="Horizontal"  Background="Transparent">
+                                <Image Margin="7,5,5,5"
+                                       Source="{Binding DataContext.Icona, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Popup}}, Converter={StaticResource IconToImageSource}, Mode=OneWay}" />
+                                <StackPanel  Background="Transparent">
+                                    <StackPanel  Orientation="Horizontal"  Background="Transparent">
+                                        <!--<TextBlock TextAlignment="Left" HorizontalAlignment="Left"  Background="Transparent" FontSize="13" Foreground="Black" FontWeight="Bold"  Padding="3,5,10,0" Text="{Binding DataContext.Titolo, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Popup}}, StringFormat= 'Titolo: \{0\}', Mode=OneWay}" />-->
+                                        <TextBlock TextAlignment="Left" HorizontalAlignment="Left" VerticalAlignment="Bottom" Background="Transparent" FontSize="13" Foreground="Black" FontWeight="Bold"  Padding="3,5,10,0" Text="{Binding DataContext.Titolo, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Popup}}, Mode=OneWay}" />
+                                        <TextBlock TextAlignment="Left" HorizontalAlignment="Left" VerticalAlignment="Bottom"  Background="Transparent" FontSize="11" Foreground="Black" Padding="10,5,40,1" Text="{Binding DataContext.DataOra, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Popup}}, Mode=OneWay}" />
+                                    </StackPanel>
+                                    <!--<TextBlock TextAlignment="Left" HorizontalAlignment="Left"  Background="Transparent" FontSize="13" Foreground="Black" Padding="3,0,10,5" Text="{Binding DataContext.Messaggio, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Popup}}, StringFormat= 'Messaggio: \{0\}', Mode=OneWay}" />-->
+                                    <TextBlock TextAlignment="Left" HorizontalAlignment="Left" Background="Transparent" FontSize="13" Foreground="Black" Padding="3,0,10,5" TextWrapping="Wrap" Text="{Binding DataContext.Messaggio, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Popup}}, Mode=OneWay}" />
+                                </StackPanel>
+                            </StackPanel>
+                            <Button Grid.Row="0" Background="Transparent" BorderBrush="Transparent" HorizontalAlignment="Right" VerticalAlignment="Top"
+                                            Command="{x:Static applicazione:Theme.ComandiGenerici.ClosePopupCommand}"
+                                            CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Popup}}}">
+                                <!--<TextBlock TextAlignment="Center" 
+                                                   Background="Transparent"
+                                                   Foreground="White"
+                                                   FontSize="10"
+                                                   TextWrapping="Wrap"
+                                                   Padding="10,5">
+                                                  X
+                                        </TextBlock>-->
+                                <Image Source="{StaticResource DeleteSign}" MaxHeight="13" MaxWidth="13" Stretch="Uniform" Margin="10,5"/>
+                            </Button>
+                            <!--  Exception details  -->
+                            <Border Grid.Row="1" 
+                                    Visibility="{Binding DataContext.HaEccezione, Converter={StaticResource BoolToVisibility}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Popup}}, Mode=OneWay}"
+                                    MaxHeight="450">
+                                <Expander Margin="16,8,16,8" Header="Dettagli">
+                                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                                        <StackPanel>
+                                            <!--  Exception Message  -->
+                                            <TextBlock Text="Exception message" FontWeight="Bold"/>
+                                            <TextBlock Text="{Binding DataContext.Eccezione.Message, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Popup}}, Mode=OneWay, TargetNullValue=-}" TextWrapping="Wrap" />
+                                            <!--  Exception Type  -->
+                                            <TextBlock Margin ="0,3,0,0" Text="Exception type"  FontWeight="Bold"/>
+                                            <TextBlock Text="{Binding DataContext.TipoEccezione, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Popup}}, Mode=OneWay, TargetNullValue=-}" />
+                                            <!--  Callstack  -->
+                                            <TextBlock Margin ="0,3,0,0" Text="Callstack"  FontWeight="Bold"/>
+                                            <TextBlock Text="{Binding DataContDataConfirmext.Eccezione.StackTrace, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Popup}}, Mode=OneWay, TargetNullValue=-}" />
+                                            <!--  Inner exception  -->
+                                            <TextBlock Margin ="0,3,0,0" Text="Inner exception"  FontWeight="Bold"/>
+                                            <TextBlock Text="{Binding DataContext.Eccezione.InnerException, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Popup}}, Mode=OneWay, TargetNullValue=-}" />
+                                        </StackPanel>
+                                    </ScrollViewer>
+                                </Expander>
+                            </Border>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

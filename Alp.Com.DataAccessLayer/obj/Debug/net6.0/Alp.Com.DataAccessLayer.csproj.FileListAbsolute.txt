@@ -1,0 +1,13 @@
+D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.DataAccessLayer\bin\Debug\net6.0\Alp.Com.DataAccessLayer.deps.json
+D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.DataAccessLayer\bin\Debug\net6.0\Alp.Com.DataAccessLayer.dll
+D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.DataAccessLayer\bin\Debug\net6.0\Alp.Com.DataAccessLayer.pdb
+D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.DataAccessLayer\obj\Debug\net6.0\Alp.Com.DataAccessLayer.csproj.AssemblyReference.cache
+D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.DataAccessLayer\obj\Debug\net6.0\Alp.Com.DataAccessLayer.GeneratedMSBuildEditorConfig.editorconfig
+D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.DataAccessLayer\obj\Debug\net6.0\Alp.Com.DataAccessLayer.AssemblyInfoInputs.cache
+D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.DataAccessLayer\obj\Debug\net6.0\Alp.Com.DataAccessLayer.AssemblyInfo.cs
+D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.DataAccessLayer\obj\Debug\net6.0\Alp.Com.DataAccessLayer.csproj.CoreCompileInputs.cache
+D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.DataAccessLayer\obj\Debug\net6.0\Alp.Com.DataAccessLayer.sourcelink.json
+D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.DataAccessLayer\obj\Debug\net6.0\Alp.Com.DataAccessLayer.dll
+D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.DataAccessLayer\obj\Debug\net6.0\refint\Alp.Com.DataAccessLayer.dll
+D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.DataAccessLayer\obj\Debug\net6.0\Alp.Com.DataAccessLayer.pdb
+D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.DataAccessLayer\obj\Debug\net6.0\ref\Alp.Com.DataAccessLayer.dll

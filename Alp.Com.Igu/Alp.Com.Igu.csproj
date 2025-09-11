@@ -5,9 +5,11 @@
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <ImplicitUsings>enable</ImplicitUsings>
+    <OutputType>WinExe</OutputType>
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="DataTypes\DataType.cs" />
     <Compile Remove="Utils\Touch.cs" />
     <Compile Remove="ViewModels\AnalisiBilletteViewModel.cs" />
     <Compile Remove="ViewModels\ImpostazioniViewModel.cs" />
@@ -31,6 +33,12 @@
     <ProjectReference Include="..\..\crs-base\Crs.Base.CommonUtilsLibrary\Crs.Base.CommonUtilsLibrary.csproj" />
     <ProjectReference Include="..\..\crs-base\Crs.Base.SendReceiveRabbit\Crs.Base.SendReceiveRabbit.csproj" />
     <ProjectReference Include="..\Alp.Com.DataAccessLayer\Alp.Com.DataAccessLayer.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="DataTypes\" />
+    <Folder Include="WpfMain\" />
+    <Folder Include="WpfProfiler\" />
   </ItemGroup>
 
 </Project>

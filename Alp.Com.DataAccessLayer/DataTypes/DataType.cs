@@ -681,4 +681,60 @@ namespace Alp.Com.DataAccessLayer.DataTypes
         public string MsgAnomalia => string.Join(" ", CamConnected.Select((valore, indice) => new { indice, valore }).Where(CC => !CC.valore).Select(CC => $"Telecamera {CC.indice + 1} non connessa.").ToArray());
 
     }
+
+    public static class StatoRemota
+    {
+
+        public static bool IsRemotaAlive { get; set; }
+
+        public static bool AreIlluminatoriOn { get; set; }
+
+        public static bool IsIlluminatore2On { get; set; }
+
+        public static bool IsTelecamera1On { get; set; }
+
+        public static bool IsTelecamera2On { get; set; }
+
+        public static bool AnomaliaStato => !AreIlluminatoriOn || !IsTelecamera1On || !IsTelecamera2On;
+
+        public static bool Anomalia => !IsRemotaAlive || AnomaliaStato;
+
+        public static string MsgAnomalia
+        {
+            get
+            {
+                List<string> lstMsg = new();
+
+                if (IsRemotaAlive)
+                {
+                    if (!AreIlluminatoriOn)
+                    {
+                        lstMsg.Add("Gli illuminatori sono spenti");
+                    }
+
+                    if (!IsTelecamera1On && !IsTelecamera2On)
+                    {
+                        lstMsg.Add("Le telecamere sono spente");
+                    }
+                    else if (!IsTelecamera1On)
+                    {
+                        lstMsg.Add("La telecamera n. 1 è spenta");
+                    }
+                    else if (!IsTelecamera2On)
+                    {
+                        lstMsg.Add("La telecamera n. 2 è spenta");
+                    }
+                }
+                else
+                {
+                    lstMsg.Add("Errore verifica accensione illuminatori e telecamere.");
+                }
+
+                return String.Join('\n', lstMsg);
+            }
+        }
+
+        public static SemaforoColor SemaforoColore => IsRemotaAlive ? (AnomaliaStato ? SemaforoColor.Giallo : SemaforoColor.Verde) : SemaforoColor.Rosso;
+
+    }
 }

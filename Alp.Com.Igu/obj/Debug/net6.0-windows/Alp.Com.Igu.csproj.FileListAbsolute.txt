@@ -1,0 +1,12 @@
+D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\obj\Debug\net6.0-windows\Alp.Com.Igu.csproj.AssemblyReference.cache
+D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\obj\Debug\net6.0-windows\Theme\ToggleButtonTheme.baml
+D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\obj\Debug\net6.0-windows\CustomControls\RotaryControl.g.cs
+D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\obj\Debug\net6.0-windows\Views\AvvisoView.g.cs
+D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\obj\Debug\net6.0-windows\Views\MainWindowView.g.cs
+D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\obj\Debug\net6.0-windows\Views\MainWindowView2.g.cs
+D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\obj\Debug\net6.0-windows\Views\ProfilerView.g.cs
+D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\obj\Debug\net6.0-windows\Views\StatoDevicesView.g.cs
+D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\obj\Debug\net6.0-windows\Views\UcTaskBar.g.cs
+D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\obj\Debug\net6.0-windows\GeneratedInternalTypeHelper.g.cs
+D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\obj\Debug\net6.0-windows\Alp.Com.Igu_MarkupCompile.cache
+D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\obj\Debug\net6.0-windows\Alp.Com.Igu_MarkupCompile.lref

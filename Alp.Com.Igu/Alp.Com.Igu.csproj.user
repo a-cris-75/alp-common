@@ -2,13 +2,13 @@
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup />
   <ItemGroup>
-    <Compile Update="WpfMain\MainWindowView2.xaml.cs">
+    <Compile Update="Views\MainWindowView2.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="WpfMain\UcTaskBar.xaml.cs">
+    <Compile Update="Views\UcTaskBar.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="WpfProfiler\PageProfiler.xaml.cs">
+    <Compile Update="Views\ProfilerView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

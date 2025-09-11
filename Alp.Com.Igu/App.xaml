@@ -1,9 +1,9 @@
-﻿<Application x:Class="AlpTlc.Pre.Igu.App"
+﻿<Application x:Class="Alp.Com.Igu.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:AlpTlc.Pre.Igu.Views"
-             xmlns:viewModels="clr-namespace:AlpTlc.App.Igu.ViewModels;assembly=AlpTlc.App.Igu"
-             xmlns:views="clr-namespace:AlpTlc.Pre.Igu.Views"
+             xmlns:local="clr-namespace:Alp.Com.Igu.Views"
+             xmlns:viewModels="clr-namespace:Alp.Com.Igu.ViewModels;assembly=Alp.Com.Igu"
+             xmlns:views="clr-namespace:Alp.Com.Igu.Views"
              ShutdownMode="OnMainWindowClose"
              >
     <!--<Application.Resources>
@@ -41,7 +41,18 @@
 
             <!--Questo qua sopra non va bene perché crea una nuova istanza di AnalisiBilletteView o di ImpostazioniView
             ogni volta che si ricarica la pagina, nonostante x:Shared="true". Questo sotto invece va bene.-->
+
+            <views:ProfilerView x:Key="ProfilerViewInstance" />
+            <views:StatoDevicesView x:Key="StatoDevicesViewInstance" />
             
+            <DataTemplate DataType="{x:Type viewModels:ProfilerViewModel}">
+                <ContentPresenter Content="{StaticResource ProfilerViewInstance}" />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModels:StatoDevicesViewModel}">
+                <ContentPresenter Content="{StaticResource StatoDevicesViewInstance}" />
+            </DataTemplate>
+
+            <!--
             <views:AnalisiBilletteView x:Key="AnalisiBilletteViewInstance" />
             <views:ImpostazioniView x:Key="ImpostazioniViewInstance" />
 
@@ -51,7 +62,7 @@
             <DataTemplate DataType="{x:Type viewModels:ImpostazioniViewModel}">
                 <ContentPresenter Content="{StaticResource ImpostazioniViewInstance}" />
             </DataTemplate>
-
+            -->
         </ResourceDictionary>
 
     </Application.Resources>

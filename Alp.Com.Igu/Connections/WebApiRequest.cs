@@ -1,4 +1,5 @@
-﻿using Alp.Com.Igu.DataTypes;
+﻿using Alp.Com.DataAccessLayer.DataTypes;
+//using Alp.Com.Igu.DataTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -254,4 +255,4 @@ namespace Alp.Com.Igu.Connections
 
     }
 }
-}
+

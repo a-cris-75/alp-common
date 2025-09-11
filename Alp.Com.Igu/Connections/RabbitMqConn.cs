@@ -1,4 +1,5 @@
-﻿using Alp.Com.Igu.DataTypes;
+﻿using Alp.Com.DataAccessLayer.DataTypes;
+//using Alp.Com.Igu.DataTypes;
 //using AlpTlc.Connessione;
 //using AlpTlc.Connessione.Broker.RabbitMq.Event;
 //using AlpTlc.Connessione.Broker.RabbitMq.Event.Com;
@@ -43,9 +44,10 @@ namespace Alp.Com.Igu.Connections
         public static RabbitMqConn GetInstance => connessoneRabbitMq;
 
         //ConnectionFactory factory = new ConnectionFactory() { HostName = ApplicationSettingsStatic.ServerIP, UserName = "KSociety", Password = "KSociety" };
-        
+
         //IConnection connection = null;
         //tatic IModel channel = null;
+        static Crs.Base.SendReceiveRabbit.RabbitMq? RAB = null;
         static string exchCom = "";
         //EventingBasicConsumer consumer = null;
         static int FrameNumberDia = 0;
@@ -445,14 +447,16 @@ namespace Alp.Com.Igu.Connections
             Serializer.Serialize(ms, evento);
             var body = ms.ToArray();
 
-            var properties = channel.CreateBasicProperties();
-            properties.DeliveryMode = 1; //2 = persistent, write on disk
+            //var properties = channel.CreateBasicProperties();
+            //properties.DeliveryMode = 1; //2 = persistent, write on disk
 
-            channel.BasicPublish(exchCom,
-                                 routingKey,
-                                 true,
-                                 properties,
-                                 body);
+            //channel.BasicPublish(exchCom,
+            //                     routingKey,
+            //                     true,
+            //                     properties,
+            //                     body);
+
+            RAB.SendSimple(body, routingKey, exchCom);
 
             log.Info($"SendTagInvoke: routingKey [{routingKey}], nomeTag [{nomeTag}], valoreTag [{valoreTag}]");
 

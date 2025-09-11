@@ -65,10 +65,10 @@ namespace Alp.Com.Igu.CustomControls
 
         public Path CreateArcSegment()
         {
-            Point outerArcStartPoint = RotaryControl.ComputeCartesianCoordinate(StartAngleInDegrees, Radius);
+            Point outerArcStartPoint = ComputeCartesianCoordinate(StartAngleInDegrees, Radius);
             outerArcStartPoint.Offset(Centre.X, Centre.Y);
 
-            Point outerArcEndPoint = RotaryControl.ComputeCartesianCoordinate(StartAngleInDegrees + AngleInDegrees, Radius);
+            Point outerArcEndPoint = ComputeCartesianCoordinate(StartAngleInDegrees + AngleInDegrees, Radius);
             outerArcEndPoint.Offset(Centre.X, Centre.Y);
 
             bool largeArc = AngleInDegrees > 180.0;
@@ -76,10 +76,10 @@ namespace Alp.Com.Igu.CustomControls
 
             double insideRadius = Radius - Thickness;
 
-            Point innerArcStartPoint = RotaryControl.ComputeCartesianCoordinate(StartAngleInDegrees, insideRadius);
+            Point innerArcStartPoint = ComputeCartesianCoordinate(StartAngleInDegrees, insideRadius);
             innerArcStartPoint.Offset(Centre.X, Centre.Y);
 
-            Point innerArcEndPoint = RotaryControl.ComputeCartesianCoordinate(StartAngleInDegrees + AngleInDegrees, insideRadius);
+            Point innerArcEndPoint = ComputeCartesianCoordinate(StartAngleInDegrees + AngleInDegrees, insideRadius);
             innerArcEndPoint.Offset(Centre.X, Centre.Y);
 
             Size innerArcSize = new Size(insideRadius, insideRadius);

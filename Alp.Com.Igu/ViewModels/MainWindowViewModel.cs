@@ -1,6 +1,7 @@
-﻿using Alp.Com.Igu.Connections;
+﻿using Alp.Com.DataAccessLayer.DataTypes;
+using Alp.Com.Igu.Connections;
 using Alp.Com.Igu.Core;
-using Alp.Com.Igu.DataTypes;
+//using Alp.Com.Igu.DataTypes;
 //using AlpTlc.App.Igu;
 //using AlpTlc.App.Igu.Core;
 //using AlpTlc.Biz;
@@ -54,7 +55,8 @@ namespace Alp.Com.Igu.ViewModels
 
         public string Titolo { get; set; }
 
-        private readonly GetDataDeviceViewModel _getDataDeviceVM;
+        private readonly ProfilerViewModel _profilerVM;
+        private readonly StatoDevicesViewModel _statoDevVM;
         //private readonly ImpostazioniViewModel _impostazioniVM;
         private readonly ILogger<MainWindowViewModel> _logger;
         private readonly ApplicationSettings _options;
@@ -448,7 +450,7 @@ namespace Alp.Com.Igu.ViewModels
                 //}
                 #endregion
 
-                if (_currentView is GetDataDeviceViewModel)
+                if (_currentView is ProfilerViewModel)
                 {
 
                 }
@@ -484,15 +486,15 @@ namespace Alp.Com.Igu.ViewModels
             {
                 msgStatoRabbitMq = value;
                 OnPropertyChanged();
-                _getDataDeviceVM.OnPropertyChangedPerAvvisi();
-                _getDataDeviceVM.OnPropertyChanged(nameof(_getDataDeviceVM.MsgStatoRabbitMq));
-                _getDataDeviceVM.OnPropertyChanged(nameof(_getDataDeviceVM.IsMsgStatoRabbitMqVisibile));
-                _getDataDeviceVM.OnPropertyChanged(nameof(_getDataDeviceVM.SemaforoRabbitMq));
-                _getDataDeviceVM.OnPropertyChanged(nameof(_getDataDeviceVM.SemaforoPlc));
-                _getDataDeviceVM.OnPropertyChanged(nameof(_getDataDeviceVM.SemaforoStatoTelecamera1));
-                _getDataDeviceVM.OnPropertyChanged(nameof(_getDataDeviceVM.SemaforoStatoTelecamera2));
-                _getDataDeviceVM.OnPropertyChanged(nameof(_getDataDeviceVM.SemaforoDipSystem));
-                _getDataDeviceVM.RefreshAvvisi();
+                _profilerVM.OnPropertyChangedPerAvvisi();
+                _profilerVM.OnPropertyChanged(nameof(_profilerVM.MsgStatoRabbitMq));
+                _profilerVM.OnPropertyChanged(nameof(_profilerVM.IsMsgStatoRabbitMqVisibile));
+                _profilerVM.OnPropertyChanged(nameof(_profilerVM.SemaforoRabbitMq));
+                _profilerVM.OnPropertyChanged(nameof(_profilerVM.SemaforoPlc));
+                _profilerVM.OnPropertyChanged(nameof(_profilerVM.SemaforoStatoTelecamera1));
+                _profilerVM.OnPropertyChanged(nameof(_profilerVM.SemaforoStatoTelecamera2));
+                _profilerVM.OnPropertyChanged(nameof(_profilerVM.SemaforoDipSystem));
+                _profilerVM.RefreshAvvisi();
             }
         }
 
@@ -504,11 +506,11 @@ namespace Alp.Com.Igu.ViewModels
             {
                 msgStatoPlc = value;
                 OnPropertyChanged();
-                _getDataDeviceVM.OnPropertyChangedPerAvvisi();
-                _getDataDeviceVM.OnPropertyChanged(nameof(_getDataDeviceVM.MsgStatoPlc));
-                _getDataDeviceVM.OnPropertyChanged(nameof(_getDataDeviceVM.IsMsgStatoPlcVisibile));
-                _getDataDeviceVM.OnPropertyChanged(nameof(_getDataDeviceVM.SemaforoPlc));
-                _getDataDeviceVM.RefreshAvvisi();
+                _profilerVM.OnPropertyChangedPerAvvisi();
+                _profilerVM.OnPropertyChanged(nameof(_profilerVM.MsgStatoPlc));
+                _profilerVM.OnPropertyChanged(nameof(_profilerVM.IsMsgStatoPlcVisibile));
+                _profilerVM.OnPropertyChanged(nameof(_profilerVM.SemaforoPlc));
+                _profilerVM.RefreshAvvisi();
             }
         }
 
@@ -520,11 +522,11 @@ namespace Alp.Com.Igu.ViewModels
             {
                 msgStatoAccensioneIlluminatori = value;
                 OnPropertyChanged();
-                _getDataDeviceVM.RefreshAvvisi();
-                _getDataDeviceVM.OnPropertyChangedPerAvvisi();
-                _getDataDeviceVM.OnPropertyChanged(nameof(_getDataDeviceVM.MsgStatoRemota));
-                _getDataDeviceVM.OnPropertyChanged(nameof(_getDataDeviceVM.IsMsgStatoRemotaVisibile));
-                _getDataDeviceVM.OnPropertyChanged(nameof(_getDataDeviceVM.SemaforoRemota));
+                _profilerVM.RefreshAvvisi();
+                _profilerVM.OnPropertyChangedPerAvvisi();
+                _profilerVM.OnPropertyChanged(nameof(_profilerVM.MsgStatoRemota));
+                _profilerVM.OnPropertyChanged(nameof(_profilerVM.IsMsgStatoRemotaVisibile));
+                _profilerVM.OnPropertyChanged(nameof(_profilerVM.SemaforoRemota));
             }
         }
 
@@ -536,13 +538,13 @@ namespace Alp.Com.Igu.ViewModels
             {
                 msgStatoAccensioneTelecamere = value;
                 OnPropertyChanged();
-                _getDataDeviceVM.RefreshAvvisi();
-                _getDataDeviceVM.OnPropertyChangedPerAvvisi();
-                _getDataDeviceVM.OnPropertyChanged(nameof(_getDataDeviceVM.MsgStatoRemota));
-                _getDataDeviceVM.OnPropertyChanged(nameof(_getDataDeviceVM.IsMsgStatoRemotaVisibile));
-                _getDataDeviceVM.OnPropertyChanged(nameof(_getDataDeviceVM.IsMsgStatoTelecamereVisibile));
-                _getDataDeviceVM.OnPropertyChanged(nameof(_getDataDeviceVM.SemaforoStatoTelecamera1));
-                _getDataDeviceVM.OnPropertyChanged(nameof(_getDataDeviceVM.SemaforoStatoTelecamera2));
+                _profilerVM.RefreshAvvisi();
+                _profilerVM.OnPropertyChangedPerAvvisi();
+                _profilerVM.OnPropertyChanged(nameof(_profilerVM.MsgStatoRemota));
+                _profilerVM.OnPropertyChanged(nameof(_profilerVM.IsMsgStatoRemotaVisibile));
+                _profilerVM.OnPropertyChanged(nameof(_profilerVM.IsMsgStatoTelecamereVisibile));
+                _profilerVM.OnPropertyChanged(nameof(_profilerVM.SemaforoStatoTelecamera1));
+                _profilerVM.OnPropertyChanged(nameof(_profilerVM.SemaforoStatoTelecamera2));
             }
         }
 
@@ -554,12 +556,12 @@ namespace Alp.Com.Igu.ViewModels
             {
                 msgStatoConnessioneTelecamere = value;
                 OnPropertyChanged();
-                _getDataDeviceVM.OnPropertyChangedPerAvvisi();
-                _getDataDeviceVM.OnPropertyChanged(nameof(_getDataDeviceVM.MsgStatoTelecamere));
-                _getDataDeviceVM.OnPropertyChanged(nameof(_getDataDeviceVM.IsMsgStatoTelecamereVisibile));
-                _getDataDeviceVM.OnPropertyChanged(nameof(_getDataDeviceVM.SemaforoStatoTelecamera1));
-                _getDataDeviceVM.OnPropertyChanged(nameof(_getDataDeviceVM.SemaforoStatoTelecamera2));
-                _getDataDeviceVM.RefreshAvvisi();
+                _profilerVM.OnPropertyChangedPerAvvisi();
+                _profilerVM.OnPropertyChanged(nameof(_profilerVM.MsgStatoTelecamere));
+                _profilerVM.OnPropertyChanged(nameof(_profilerVM.IsMsgStatoTelecamereVisibile));
+                _profilerVM.OnPropertyChanged(nameof(_profilerVM.SemaforoStatoTelecamera1));
+                _profilerVM.OnPropertyChanged(nameof(_profilerVM.SemaforoStatoTelecamera2));
+                _profilerVM.RefreshAvvisi();
             }
         }
 
@@ -574,11 +576,11 @@ namespace Alp.Com.Igu.ViewModels
             {
                 msgStatoDipSystem = value;
                 OnPropertyChanged();
-                _getDataDeviceVM.OnPropertyChangedPerAvvisi();
-                _getDataDeviceVM.OnPropertyChanged(nameof(_getDataDeviceVM.MsgStatoDipSystem));
-                _getDataDeviceVM.OnPropertyChanged(nameof(_getDataDeviceVM.IsMsgStatoDipSystemVisibile));
-                _getDataDeviceVM.OnPropertyChanged(nameof(_getDataDeviceVM.SemaforoDipSystem));
-                _getDataDeviceVM.RefreshAvvisi();
+                _profilerVM.OnPropertyChangedPerAvvisi();
+                _profilerVM.OnPropertyChanged(nameof(_profilerVM.MsgStatoDipSystem));
+                _profilerVM.OnPropertyChanged(nameof(_profilerVM.IsMsgStatoDipSystemVisibile));
+                _profilerVM.OnPropertyChanged(nameof(_profilerVM.SemaforoDipSystem));
+                _profilerVM.RefreshAvvisi();
             }
         }
 
@@ -633,14 +635,14 @@ namespace Alp.Com.Igu.ViewModels
 
         //public bool ModalitaManuale => !ModalitaAutomatica;
 
-        public MainWindowViewModel(GetDataDeviceViewModel analisiBilletteViewModel
+        public MainWindowViewModel(ProfilerViewModel analisiBilletteViewModel
             //, ImpostazioniViewModel impostazioniViewModel
             , ILogger<MainWindowViewModel> logger
             , ApplicationSettings options
             )
         {
 
-            _getDataDeviceVM = analisiBilletteViewModel;
+            _profilerVM = analisiBilletteViewModel;
             //_impostazioniVM = impostazioniViewModel;
 
             //_logger = _loggerFactory.CreateLogger<MainWindowViewModel>();
@@ -651,7 +653,7 @@ namespace Alp.Com.Igu.ViewModels
 
             RegolazioneImpostazioniAbilitata = _options.RegolazioneImpostazioniAbilitata;
 
-            _getDataDeviceVM.mainWindowVMParent = this;
+            _profilerVM.mainWindowVMParent = this;
             //_impostazioniVM.mainWindowVMParent = this;
 
             
@@ -663,7 +665,7 @@ namespace Alp.Com.Igu.ViewModels
                 else
                     Titolo = " Alping Italia - Taglio a Misura Tondoni";
 
-                CurrentView = _getDataDeviceVM;
+                CurrentView = _profilerVM;
 
                 ChangeViewCommand = new RelayCommand(o =>
                 {
@@ -682,7 +684,7 @@ namespace Alp.Com.Igu.ViewModels
 
                 HomeViewCommand = new RelayCommand(o =>
                 {
-                    CurrentView = _getDataDeviceVM;
+                    CurrentView = _profilerVM;
                 });
 
                 //DiscoveryViewCommand = new RelayCommand(o =>
@@ -736,7 +738,7 @@ namespace Alp.Com.Igu.ViewModels
                 if (isLandscape != value)
                 {
                     isLandscape = value;
-                    if (_getDataDeviceVM != null) _getDataDeviceVM.IsLandscape = value;
+                    if (_profilerVM != null) _profilerVM.IsLandscape = value;
                     //if (_impostazioniVM != null) _impostazioniVM.IsLandscape = value;
                     OnPropertyChanged();
                     OnPropertyChanged(nameof(IsPortrait));
@@ -765,14 +767,14 @@ namespace Alp.Com.Igu.ViewModels
             }
         }
 
-        public void CaricaPaginaImpostazioni(object sender, RoutedEventArgs e)
+        public void CaricaPaginaStati(object sender, RoutedEventArgs e)
         {
-            CurrentView = _impostazioniVM;
+            CurrentView = _statoDevVM;
         }
 
         public void CaricaPaginaPrincipale(object sender, RoutedEventArgs e)
         {
-            CurrentView = _getDataDeviceVM;
+            CurrentView = _profilerVM;
         }
 
     }

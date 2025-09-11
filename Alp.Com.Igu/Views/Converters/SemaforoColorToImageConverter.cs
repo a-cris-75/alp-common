@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Alp.Com.DataAccessLayer.DataTypes;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -11,7 +12,7 @@ using System.Windows.Data;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using AlpTlc.Domain.StatoMacchina;
+//using AlpTlc.Domain.StatoMacchina;
 
 namespace Alp.Com.Igu.Views.Converters
 {
