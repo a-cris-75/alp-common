@@ -8,18 +8,48 @@
         xmlns:custCtrls="clr-namespace:Alp.Com.Igu.CustomControls"
         xmlns:viewModel="clr-namespace:Alp.Com.Igu.ViewModels;assembly=Alp.Com.Igu" 
         mc:Ignorable="d"
-        Height="600" Width="920"
+        Height="800" Width="1920"
         ResizeMode="CanResize"
         Background="Transparent"
         WindowStartupLocation="CenterScreen"
  		WindowStyle="None"
 		AllowsTransparency="True"
-        Icon="..\Icons\AlpLOSMIgu.ico" Closed="Window_Closed">
+        Icon="/Views/AlpLOSMIgu.ico" Closed="Window_Closed" WindowState="Maximized">
     <!-- xmlns:viewModel="clr-namespace:AlpTlc.App.Igu.ViewModels;assembly=AlpTlc.App.Igu" -->
 
     <Window.Resources>
         <!-- localConverters:MathConverter x:Key="Math" /-->
+        <Style x:Key="ModernButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#FF2D2D2D"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#FF404040"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Width" Value="120"/>
+            <Setter Property="Height" Value="60"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                        BorderBrush="{TemplateBinding BorderBrush}" 
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="3">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#FF404040"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
+    <!--Window.DataContext>
+        <viewModel:MainWindowViewModel/>
+    </Window.DataContext-->
 
     <!--d:DataContext="{d:DesignInstance viewModel:MainWindowViewModel, IsDesignTimeCreatable=True}"-->
 
@@ -33,69 +63,70 @@
 
     <!--<Border Background="#272537" CornerRadius="20">-->
     <!--<Border Background="#464541" CornerRadius="20">--> <!--Grigio Danieli-->
-        <Border Background="#212121" CornerRadius="20">
+        <Border Background="#212121" CornerRadius="10">
             <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="1*"/>
+                <RowDefinition Height="60"/>
                 <RowDefinition Height="18*"/>
-                <RowDefinition Height="1*"/>
+                <RowDefinition Height="80"/>
             </Grid.RowDefinitions>
 
-            <DockPanel x:Name="dckBarTitle" Grid.Row="0" >
-
-                <StackPanel DockPanel.Dock="Left" 
+            <Grid x:Name="dckBarTitle" Grid.Row="0" Margin="0,5,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="300"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="400"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0"
                         Orientation="Horizontal" 
                         VerticalAlignment="Stretch"
-                        Margin="10,0">
-                    <Grid Margin="10,0">
+                        Margin="10,0" >
+                    <!--Grid Margin="10,0" Width="400">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="30*"/>
-                            <!--25-->
+                            <RowDefinition Height="10"/>
                             <RowDefinition Height="50*"/>
-                            <RowDefinition Height="20*"/>
-                            <!--25-->
-                        </Grid.RowDefinitions>
+                            <RowDefinition Height="10*"/>
+                        </Grid.RowDefinitions-->
                         <Image Grid.Row="1" VerticalAlignment="Stretch"
-                                        HorizontalAlignment="Left">
-                            <Image.Source>
-                                <!--<BitmapImage DecodePixelWidth ="360" UriSource="../Images/Loghi Alping/LogoAlpingInterfacce.png" />-->
-                                <BitmapImage DecodePixelWidth ="360" UriSource="../Images/Loghi Alping/LogoAlpingInterfacceBianco.png" />
-                            </Image.Source>
+                            HorizontalAlignment="Left" Margin="15,5"
+                            Source="/Alp.Com.Igu;component/Images/Loghi Alping/LogoAlpingInterfacceBianco.png">
+                        <!--Image.Source>
+                                <BitmapImage DecodePixelWidth ="360" UriSource="/Views/LogoAlpingInterfacceBianco.png" />
+                            </Image.Source-->
                         </Image>
-                    </Grid>
-                    <TextBlock Text="AlpLOSM - Ausilio Visivo Losangatura Billette"
-                           VerticalAlignment="Center"
-                           HorizontalAlignment="Left"
-                           Foreground="#C7C7CC"
-                          Margin="20,0"/>
-                    <!-- FontSize="{Binding ActualHeight, ElementName=dckBarTitle, Converter={StaticResource Math}, ConverterParameter=@VALUE/2}" -->
-
+                    <!--/Grid-->
+                   
                 </StackPanel>
-
-                <StackPanel DockPanel.Dock="Right" 
+                <StackPanel Grid.Column="1">
+                    <TextBlock Text="AlpLAM - Gestione Tagli Lamiere" FontSize="24" Width="600"
+                        VerticalAlignment="Center" TextAlignment="Center"
+                        HorizontalAlignment="Center"
+                        Foreground="#C7C7CC"
+                       Margin="20,10"/>      
+                    <!-- FontSize="{Binding ActualHeight, ElementName=dckBarTitle, Converter={StaticResource Math}, ConverterParameter=@VALUE/2}" -->    
+                </StackPanel>
+                
+                <StackPanel Grid.Column="2" 
                         Orientation="Horizontal" 
                         VerticalAlignment="Stretch"
                         HorizontalAlignment="Right"
-                        Margin="20,0">
+                        Margin="0,0">
 
                     <!--Logo Cliente-->
-                    <Grid Margin="20,10">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="0*"/>
-                            <RowDefinition Height="84*"/>
-                            <RowDefinition Height="16*"/>
-                        </Grid.RowDefinitions>
+                    <DockPanel Margin="0,0" Width="300" HorizontalAlignment="Stretch">
 
-                        <Image Grid.Row="1" 
-                           VerticalAlignment="Center"
-                           HorizontalAlignment="Left"
-                               Margin="0,5,0,0">
+                        <Image VerticalAlignment="Stretch" Height="50"
+                           HorizontalAlignment="Center"
+                           Margin="0,0,0,0"
+                           Source="/Alp.Com.Igu;component/Images/LogoMarcegaglia.png">
                             <!--<Image Width="210"
                                VerticalAlignment="Center"
                                HorizontalAlignment="Left"
                                Margin="0,10,60,0">-->
                             <!--Margin="60,0">-->
-                            <Image.Source>
+
+
+                            <!--Image.Source-->
                                 <!--To save significant application memory, set the DecodePixelWidth or  
                                      DecodePixelHeight of the BitmapImage value of the image source to the desired 
                                      height and width of the rendered image. If you don't do this, the application will 
@@ -108,15 +139,15 @@
 
                                 <!--<BitmapImage DecodePixelWidth ="180" UriSource="..\Images\LogoValbruna.png" RenderOptions.BitmapScalingMode="HighQuality"/>-->
                                 <!--<BitmapImage DecodePixelWidth ="360" UriSource="..\Images\LogoPittiniCeleste.png" RenderOptions.BitmapScalingMode="HighQuality"/>-->
-                                <BitmapImage DecodePixelWidth ="360" UriSource="..\Images\Logo Pittini interfacce.png" RenderOptions.BitmapScalingMode="HighQuality"/>
+                                <!--BitmapImage DecodePixelWidth ="360" UriSource="/Views/LogoMarcegaglia.png" /-->
 
-                            </Image.Source>
+                            <!--/Image.Source-->
                         </Image>
 
-                    </Grid>
+                    </DockPanel>
 
                     <!--Cambio pagina Impostazioni/Home-->
-                    <ToggleButton x:Name = "tbtSettingsHome" 
+                    <!--ToggleButton x:Name = "tbtSettingsHome" 
                           VerticalAlignment="Center"
                           HorizontalAlignment = "Right" 
                           Checked = "CambioPagina_Checked" Unchecked = "CambioPagina_Unchecked"
@@ -124,7 +155,6 @@
                           MaxHeight="40" MaxWidth="40"
                           Background="Transparent"
                           IsChecked="{Binding IsSettingsActive}">
-                        <!-- Visibility ="{Binding Path=RegolazioneImpostazioniAbilitata, Converter={StaticResource BoolToVisibility}, ConverterParameter='ShowOrHide', FallbackValue=Hidden}"-->
                         <ToggleButton.Style>
                             <Style TargetType="ToggleButton">
                                 <Setter Property="Template">
@@ -143,11 +173,9 @@
                                 <Style TargetType="{x:Type Image}">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding IsSettingsActive}" Value="false">
-                                            <!--<Setter Property="Source" Value="../Images/settings 11 bianco.png"/>-->
                                             <Setter Property="Source" Value="../Images/IconaImpostazioniAlping.png"/>
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding IsSettingsActive}" Value="true">
-                                            <!--<Setter Property="Source" Value="../Images/Home_white.png"/>-->
                                             <Setter Property="Source" Value="../Images/Icona Home.png"/>
                                         </DataTrigger>
                                     </Style.Triggers>
@@ -155,23 +183,23 @@
                             </Image.Style>
                         </Image>
 
-                    </ToggleButton>
+                    </ToggleButton-->
                     
                     <!--Aiuto-->
-                    <Grid>
+                    <Grid HorizontalAlignment="Right" Margin="0,0,15,0">
                         <Button x:Name="btnHelp" 
                                 Background="Transparent"
                                 BorderBrush="Transparent"
                                 VerticalAlignment="Center"
                                 VerticalContentAlignment="Center"
-                                Margin="20,14,20,10"
+                               
                                 Command="{Binding OpenHelpCommand}" 
                                 Foreground="lightgray">
                             <!-- FontSize="{Binding ActualHeight, ElementName=dckBarTitle, Converter={StaticResource Math}, ConverterParameter=@VALUE/2}"-->
 
                             <Image VerticalAlignment="Center"
                                    HorizontalAlignment="Left"
-                                   Margin="2">
+                                   Margin="2" Height="20">
                                 <Image.Source>
                                     <BitmapImage DecodePixelWidth ="32" UriSource="..\Images\IconaHelpAlping.png" RenderOptions.BitmapScalingMode="HighQuality"/>
                                 </Image.Source>
@@ -194,14 +222,13 @@
                     </Grid>
                     
                     <!--Minimizza-->
-                    <Grid>
+                    <Grid HorizontalAlignment="Right" Margin="0,0,10,0">
                         <!--Margin="20,0"-->
                         <Button x:Name="btnMinimizza" 
                             Background="Transparent"
                             BorderBrush="Transparent"
                             VerticalAlignment="Center"
                             VerticalContentAlignment="Center"
-                            Margin="16,14,16,10"
                             Click="btnMinimizza_Click"
                             Foreground="lightgray">
                             <!-- FontSize="{Binding ActualHeight, ElementName=dckBarTitle, Converter={StaticResource Math}, ConverterParameter=@VALUE/2}" -->
@@ -209,7 +236,7 @@
                             <!--&#x2500;-->
                             <Image VerticalAlignment="Center"
                                    HorizontalAlignment="Left"
-                                   Margin="2">
+                                   Margin="2" Height="20">
                                 <Image.Source>
                                     <BitmapImage DecodePixelWidth ="32" UriSource="..\Images\Icona Riduci.png" RenderOptions.BitmapScalingMode="HighQuality"/>
                                 </Image.Source>
@@ -218,14 +245,13 @@
                     </Grid>
                     
                     <!--Chiudi-->
-                    <Grid>
+                    <Grid HorizontalAlignment="Right" Margin="0,0,10,0">
                         <!--Margin="20,0"-->
                         <Button x:Name="btnChiudi" 
                             Background="Transparent"
                             BorderBrush="Transparent"
                             VerticalAlignment="Center"
                             VerticalContentAlignment="Center"
-                            Margin="20,14,8,10"
                             CommandParameter="True"
                             Foreground="lightgray" Click="btnChiudi_Click">
                             <!-- FontSize="{Binding ActualHeight, ElementName=dckBarTitle, Converter={StaticResource Math}, ConverterParameter=@VALUE*3/8}" -->
@@ -233,7 +259,7 @@
                             <!--&#x2573;-->
                             <Image VerticalAlignment="Center"
                                    HorizontalAlignment="Left"
-                                   Margin="2">
+                                   Margin="2" Height="20">
                                 <Image.Source>
                                     <BitmapImage DecodePixelWidth ="32" UriSource="..\Images\Icona Close.png" RenderOptions.BitmapScalingMode="HighQuality"/>
                                 </Image.Source>
@@ -243,19 +269,56 @@
                     
                 </StackPanel>
 
-            </DockPanel>
+            </Grid>
 
             <!--Il ContentControl, grazie a Content="{Binding CurrentView}  
                 mostra la View associata al ViewModel "CurrentView", 
                 come definito nei DataTemplate presenti in App.xaml :-->
 
-            <ContentControl Grid.Row="1" 
+            <Frame Name="PageContainer"  Grid.Row="1" 
                             Grid.Column="0" 
                             Margin="10"
-                            Content="{Binding CurrentView}"/>
+                            Content="{Binding CurrentPage}"/>
 
-            <ContentControl Grid.Row="0"/>
-            <ContentControl Grid.Row="2"/>
+            <!-- Bottom Navigation -->
+            <Grid Name="grdFooter" Grid.Row="2" Height="70" VerticalAlignment="Top" Background="#FF2D2D2D" >
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Button Style="{StaticResource ModernButtonStyle}"  Margin="5" 
+                            Command="{Binding NavigateToPageCommand}" 
+                            CommandParameter="Home"
+                            >
+                        <StackPanel>
+                            <TextBlock Text="🏠" FontSize="16" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Home" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource ModernButtonStyle}" Margin="5"
+                            Command="{Binding NavigateToPageCommand}" 
+                            CommandParameter="Allarms">
+                        <StackPanel>
+                            <TextBlock Text="⚠" FontSize="16" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Allarmi"  HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource ModernButtonStyle}"  Margin="5"
+                            Command="{Binding NavigateToPageCommand}" 
+                            CommandParameter="Settings"
+                            >
+                        <StackPanel>
+                            <TextBlock Text="⚙" FontSize="16" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Impostazioni"  HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+
+                <!-- Time Display -->
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,30,0">
+                    <TextBlock Text="11:00 AM" FontSize="16" Foreground="White" HorizontalAlignment="Right"/>
+                    <TextBlock Text="10/08/2025" FontSize="14" Foreground="#FFAAAAAA" HorizontalAlignment="Right"/>
+                </StackPanel>
+            </Grid>
+
+
         </Grid>
     </Border>
 

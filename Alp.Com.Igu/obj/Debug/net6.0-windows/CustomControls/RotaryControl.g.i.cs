@@ -10,8 +10,6 @@
 //------------------------------------------------------------------------------
 
 using Alp.Com.Igu.CustomControls;
-using Alp.Com.Igu.ViewModels;
-using Alp.Com.Igu.Views;
 using System;
 using System.Diagnostics;
 using System.Windows;

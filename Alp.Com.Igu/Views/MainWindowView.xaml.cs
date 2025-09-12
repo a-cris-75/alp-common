@@ -24,7 +24,6 @@ namespace Alp.Com.Igu.Views
     /// </summary>
     public partial class MainWindowView : Window
     {
-        //ILogger _logger;
 
         private static readonly log4net.ILog _logger = log4net.LogManager.GetLogger
                            ("Alp.Com.Igu.Views.MainWindowView");
@@ -32,7 +31,7 @@ namespace Alp.Com.Igu.Views
 
         MainWindowViewModel vm;
 
-        public MainWindowView(ILogger<MainWindowView> logger)
+        public MainWindowView()
         {
             //_logger = logger;
             _logger.Info("MainWindowView ctor...");
@@ -66,17 +65,17 @@ namespace Alp.Com.Igu.Views
         
         }
 
-        private void CambioPagina_Checked(object sender, RoutedEventArgs e)
-        {
-            MainWindowViewModel vm = this.DataContext as MainWindowViewModel;
-            vm.CaricaPaginaStati(sender, e);
-        }
+        //private void CambioPagina_Checked(object sender, RoutedEventArgs e)
+        //{
+        //    MainWindowViewModel vm = this.DataContext as MainWindowViewModel;
+        //    vm.CaricaPaginaStati(sender, e);
+        //}
 
-        private void CambioPagina_Unchecked(object sender, RoutedEventArgs e)
-        {
-            MainWindowViewModel vm = this.DataContext as MainWindowViewModel;
-            vm.CaricaPaginaPrincipale(sender, e);
-        }
+        //private void CambioPagina_Unchecked(object sender, RoutedEventArgs e)
+        //{
+        //    MainWindowViewModel vm = this.DataContext as MainWindowViewModel;
+        //    vm.CaricaPaginaPrincipale(sender, e);
+        //}
 
         private void btnMinimizza_Click(object sender, RoutedEventArgs e)
         {
@@ -112,6 +111,11 @@ namespace Alp.Com.Igu.Views
         }
 
 
+        public void ShowPage(Page page)
+        {
+            PageContainer.Content = page;
+            vm.CurrentPage = page;
+        }
 
 
 

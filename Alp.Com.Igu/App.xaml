@@ -34,26 +34,18 @@
                 <ResourceDictionary Source="Theme/ToggleButtonTheme.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
-            <!--<DataTemplate DataType="{x:Type viewModels:AnalisiBilletteViewModel}" x:Shared="true">
-                <views:AnalisiBilletteView />
-            </DataTemplate>
-            <DataTemplate DataType="{x:Type viewModels:ImpostazioniViewModel}" x:Shared="true">
-                <views:ImpostazioniView/>
-            </DataTemplate>-->
-
-            
 
             <!--Questo qua sopra non va bene perché crea una nuova istanza di AnalisiBilletteView o di ImpostazioniView
             ogni volta che si ricarica la pagina, nonostante x:Shared="true". Questo sotto invece va bene.-->
 
-            <views:ProfilerView x:Key="ProfilerViewInstance" />
+            <!--views:ProfilerView x:Key="ProfilerViewInstance" />
             <views:StatoDevicesView x:Key="StatoDevicesViewInstance" />
             
             <DataTemplate DataType="{x:Type viewModels:ProfilerViewModel}">
                 <ContentPresenter Content="{StaticResource ProfilerViewInstance}" />
             </DataTemplate>
 
-            <!--DataTemplate DataType="{x:Type viewModels:StatoDevicesViewModel}">
+            <DataTemplate DataType="{x:Type viewModels:StatoDevicesViewModel}">
                 <ContentPresenter Content="{StaticResource StatoDevicesViewInstance}" />
             </DataTemplate-->
 

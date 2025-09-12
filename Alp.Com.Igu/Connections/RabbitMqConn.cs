@@ -6,8 +6,8 @@
 //using AlpTlc.Connessione.Broker.RabbitMq.ProtoModel;
 //using AlpTlc.Domain.Impostazioni;
 //using AlpTlc.Domain.StatoMacchina;
-using Crs.Base.RabbitParsingHelper;
-using Crs.Base.SendReceiveRabbit;
+//using Crs.Base.RabbitParsingHelper;
+//using Crs.Base.SendReceiveRabbit;
 using KSociety.Base.EventBusRabbitMQ;
 using ProtoBuf;
 using RabbitMQ.Client;
@@ -45,9 +45,9 @@ namespace Alp.Com.Igu.Connections
 
         //ConnectionFactory factory = new ConnectionFactory() { HostName = ApplicationSettingsStatic.ServerIP, UserName = "KSociety", Password = "KSociety" };
 
-        //IConnection connection = null;
-        //tatic IModel channel = null;
-        static Crs.Base.SendReceiveRabbit.RabbitMq? RAB = null;
+        IConnection connection = null;
+        static RabbitMQ.Client.IModel channel = null;
+        //static Crs.Base.SendReceiveRabbit.RabbitMq? RAB = null;
         static string exchCom = "";
         //EventingBasicConsumer consumer = null;
         static int FrameNumberDia = 0;
@@ -117,7 +117,7 @@ namespace Alp.Com.Igu.Connections
 
             log.Info("Init...");
 
-            hostname = Dns.GetHostName();
+            //hostname = Dns.GetHostName();
 
             // TODO : usare DefaultRabbitMqPersistentConnection delle librerie KSociety.Base (così si usa anche il logger...?) - vedo il Dia.
             // NB : il pacchetto KSociety.Base.EventBusRabbitMQ e la using KSociety.Base.EventBusRabbitMQ le ho preparate solo a questo scopo
@@ -139,7 +139,7 @@ namespace Alp.Com.Igu.Connections
 
             // TODO FINE
 
-            Crs.Base.SendReceiveRabbit.RabbitMq RAB = new Crs.Base.SendReceiveRabbit.RabbitMq(hostname, 5672, "", "");
+            //Crs.Base.SendReceiveRabbit.RabbitMq RAB = new Crs.Base.SendReceiveRabbit.RabbitMq("", 5672, "", "");
 
 
             // Questo è NECESSARIO per il corretto funzionamento della serializzazione / deserializzazione!!
@@ -156,64 +156,66 @@ namespace Alp.Com.Igu.Connections
             string queueDia = "CodaImmagineDiaPerIgu_" + hostname;
             string queueDip = "CodaImmagineDipPerIgu_" + hostname;
 
-            RAB.AddKeyExchange("ImageIntegrationEvent.Dalsa_1.imagelive", exchDia, queueDia, true);
-            RAB.AddKeyExchange("ImageIntegrationEvent.Dalsa_2.imagelive", exchDia, queueDia, true);
-            RAB.AddKeyExchange("ImageIntegrationEvent.Dalsa_1.image", exchDia, queueDia, true);
-            RAB.AddKeyExchange("ImageIntegrationEvent.Dalsa_2.image", exchDia, queueDia, true);
-            RAB.AddKeyExchange("CamStatusIntegrationEvent.StatusMonitor.camstatus", exchDia, queueDia, true);
+            //RAB.AddKeyExchange("ImageIntegrationEvent.Dalsa_1.imagelive", exchDia, queueDia, true);
+            //RAB.AddKeyExchange("ImageIntegrationEvent.Dalsa_2.imagelive", exchDia, queueDia, true);
+            //RAB.AddKeyExchange("ImageIntegrationEvent.Dalsa_1.image", exchDia, queueDia, true);
+            //RAB.AddKeyExchange("ImageIntegrationEvent.Dalsa_2.image", exchDia, queueDia, true);
+            //RAB.AddKeyExchange("CamStatusIntegrationEvent.StatusMonitor.camstatus", exchDia, queueDia, true);
 
-            RAB.AddKeyExchange("ImageProcessedIntegrationEvent.Dalsa_1.imageprocessed", exchDip, queueDip, true);
-            RAB.AddKeyExchange("ImageProcessedIntegrationEvent.Dalsa_2.imageprocessed", exchDip, queueDip, true);
-            List<string> lstqueue = new List<string>();
-            lstqueue.Add(queue);
-            lstqueue.Add(queueDia);
-            lstqueue.Add(queueDip);
-            RAB.Receive(ConsumerReceived, lstqueue);
+            //RAB.AddKeyExchange("ImageProcessedIntegrationEvent.Dalsa_1.imageprocessed", exchDip, queueDip, true);
+            //RAB.AddKeyExchange("ImageProcessedIntegrationEvent.Dalsa_2.imageprocessed", exchDip, queueDip, true);
+            //List<string> lstqueue = new List<string>();
+            //lstqueue.Add(queue);
+            //lstqueue.Add(queueDia);
+            //lstqueue.Add(queueDip);
+            //RAB.Receive(ConsumerReceived, lstqueue);
 
-            //connection = factory.CreateConnection();
-            //channel = connection.CreateModel();
+            ConnectionFactory factory = new ConnectionFactory() { HostName = ApplicationSettingsStatic.ServerIP, UserName = "KSociety", Password = "KSociety" };
+
+            connection = factory.CreateConnection();
+            channel = connection.CreateModel();
 
             //channel.ExchangeDeclare(exchange: exchLog, type: ExchangeType.Direct, durable: false, autoDelete: true);
-            //channel.ExchangeDeclare(exchange: exchCom, type: ExchangeType.Direct, durable: false, autoDelete: true);
-            //channel.ExchangeDeclare(exchange: exchDia, type: ExchangeType.Direct, durable: false, autoDelete: true);
-            //channel.ExchangeDeclare(exchange: exchDip, type: ExchangeType.Direct, durable: false, autoDelete: true);
+            channel.ExchangeDeclare(exchange: exchCom, type: ExchangeType.Direct, durable: false, autoDelete: true);
+            channel.ExchangeDeclare(exchange: exchDia, type: ExchangeType.Direct, durable: false, autoDelete: true);
+            channel.ExchangeDeclare(exchange: exchDip, type: ExchangeType.Direct, durable: false, autoDelete: true);
 
-            //var queueName = channel.QueueDeclare(queue: "CodaPerIgu_" + hostname).QueueName;
-            //var queueImageDiaName = channel.QueueDeclare(queue: "CodaImmagineDiaPerIgu_" + hostname).QueueName;
-            //var queueImageDipName = channel.QueueDeclare(queue: "CodaImmagineDipPerIgu_" + hostname).QueueName;
+            var queueName = channel.QueueDeclare(queue: "CodaPerIgu_" + hostname).QueueName;
+            var queueImageDiaName = channel.QueueDeclare(queue: "CodaImmagineDiaPerIgu_" + hostname).QueueName;
+            var queueImageDipName = channel.QueueDeclare(queue: "CodaImmagineDipPerIgu_" + hostname).QueueName;
 
-            //channel.QueueBind(queue: queueImageDiaName, exchange: exchDia, routingKey: "ImageIntegrationEvent.Dalsa_1.imagelive");
-            //channel.QueueBind(queue: queueImageDiaName, exchange: exchDia, routingKey: "ImageIntegrationEvent.Dalsa_2.imagelive");
+            channel.QueueBind(queue: queueImageDiaName, exchange: exchDia, routingKey: "ImageIntegrationEvent.Dalsa_1.imagelive");
+            channel.QueueBind(queue: queueImageDiaName, exchange: exchDia, routingKey: "ImageIntegrationEvent.Dalsa_2.imagelive");
 
-            //// Queste immagini sono destinate al Dip, ma le rileviamo solo per ricavare il numero di immagine emesso dal Dia e vedere se il Dip rimane indietro
-            //channel.QueueBind(queue: queueImageDiaName, exchange: exchDia, routingKey: "ImageIntegrationEvent.Dalsa_1.image");
-            //channel.QueueBind(queue: queueImageDiaName, exchange: exchDia, routingKey: "ImageIntegrationEvent.Dalsa_2.image");
+            // Queste immagini sono destinate al Dip, ma le rileviamo solo per ricavare il numero di immagine emesso dal Dia e vedere se il Dip rimane indietro
+            channel.QueueBind(queue: queueImageDiaName, exchange: exchDia, routingKey: "ImageIntegrationEvent.Dalsa_1.image");
+            channel.QueueBind(queue: queueImageDiaName, exchange: exchDia, routingKey: "ImageIntegrationEvent.Dalsa_2.image");
 
-            //channel.QueueBind(queue: queueImageDipName, exchange: exchDip, routingKey: "ImageProcessedIntegrationEvent.Dalsa_1.imageprocessed");
-            //channel.QueueBind(queue: queueImageDipName, exchange: exchDip, routingKey: "ImageProcessedIntegrationEvent.Dalsa_2.imageprocessed");
+            channel.QueueBind(queue: queueImageDipName, exchange: exchDip, routingKey: "ImageProcessedIntegrationEvent.Dalsa_1.imageprocessed");
+            channel.QueueBind(queue: queueImageDipName, exchange: exchDip, routingKey: "ImageProcessedIntegrationEvent.Dalsa_2.imageprocessed");
 
-            //// MB + PER NOTIFICA STATO TELECAMERE A IGU :
-            //channel.QueueBind(queue: queueName, exchange: exchDia, routingKey: "CamStatusIntegrationEvent.StatusMonitor.camstatus");
+            // MB + PER NOTIFICA STATO TELECAMERE A IGU :
+            channel.QueueBind(queue: queueName, exchange: exchDia, routingKey: "CamStatusIntegrationEvent.StatusMonitor.camstatus");
 
-            //// Intercettiamo gli invoke che arrivano dal Plc:
-            //channel.QueueBind(queue: queueName, exchange: exchCom, routingKey: "TagIntegrationEvent.FromPlc.automation.invoke");
+            // Intercettiamo gli invoke che arrivano dal Plc:
+            channel.QueueBind(queue: queueName, exchange: exchCom, routingKey: "TagIntegrationEvent.FromPlc.automation.invoke");
 
-            //channel.QueueBind(queue: queueName, exchange: exchCom, routingKey: "TagWriteIntegrationEvent.ToPlc.automation.write.server"); //Intercettiamo quello che il Dia o il Dip mandano al Plc
-            //// ... usiamo gli stessi messaggi e poi li smistiamo sia verso il Plc che verso l'Igu (coda CodaPerIgu) per avere il watchdog dal Dia e dal Dip e il systemready dal Dip (si potevano anche creare messaggi separati dedicati all'Igu...)
+            channel.QueueBind(queue: queueName, exchange: exchCom, routingKey: "TagWriteIntegrationEvent.ToPlc.automation.write.server"); //Intercettiamo quello che il Dia o il Dip mandano al Plc
+            // ... usiamo gli stessi messaggi e poi li smistiamo sia verso il Plc che verso l'Igu (coda CodaPerIgu) per avere il watchdog dal Dia e dal Dip e il systemready dal Dip (si potevano anche creare messaggi separati dedicati all'Igu...)
 
-            //// Per ricevere indietro un proprio stesso messaggio (loop per verificare il funzionamento del RabbitMq):
-            //channel.QueueBind(queue: queueName, exchange: exchCom, routingKey: "TagIntegrationEvent.FromIgu.igu.invoke");
+            // Per ricevere indietro un proprio stesso messaggio (loop per verificare il funzionamento del RabbitMq):
+            channel.QueueBind(queue: queueName, exchange: exchCom, routingKey: "TagIntegrationEvent.FromIgu.igu.invoke");
 
-            //// Per ricevere messaggi dagli altri servizi:
-            //channel.QueueBind(queue: queueName, exchange: exchCom, routingKey: "TagIntegrationEvent.ToIgu.igu.invoke");
+            // Per ricevere messaggi dagli altri servizi:
+            channel.QueueBind(queue: queueName, exchange: exchCom, routingKey: "TagIntegrationEvent.ToIgu.igu.invoke");
 
-            //var consumer = new EventingBasicConsumer(channel);
+            var consumer = new EventingBasicConsumer(channel);
 
-            //consumer.Received += ConsumerReceived;
+            consumer.Received += ConsumerReceived;
 
-            //channel.BasicConsume(queue: queueName, autoAck: true, consumer: consumer);
-            //channel.BasicConsume(queue: queueImageDiaName, autoAck: true, consumer: consumer);
-            //channel.BasicConsume(queue: queueImageDipName, autoAck: true, consumer: consumer);
+            channel.BasicConsume(queue: queueName, autoAck: true, consumer: consumer);
+            channel.BasicConsume(queue: queueImageDiaName, autoAck: true, consumer: consumer);
+            channel.BasicConsume(queue: queueImageDipName, autoAck: true, consumer: consumer);
 
             log.Debug("In attesa di messaggi da coda Rabbit.");
 
@@ -288,10 +290,6 @@ namespace Alp.Com.Igu.Connections
         private void ProcessEvent(string routingKey, string eventName, ReadOnlyMemory<byte> message, CancellationToken cancel = default)
         {
             Type eventType = ByName(eventName);
-            // TODO RIABILITARE LOG CON CONDIZIONE
-            //_logger.Verbose($"ProcessEvent... eventType: [{eventType}]");
-
-            //if (eventType.Name.StartsWith("Tag")) return; // PER TEST, SE iL WATCHDOG DA' FASTIDIO. CANCELLARE
             using var ms = new MemoryStream(message.ToArray());
             var integrationEvent = Serializer.Deserialize(eventType, ms);
 
@@ -334,9 +332,7 @@ namespace Alp.Com.Igu.Connections
 
                 case "TagIntegrationEvent":
                     TagIntegrationEvent tie = (TagIntegrationEvent)integrationEvent;
-                    // TODO RIABILITARE LOG CON CONDIZIONE
-                    //_logger.Information($"ProcessEvent: TagIntegrationEvent Received: GroupName[{tie.GroupName}] Name[{tie.Name}] Value[{tie.Value}]");
-
+                   
                     if (tie.Name.Equals("RabbitMqAutoWatchdog"))
                     {
                         if (int.TryParse(tie.Value, out var rabbitMqAutoWatchdogValue))
@@ -369,9 +365,7 @@ namespace Alp.Com.Igu.Connections
 
                 case "ImageIntegrationEvent":
                     ImageIntegrationEvent iie = (ImageIntegrationEvent)integrationEvent;
-                    // TODO RIABILITARE LOG CON CONDIZIONE
-                    //_logger.Information($"ProcessEvent: ImageIntegrationEvent Received: [{iie}]");
-
+                    
                     if (iie != null)
                     {
                         if (!IsDipAlive)
@@ -407,7 +401,7 @@ namespace Alp.Com.Igu.Connections
 
                     break;
 
-                case "ProfilerIntgrationEvent":
+                case "ProfilerIntegrationEvent":
                     DatiLamieraIntegrationEvent al = (DatiLamieraIntegrationEvent)integrationEvent;
                     AnalisiLamiera.Larghezza = al.Larghezza;
                     AnalisiLamiera.Lunghezza = al.Lunghezza;
@@ -417,10 +411,7 @@ namespace Alp.Com.Igu.Connections
                     AnalisiLamiera.Destinazione = al.Destinazione;
                     AnalisiLamiera.CoordinateTaglio = al.CoordinateTaglio;
                     break;
-
             }
-
-
         }
 
         private static Type ByName(string name)
@@ -443,9 +434,7 @@ namespace Alp.Com.Igu.Connections
 
         public static void SendTagInvoke(string nomeTagGroup, string nomeTag, string valoreTag)
         {
-
-            //if (channel == null) return;
-
+            if (channel == null) return;
             Tag tg = new Tag() { Name = nomeTag, Value = valoreTag, TagGroup = new TagGroup() { Name = nomeTagGroup } };
             TagValueChanged notification = new TagValueChanged() { Tag = tg, Timestamp = DateTime.Now };
 
@@ -456,24 +445,25 @@ namespace Alp.Com.Igu.Connections
                                                                  notification.Timestamp);
 
             string routingKey = evento.RoutingKey;
-
             using var ms = new MemoryStream();
             Serializer.Serialize(ms, evento);
             var body = ms.ToArray();
 
-            //var properties = channel.CreateBasicProperties();
-            //properties.DeliveryMode = 1; //2 = persistent, write on disk
+            if (channel != null)
+            {
+                var properties = channel.CreateBasicProperties();
+                properties.DeliveryMode = 1; //2 = persistent, write on disk
 
-            //channel.BasicPublish(exchCom,
-            //                     routingKey,
-            //                     true,
-            //                     properties,
-            //                     body);
+                channel.BasicPublish(exchCom,
+                                     routingKey,
+                                     true,
+                                     properties,
+                                     body);
 
-            RAB.SendSimple(body, routingKey, exchCom);
+                //RAB.SendSimple(body, routingKey, exchCom);
 
-            log.Info($"SendTagInvoke: routingKey [{routingKey}], nomeTag [{nomeTag}], valoreTag [{valoreTag}]");
-
+                log.Info($"SendTagInvoke: routingKey [{routingKey}], nomeTag [{nomeTag}], valoreTag [{valoreTag}]");
+            }
         }
     }
 

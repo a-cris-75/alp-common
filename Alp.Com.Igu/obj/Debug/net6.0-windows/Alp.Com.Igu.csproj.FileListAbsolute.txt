@@ -20,8 +20,6 @@ D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\KSocie
 D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\KSociety.Base.EventBusRabbitMQ.dll
 D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\log4net.dll
 D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\System.Net.Http.Formatting.dll
-D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\Microsoft.Bcl.AsyncInterfaces.dll
-D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\Microsoft.Bcl.TimeProvider.dll
 D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\Microsoft.Extensions.Configuration.dll
 D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\Microsoft.Extensions.Configuration.Abstractions.dll
 D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\Microsoft.Extensions.Configuration.Binder.dll
@@ -53,7 +51,6 @@ D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\Micros
 D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\Newtonsoft.Json.dll
 D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\Newtonsoft.Json.Bson.dll
 D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\Polly.dll
-D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\Polly.Core.dll
 D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\protobuf-net.dll
 D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\protobuf-net.Core.dll
 D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\RabbitMQ.Client.dll
@@ -62,13 +59,10 @@ D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\System
 D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\System.Collections.Immutable.dll
 D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\System.Diagnostics.DiagnosticSource.dll
 D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\System.Diagnostics.EventLog.dll
-D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\System.IO.Pipelines.dll
 D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\System.Management.dll
 D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\System.ServiceProcess.ServiceController.dll
 D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\System.Text.Encodings.Web.dll
 D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\System.Text.Json.dll
-D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\System.Threading.Channels.dll
-D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\System.Threading.RateLimiting.dll
 D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\System.Threading.Tasks.Dataflow.dll
 D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\runtimes\win\lib\net6.0\System.Diagnostics.EventLog.Messages.dll
 D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\runtimes\win\lib\net6.0\System.Diagnostics.EventLog.dll
@@ -77,10 +71,7 @@ D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\runtim
 D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\runtimes\browser\lib\net6.0\System.Text.Encodings.Web.dll
 D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\Alp.Com.DataAccessLayer.dll
 D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\Crs.Base.CommonUtilsLibrary.dll
-D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\Crs.Base.SendReceiveRabbit.dll
 D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\Crs.Base.CommonUtilsLibrary.pdb
-D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\Crs.Base.SendReceiveRabbit.pdb
-D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\Crs.Base.SendReceiveRabbit.dll.config
 D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\Alp.Com.DataAccessLayer.pdb
 D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\obj\Debug\net6.0-windows\App.g.cs
 D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\obj\Debug\net6.0-windows\App.baml
@@ -104,3 +95,19 @@ D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\obj\Debug\net6.0-windows\refint
 D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\obj\Debug\net6.0-windows\Alp.Com.Igu.pdb
 D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\obj\Debug\net6.0-windows\Alp.Com.Igu.genruntimeconfig.cache
 D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\obj\Debug\net6.0-windows\ref\Alp.Com.Igu.dll
+D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\appsettings.json
+D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\Icons\SkyDrive.ico
+D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\Images\Loghi Alping\Alping logo_oriz 1.png
+D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\Images\Loghi Alping\Alping logo_oriz 2.png
+D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\Images\Loghi Alping\Alping logo_oriz no payoff.png
+D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\Images\Loghi Alping\Alping_Artificial Int oriz.png
+D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\Images\Loghi Alping\Alping_Artificial Int orizCrop Chiaro.png
+D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\Images\Loghi Alping\Alping_Artificial Int orizCrop.png
+D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\Images\Loghi Alping\Alping_Artificial Int vert.png
+D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\Images\Loghi Alping\Alping_Artificial Int vertCrop.png
+D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\Images\Loghi Alping\LogoAlpingInterfacce.png
+D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\Icons\AlpLOSMIgu.ico
+D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\KSociety.Base.InfraSub.Shared.dll
+D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\MediatR.dll
+D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\bin\Debug\net6.0-windows\Quartz.dll
+D:\CRS\DEV\REPOSITORY_GIT\alp-common\Alp.Com.Igu\obj\Debug\net6.0-windows\Alp.Com.Igu_Content.g.cs

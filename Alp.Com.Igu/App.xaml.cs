@@ -53,7 +53,7 @@ namespace Alp.Com.Igu
             _configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile("appsettings.Development.json", optional: true)
+                //.AddJsonFile("appsettings.Development.json", optional: true)
                 .Build();
 
             // NB: Se il servizio RabbitMQ non è in esecuzione, alla riga qui sotto il programma resta piantato indefinitamente:

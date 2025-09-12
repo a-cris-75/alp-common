@@ -5,11 +5,16 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Alp.Com.Igu.Views"
       xmlns:localConverters="clr-namespace:Alp.Com.Igu.Views.Converters"
-      xmlns:viewModels="clr-namespace:Alp.Com.Igu.ViewModels;assembly=Alp.Com.Igu"
+      xmlns:viewModels="clr-namespace:Alp.Com.Igu.ViewModels" 
       mc:Ignorable="d" 
       d:DesignHeight="1080" d:DesignWidth="1920"
 
       Title="PageProfiler">
+
+    <!--Page.DataContext>
+        <viewModels:ProfilerViewModel/>
+    </Page.DataContext-->
+
     <Page.Resources>
         <Style TargetType="{x:Type Control}" x:Key="baseStyle">
             <Setter Property="FontSize" Value="100" />
@@ -54,7 +59,7 @@
         </Style>
 
         <Style x:Key="MioStileLamiera" TargetType="TextBlock">
-            <Setter Property="Height" Value=" 500"/>
+            <Setter Property="Height" Value=" 585"/>
             <Setter Property="Background" Value="Gray"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="FontSize" Value="30"/>
@@ -129,7 +134,7 @@
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="600"/>
+                <ColumnDefinition Width="400"/>
             </Grid.ColumnDefinitions>
 
             <Border BorderBrush="Black" Background="#FF252323" BorderThickness="1" Grid.Row="1"  Grid.Column="0" CornerRadius="5" Margin="3">
@@ -150,25 +155,30 @@
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="350"/>
+                            <ColumnDefinition Width="250"/>
                         </Grid.ColumnDefinitions>
 
-                        <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,10">
-                            <StackPanel Orientation="Horizontal" Margin="0,30,0,105" Background="#FF1E1E1E">
+                        <Grid Name="grdLamieraDesign"  Grid.Row="0" Grid.Column="0" Margin="0,10,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="250"/>
+                                <ColumnDefinition Name="colLamieraDesign" Width="900"/>
+                                <ColumnDefinition Width="100"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="0,0,0,50" Background="#FF1E1E1E">
                                 <Image Source="/Alp.Com.Igu;component/Images/Lamiera1.png" Margin="0,10,0,25"  Width="Auto" Height="Auto" />
                             </StackPanel>
-                            <StackPanel Orientation="Horizontal" Background="#FF1E1E1E" Margin="5,30,0,105">
-                            <TextBlock Name="rectLamieraStart" Text="L1" Width="50" Style="{StaticResource MioStileLamiera}"/>
-                            <TextBlock Name="rectLamiera1" Text="L2" Width="100" Style="{StaticResource MioStileLamiera}" />
-                            <TextBlock Name="rectLamiera2" Text="L3" Width="100" Style="{StaticResource MioStileLamiera}"/>
-                            <TextBlock Name="rectLamiera3" Text="L4" Width="100" Style="{StaticResource MioStileLamiera}"/>
-                            <TextBlock Name="rectLamiera4" Text="L5" Width="100" Style="{StaticResource MioStileLamiera}"/>
-                            <TextBlock Name="rectLamieraEnd" Width="50" Style="{StaticResource MioStileLamiera}"/>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" Background="#FF1E1E1E" Margin="5,0,0,50">
+                                <TextBlock Name="rectLamiera0" Text="{Binding BIND_NAME_L1}" Width="{Binding BIND_L1_LUNGH}" Style="{StaticResource MioStileLamiera}"/>
+                                <TextBlock Name="rectLamiera1" Text="{Binding BIND_NAME_L2}" Width="{Binding BIND_L2_LUNGH}" Style="{StaticResource MioStileLamiera}" />
+                                <TextBlock Name="rectLamiera2" Text="{Binding BIND_NAME_L3}" Width="{Binding BIND_L3_LUNGH}" Style="{StaticResource MioStileLamiera}"/>
+                                <TextBlock Name="rectLamiera3" Text="{Binding BIND_NAME_L4}" Width="{Binding BIND_L4_LUNGH}" Style="{StaticResource MioStileLamiera}"/>
+                                <TextBlock Name="rectLamiera4" Text="{Binding BIND_NAME_L5}" Width="{Binding BIND_L5_LUNGH}" Style="{StaticResource MioStileLamiera}"/>
+                                <TextBlock Name="rectLamiera5" Text="{Binding BIND_NAME_L6}" Width="{Binding BIND_L6_LUNGH}" Style="{StaticResource MioStileLamiera}"/>
                             </StackPanel>
-                            <StackPanel Orientation="Horizontal" Margin="0,30,0,105" Background="#FF1E1E1E">
+                            <StackPanel Grid.Column="2" Orientation="Horizontal" Margin="0,0,0,50" Background="#FF1E1E1E">
                                 <Image Source="/Alp.Com.Igu;component/Images/Lamiera2.png" Margin="0,20,0,30" Width="Auto" Height="Auto"  />
                             </StackPanel>
-                        </StackPanel>
+                        </Grid>
                         <Grid Name="grdMainContentLeftBottom" Grid.Row="1" Grid.Column="0" Height="120">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="300"/>
@@ -177,7 +187,7 @@
                             </Grid.ColumnDefinitions>
 
                             <Border Name="bg1" Grid.Column="0" BorderBrush="#FF2D2D2D" BorderThickness="2" Background="#FF404040" CornerRadius="5" Margin="3">
-                                
+
                                 <Grid Name="GridBottom1" TextBlock.FontSize="16">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="35"/>
@@ -198,7 +208,7 @@
                                     <Label Name="lblLenDis1" Grid.Column="1" Grid.Row="2"  Foreground="White" Width="Auto" Background="Gray" Height="35" VerticalAlignment="Center" FontSize="16"
                                            Content= "{Binding Path=BIND_LUNGHEZZA_TOT}" 
                                            />
-                          
+
                                 </Grid>
                             </Border>
                             <Border Name="bg2" Grid.Column="1" BorderBrush="#FF2D2D2D" BorderThickness="2" Background="#FF404040" CornerRadius="5" Margin="3">
@@ -224,7 +234,7 @@
                                            />
                                 </Grid>
                             </Border>
-                            <Border Name="bg3" Grid.Column="2" BorderBrush="#FF2D2D2D" BorderThickness="2" Background="#FF404040" CornerRadius="5" Margin="3">
+                            <Border Name="bg3" Grid.Column="2" BorderBrush="#FF2D2D2D" BorderThickness="2" Background="#FF404040" CornerRadius="5" Margin="3,0,100,0">
                                 <Grid Name="GridBottom3" >
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="35"/>
@@ -250,12 +260,12 @@
                         </Grid>
 
                         <Grid Name="grdMainContentLeftRigth" Grid.Column="1">
-                            
+
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="35"/>
-                                    <RowDefinition Height="300"/>
-                                    <RowDefinition Height="10"/>
-                                    <RowDefinition Height="35"/>
+                                <RowDefinition Height="300"/>
+                                <RowDefinition Height="10"/>
+                                <RowDefinition Height="35"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
                             <Label Grid.Row="0" Content="LAMIERA" Foreground="White" VerticalAlignment="Center" Width="Auto" FontSize="16" HorizontalAlignment="Center" />
@@ -263,15 +273,17 @@
                                       ItemsSource="{Binding BIND_LST_LUNGH}">
 
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Lamiera"            
-                                    Width="*"
-                                    CellStyle="{StaticResource MioStileCella1}"
-                                    HeaderStyle="{StaticResource MioStileHeader}"/>
+                                    <DataGridTextColumn Header="Lamiera"
+                                        Binding="{Binding [0]}"
+                                        Width="*"
+                                        CellStyle="{StaticResource MioStileCella1}"
+                                        HeaderStyle="{StaticResource MioStileHeader}"/>
 
                                     <DataGridTextColumn Header="Lunghezza" 
-                                    Width="*"
-                                    CellStyle="{StaticResource MioStileCella2}"
-                                    HeaderStyle="{StaticResource MioStileHeader}"/>
+                                        Binding="{Binding [1]}"                    
+                                        Width="*"
+                                        CellStyle="{StaticResource MioStileCella2}"
+                                        HeaderStyle="{StaticResource MioStileHeader}"/>
                                 </DataGrid.Columns>
 
                             </DataGrid>
@@ -282,44 +294,32 @@
 
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="Valore" 
+                                        Binding="{Binding [0]}"
                                         Width="*"
                                         CellStyle="{StaticResource MioStileCella1}"
                                         HeaderStyle="{StaticResource MioStileHeader}"/>
 
-                                    <!--DataGridTextColumn Header="Valore"  Binding="{Binding Valore}"
-                                         Width="*"
-                                         CellStyle="{StaticResource MioStileCella1}"
-                                         HeaderStyle="{StaticResource MioStileHeader}"/-->
-
                                     <DataGridTextColumn Header="Posizione Taglio" 
+                                        Binding="{Binding [1]}"
                                         Width="*"
                                         CellStyle="{StaticResource MioStileCella2}"
                                         HeaderStyle="{StaticResource MioStileHeader}"/>
                                 </DataGrid.Columns>
-
                             </DataGrid>
-                           
                         </Grid>
                         <!--DataGrid Grid.Row="2" d:ItemsSource="{d:SampleData ItemCount=5}"/-->
                         <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
-                            
                             <!--Label Content="CONFERMARE I DATI PRIMA DI INVIARE ALLA CESOIA" Foreground="White" VerticalAlignment="Center" Width="Auto" HorizontalContentAlignment="Center" FontSize="16" Padding="10"/-->
                             <Button x:Name="btnOk" Content="OK" Width="120" Height="80" Style="{StaticResource MioStileButtons}" Background="#FF1ED81E" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-
-                      
                             <Button x:Name="btnScarta" Content="Scarta" Width="120" Height="80" Style="{StaticResource MioStileButtons}" Background="Red" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-
-
                         </StackPanel>
                     </Grid>
-
-                    
                 </Grid>
             </Border>
             <Border BorderBrush="Black" BorderThickness="1" Grid.Row="1"  Grid.Column="1" CornerRadius="5" Margin="3">
                 <Grid Name="GridRight" Background="#FF252323"  >
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="100"/>
+                        <RowDefinition Height="80"/>
                         <RowDefinition Height="400"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
@@ -332,18 +332,18 @@
 
                     <Grid Name="grdProfiliDesign" Grid.Row="1" Margin="10,0,10,0">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="300"/>
+                            <ColumnDefinition Width="190"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
                         <StackPanel Grid.Column="0">
                             <Label Content="Profilo 1" Foreground="White" VerticalAlignment="Center" Width="Auto" FontSize="16" HorizontalAlignment="Center" />
-                            <Image Source="/Alp.Com.Igu;component/Images/ProfiloLato1Conc.png" Height="215" Margin="10,0,10,0"/>
+                            <Image Source="/Alp.Com.Igu;component/Images/ProfiloLato1Conc.png" Height="200" Margin="10,0,10,0"/>
                             <Label Content="Z0   -   Z1" Foreground="White" VerticalAlignment="Center" Width="Auto" FontSize="16" HorizontalAlignment="Left" />
                         </StackPanel>
                         <StackPanel Grid.Column="1">
                             <Label Content="Profilo 2" Foreground="White" VerticalAlignment="Center" Width="Auto" FontSize="16" HorizontalAlignment="Center" />
-                            <Image Source="/Alp.Com.Igu;component/Images/ProfiloLato2Conv.png" Height="215" Margin="10,0,10,0"/>
+                            <Image Source="/Alp.Com.Igu;component/Images/ProfiloLato2Conv.png" Height="200" Margin="10,0,10,0"/>
                             <Label Content="Z0   -   Z1" Foreground="White" VerticalAlignment="Center" Width="Auto" FontSize="16" HorizontalAlignment="Right" />
                         </StackPanel>
                     </Grid>
@@ -355,7 +355,7 @@
                         </Grid.RowDefinitions>
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="300"/>
+                                <ColumnDefinition Width="200"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
 

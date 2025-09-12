@@ -29,12 +29,6 @@ namespace Alp.Com.Igu.ViewModels
 
         [System.Runtime.InteropServices.DllImport("kernel32.dll")]
         static extern int GetCurrentThreadId();
-
-        //private static int _n_istanze = 0;
-
-        //private readonly ILogger<AnalisiBilletteViewModel> _logger;
-        //private readonly ApplicationSettings _options;
-
         System.Windows.Threading.DispatcherTimer TIMER_NEW_DATA = new System.Windows.Threading.DispatcherTimer();
 
         private const double TIMER_MAX_WAIT_SEC = 3;
@@ -60,11 +54,101 @@ namespace Alp.Com.Igu.ViewModels
             IsAvvisiVisibleChangedEvent?.Invoke();
         }
 
+        public bool IsPortrait => !IsLandscape;
+        public string BIND_LUNGHEZZA_TOT => AnalisiLamiera.Lunghezza.ToString() + " mm";
+        public string BIND_LUNGHEZZA_TOT_LBL => "X0-X" + AnalisiLamiera.CoordinateTaglio.Count.ToString();
+        public string BIND_LARGHEZZA_TOT => AnalisiLamiera.Larghezza.ToString() + " mm";
+        public string BIND_LARGHEZZA_TOT_LBL => "Y0-Y" + AnalisiLamiera.CoordinateTaglio.Count.ToString();
+        public string BIND_SPESSOE => AnalisiLamiera.Spessore.ToString() + " mm";
+        public string BIND_OMEGA_L1 => AnalisiLamiera.Omega_L1.ToString() + " mm";
+        public string BIND_OMEGA_L2 => AnalisiLamiera.Omega_L2.ToString() + " mm";
+        public List<(string, string)> BIND_LST_TAGLI
+        {
+            get
+            {
+                List<(string, string)> res = new List<(string, string)>();
+
+                if (AnalisiLamiera.CoordinateTaglio.Count > 0)
+                {
+                    int idxL = 1;
+                    float firstlen = AnalisiLamiera.CoordinateTaglio.First().Item1;
+                    foreach ((float, string) o in AnalisiLamiera.CoordinateTaglio.Skip(1))
+                    {
+                        float len = o.Item1 - firstlen;
+                        string lbl = "X" + idxL.ToString();
+                        res.Add(new(lbl, len.ToString() + " mm"));
+                        idxL++;
+                    }
+                }
+                return res;
+            }
+        }//=> AnalisiLamiera.CoordinateTaglio.Select(X => (X.Item2, X.Item1.ToString())).ToList();
+        public List<(string, string)> BIND_LST_LUNGH
+        {
+            get
+            {
+                List<(string, string)> res = new List<(string, string)>();
+
+                if (AnalisiLamiera.CoordinateTaglio.Count > 0)
+                {
+                    float firstlen = AnalisiLamiera.CoordinateTaglio.First().Item1;
+                    int idxL = 1;
+                    int idxC = 1;
+                    foreach ((float, string) o in AnalisiLamiera.CoordinateTaglio.Skip(1))
+                    {
+                        float len = o.Item1 - firstlen;
+                        bool islam = o.Item2.Equals("L");
+                        string lbl = islam ? "L" + idxL.ToString() : "C" + idxC.ToString();
+                        res.Add(new(lbl, len.ToString() + " mm"));
+
+                        if (islam) idxL++;
+                        else idxC++;
+                    }
+                }
+                return res;
+            }
+        }
+
+        private int totlen = 900;
+        public int BIND_L1_LUNGH => GetPropLen(0, totlen);
+        public int BIND_L2_LUNGH => GetPropLen(1, totlen);
+        public int BIND_L3_LUNGH => GetPropLen(2, totlen);
+        public int BIND_L4_LUNGH => GetPropLen(3, totlen);
+        public int BIND_L5_LUNGH => GetPropLen(4, totlen);
+        public int BIND_L6_LUNGH => GetPropLen(5, totlen);
+
+        public string BIND_NAME_L1 => GetNameLam(0);
+        public string BIND_NAME_L2 => GetNameLam(1);
+        public string BIND_NAME_L3 => GetNameLam(2);
+        public string BIND_NAME_L4 => GetNameLam(3);
+        public string BIND_NAME_L5 => GetNameLam(4);
+        public string BIND_NAME_L6 => GetNameLam(5);
+
+
+        private int GetPropLen(int idx,  int totlen)
+        {
+            int res = 0;
+            if (AnalisiLamiera.CoordinateTaglio.Count() > idx)
+            {
+                float f = (float)AnalisiLamiera.CoordinateTaglio[idx].Item1 / AnalisiLamiera.Lunghezza * 100;
+                res = (int)(totlen * f / 100);
+            }
+
+            return res;
+        }
+
+        private string GetNameLam(int idx)
+        { 
+            string res = "";
+            if (AnalisiLamiera.CoordinateTaglio.Count() > idx)
+                res= AnalisiLamiera.CoordinateTaglio[idx].Item2 + (idx+1).ToString();
+                return res;
+        }
+
         public ProfilerViewModel()
         {
             Init();
         }
-
 
         /// <summary>
         /// Recupera parametri da appsettings.json: qua trovo gli idx dei dispositivi:
@@ -114,13 +198,11 @@ namespace Alp.Com.Igu.ViewModels
 
             try
             {
-                //DatiLamieraIntegrationEvent al = (DatiLamieraIntegrationEvent)integrationEvent;
-                //AnalisiLamiera.Larghezza = al.Larghezza;
-                //AnalisiLamiera.Lunghezza = al.Lunghezza;
-                //AnalisiLamiera.Omega_L1 = al.Omega_L1;
-                //AnalisiLamiera.Omega_L2 = al.Omega_L2;
-                //AnalisiLamiera.Spessore = al.Spessore;
-                //AnalisiLamiera.CoordinateTaglio = al.CoordinateTaglio;
+                // TO DO: invia richiesta di dati lamiera a Rabbit oppure a WebApi
+                // - Dia dovrebbe rispondere ed inviare il dao intercettato in RabbitMqConn (ProfilerIntgrationEvent)
+
+                // non so se necessario: dovrebbe forzare la lettura dei dati. ogni secondo
+                OnPropertyChanged();
 
 
                 //if (FramePeriodSec != null)
@@ -157,7 +239,7 @@ namespace Alp.Com.Igu.ViewModels
             }
             catch (Exception ex)
             {
-                _logger.Error("timerVerificaSeStannoArrivandoImmagini_Tick Error: " + ex.Message);
+                _logger.Error("timerNewData_Tick Error: " + ex.Message);
             }
 
         }
@@ -178,59 +260,7 @@ namespace Alp.Com.Igu.ViewModels
             }
         }
 
-        public bool IsPortrait => !IsLandscape;
-
-        public string BIND_LUNGHEZZA_TOT => AnalisiLamiera.Lunghezza.ToString() + " mm";
-        public string BIND_LUNGHEZZA_TOT_LBL => "X0-X" + AnalisiLamiera.CoordinateTaglio.Count.ToString();
-        public string BIND_LARGHEZZA_TOT => AnalisiLamiera.Larghezza.ToString() + " mm";
-        public string BIND_LARGHEZZA_TOT_LBL => "Y0-Y" + AnalisiLamiera.CoordinateTaglio.Count.ToString() ;
-        public string BIND_SPESSOE => AnalisiLamiera.Spessore.ToString() + " mm";
-        public string BIND_OMEGA_L1 => AnalisiLamiera.Omega_L1.ToString() + " mm";
-        public string BIND_OMEGA_L2 => AnalisiLamiera.Omega_L2.ToString() + " mm";
-        public List<(string, string)> BIND_LST_TAGLI {
-            get
-            {
-                List<(string, string)> res = new List<(string, string)>();
-
-                if (AnalisiLamiera.CoordinateTaglio.Count > 0)
-                {
-                    int idxL = 1;
-                    float firstlen = AnalisiLamiera.CoordinateTaglio.First().Item1;
-                    foreach ((float, string) o in AnalisiLamiera.CoordinateTaglio.Skip(1))
-                    {
-                        float len = o.Item1 - firstlen;
-                        string lbl = "X" + idxL.ToString();
-                        res.Add(new(lbl, len.ToString() + " mm"));
-                        idxL++;
-                    }
-                }
-                return res;
-            }
-        }//=> AnalisiLamiera.CoordinateTaglio.Select(X => (X.Item2, X.Item1.ToString())).ToList();
-        public List<(string, string)> BIND_LST_LUNGH { 
-            get {
-                List<(string, string)> res = new List<(string, string)>();
-                
-                if (AnalisiLamiera.CoordinateTaglio.Count > 0)
-                {
-                    float firstlen = AnalisiLamiera.CoordinateTaglio.First().Item1;
-                    int idxL = 1;
-                    int idxC = 1;
-                    foreach ((float, string) o in AnalisiLamiera.CoordinateTaglio.Skip(1))
-                    {
-                        float len = o.Item1 - firstlen;
-                        bool islam = o.Item2.Equals("L");
-                        string lbl = islam ? "L" + idxL.ToString() : "C"+idxC.ToString(); 
-                        res.Add(new(lbl, len.ToString() + " mm"));
-
-                        if(islam) idxL++;
-                        else idxC++;
-                    }
-                }
-                return res;
-            } 
-        }
-
+        
         public string MsgStatoRabbitMq => mainWindowVMParent.MsgStatoRabbitMq;
         public string MsgStatoPlc => mainWindowVMParent.MsgStatoPlc;
         //public string MsgStatoAccensioneIlluminatori => mainWindowVMParent.MsgStatoAccensioneIlluminatori;

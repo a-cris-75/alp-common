@@ -10,4 +10,8 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Alp.Com.DataAccessLayer\Alp.Com.DataAccessLayer.csproj" />
+  </ItemGroup>
+
 </Project>

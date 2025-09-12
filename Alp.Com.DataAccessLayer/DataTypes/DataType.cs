@@ -420,7 +420,12 @@ namespace Alp.Com.DataAccessLayer.DataTypes
         public static float Omega_L1 { get; set; }
         public static float Omega_L2 { get; set; }
         // contiene X1 (distaza taglio in mm da testa), lamiera o campione
-        public static List<(float, string)> CoordinateTaglio { get; set; } 
+        private static List<(float, string)> coordinateTaglio = new List<(float, string)>();
+        public static List<(float, string)> CoordinateTaglio
+        {
+            get { return coordinateTaglio; }
+            set { coordinateTaglio = value; }
+        }
         public static string? Destinazione { get; set; }
 
     }

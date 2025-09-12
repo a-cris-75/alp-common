@@ -16,8 +16,130 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="KSociety.Base.EventBus" Version="1.5.11" />
-    <PackageReference Include="KSociety.Base.EventBusRabbitMQ" Version="1.5.11" />
+    <None Remove="Icons\AlpLOSMIgu.ico" />
+    <None Remove="Icons\SkyDrive.ico" />
+    <None Remove="Images\Delete-icon.png" />
+    <None Remove="Images\Home_white.png" />
+    <None Remove="Images\Icona Close.png" />
+    <None Remove="Images\Icona Home.png" />
+    <None Remove="Images\Icona Riduci.png" />
+    <None Remove="Images\IconaHelpAlping.png" />
+    <None Remove="Images\IconaImpostazioniAlping.png" />
+    <None Remove="Images\Lamiera1.png" />
+    <None Remove="Images\Lamiera2.png" />
+    <None Remove="Images\Loghi Alping\LogoAlpingInterfacceBianco.png" />
+    <None Remove="Images\Logo Pittini interfacce.png" />
+    <None Remove="Images\LogoCliente.jpg" />
+    <None Remove="Images\LogoMarcegaglia.png" />
+    <None Remove="Images\LogoPittini.png" />
+    <None Remove="Images\LogoPittiniCeleste.png" />
+    <None Remove="Images\minimize_white.png" />
+    <None Remove="Images\ProfiloLato1Conc.png" />
+    <None Remove="Images\ProfiloLato1Conv.png" />
+    <None Remove="Images\ProfiloLato2Conc.png" />
+    <None Remove="Images\ProfiloLato2Conv.png" />
+    <None Remove="Images\SemaforoBlu.png" />
+    <None Remove="Images\SemaforoGiallo.png" />
+    <None Remove="Images\SemaforoGrigio.png" />
+    <None Remove="Images\SemaforoRosso.png" />
+    <None Remove="Images\SemaforoVerde.png" />
+    <None Remove="Images\settings 11 bianco.png" />
+    <None Remove="Images\x_icon.png" />
+    <None Remove="Views\AlpLOSMIgu.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Icons\AlpLOSMIgu.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Icons\SkyDrive.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Resource Include="Images\Delete-icon.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\Home_white.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\Icona Close.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\Icona Home.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\Icona Riduci.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\IconaHelpAlping.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\IconaImpostazioniAlping.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\Lamiera1.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\Lamiera2.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\Loghi Alping\LogoAlpingInterfacceBianco.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\Logo Pittini interfacce.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\LogoCliente.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\LogoMarcegaglia.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\LogoPittini.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\LogoPittiniCeleste.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\minimize_white.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\ProfiloLato1Conc.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\ProfiloLato1Conv.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\ProfiloLato2Conc.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\ProfiloLato2Conv.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\SemaforoBlu.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\SemaforoGiallo.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\SemaforoGrigio.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\SemaforoRosso.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\SemaforoVerde.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\settings 11 bianco.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\x_icon.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="KSociety.Base.EventBusRabbitMQ" Version="0.0.40" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.8" />
     <PackageReference Include="protobuf-net.Core" Version="3.2.56" />
@@ -31,12 +153,48 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\crs-base\Crs.Base.CommonUtilsLibrary\Crs.Base.CommonUtilsLibrary.csproj" />
-    <ProjectReference Include="..\..\crs-base\Crs.Base.SendReceiveRabbit\Crs.Base.SendReceiveRabbit.csproj" />
     <ProjectReference Include="..\Alp.Com.DataAccessLayer\Alp.Com.DataAccessLayer.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="DataTypes\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Views\AlpLOSMIgu.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\Loghi Alping\Alping logo_oriz 1.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\Loghi Alping\Alping logo_oriz 2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\Loghi Alping\Alping logo_oriz no payoff.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\Loghi Alping\Alping_Artificial Int oriz.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\Loghi Alping\Alping_Artificial Int orizCrop Chiaro.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\Loghi Alping\Alping_Artificial Int orizCrop.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\Loghi Alping\Alping_Artificial Int vert.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\Loghi Alping\Alping_Artificial Int vertCrop.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\Loghi Alping\LogoAlpingInterfacce.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

@@ -17,55 +17,63 @@ namespace Alp.Com.Igu.Connections
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger
                            ("Alp.Com.Igu.Connections.WebApiRequest");
 
-        private readonly HttpClient httpClient;
-        private readonly WebApiRequest webApiConn = new WebApiRequest();
+        private readonly HttpClient? httpClient;
+        private readonly WebApiRequest? webApiConn;// = new WebApiRequest();
         private string URI = "ImpostazioniGenerali";
         private string serverIP = ApplicationSettingsStatic.ServerIP;
         //static string IP = "169.254.104.146"; //"localhost";
 
         public WebApiRequest()
         {
-            httpClient = new HttpClient();
-            // Update port # in the following line.
-            httpClient.BaseAddress = new Uri("http://" + serverIP + ":710/");
-            httpClient.DefaultRequestHeaders.Accept.Clear();
-            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            httpClient.Timeout = TimeSpan.FromSeconds(6); // Il default è 100
-
+            try
+            {
+                httpClient = new HttpClient();
+                // Update port # in the following line.
+                httpClient.BaseAddress = new Uri("http://" + serverIP + ":710/");
+                httpClient.DefaultRequestHeaders.Accept.Clear();
+                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                httpClient.Timeout = TimeSpan.FromSeconds(6); // Il default è 100
+            } catch { }
         }
 
         public WebApiRequest(string uri)
         {
-            httpClient = new HttpClient();
-            // Update port # in the following line.
-            httpClient.BaseAddress = new Uri("http://" + serverIP + ":710/");
-            httpClient.DefaultRequestHeaders.Accept.Clear();
-            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            httpClient.Timeout = TimeSpan.FromSeconds(6); // Il default è 100
+            try
+            {
+                httpClient = new HttpClient();
+                // Update port # in the following line.
+                httpClient.BaseAddress = new Uri("http://" + serverIP + ":710/");
+                httpClient.DefaultRequestHeaders.Accept.Clear();
+                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                httpClient.Timeout = TimeSpan.FromSeconds(6); // Il default è 100
 
-            URI = uri;
+                URI = uri;
+            }
+            catch { }
         }
 
-        public WebApiRequest GetInstance() => webApiConn;
+        public WebApiRequest? GetInstance() => webApiConn;
         
 
         public async Task<List<ImpostazioneGenerale>> GetSettingsAsync()
         {
             List<ImpostazioneGenerale> res = new List<ImpostazioneGenerale>();
-            //HttpResponseMessage response = await httpClient.GetAsync("ImpostazioniDia/" + id.ToString());
-            HttpResponseMessage response = await httpClient.GetAsync(URI).ConfigureAwait(false); // NB: .ConfigureAwait(false); è necesssario solo se la chiamata avviene da WPF, non da servizio... boh?
-            response.EnsureSuccessStatusCode();
+            if (httpClient != null)
+            {               
+                //HttpResponseMessage response = await httpClient.GetAsync("ImpostazioniDia/" + id.ToString());
+                HttpResponseMessage response = await httpClient.GetAsync(URI).ConfigureAwait(false); // NB: .ConfigureAwait(false); è necesssario solo se la chiamata avviene da WPF, non da servizio... boh?
+                response.EnsureSuccessStatusCode();
 
-            if (response.IsSuccessStatusCode)
-            {
-                //res = await response.Content.ReadAsAsync<List<ImpostazioneGenerale>>();
-                res = await response.Content.ReadAsAsync<List<ImpostazioneGenerale>>();
+                if (response.IsSuccessStatusCode)
+                {
+                    //res = await response.Content.ReadAsAsync<List<ImpostazioneGenerale>>();
+                    res = await response.Content.ReadAsAsync<List<ImpostazioneGenerale>>();
+                }
+                else
+                {
+                    log.Error($"Errore in GetSettingsAsync con uri [{URI}]: StatusCode: [{(int)response.StatusCode}], ReasonPhrase: [{response.ReasonPhrase}]");
+                }
             }
-            else
-            {
-                log.Error($"Errore in GetSettingsAsync con uri [{URI}]: StatusCode: [{(int)response.StatusCode}], ReasonPhrase: [{response.ReasonPhrase}]");
-            }
-
             return res;
 
         }
@@ -73,19 +81,24 @@ namespace Alp.Com.Igu.Connections
         public async Task<bool> PostNewSettingsAsync(List<ImpostazioneGenerale> lstImpostazioneDia)
         {
             bool res = true;
-            HttpResponseMessage response = await httpClient.PostAsJsonAsync(URI, lstImpostazioneDia).ConfigureAwait(false);
-            response.EnsureSuccessStatusCode();
 
-            if (response.IsSuccessStatusCode)
+            if (httpClient != null)
             {
-                log.Info($"Done PostImpostazioniAsync con uri [{URI}]");
-            }
-            else
-            {
-                log.Error($"Errore in PostImpostazioniAsync con uri [{URI}]: StatusCode: [{(int)response.StatusCode}], ReasonPhrase: [{response.ReasonPhrase}]");
-                res = false;
-            }
+                HttpResponseMessage response = await httpClient.PostAsJsonAsync(URI, lstImpostazioneDia).ConfigureAwait(false);
+                response.EnsureSuccessStatusCode();
 
+                if (response.IsSuccessStatusCode)
+                {
+                    log.Info($"Done PostImpostazioniAsync con uri [{URI}]");
+                }
+                else
+                {
+                    log.Error($"Errore in PostImpostazioniAsync con uri [{URI}]: StatusCode: [{(int)response.StatusCode}], ReasonPhrase: [{response.ReasonPhrase}]");
+                    res = false;
+                }
+            }
+            else res = false;
+               
             return res;
 
         }
@@ -93,19 +106,23 @@ namespace Alp.Com.Igu.Connections
         public async Task<bool> PutReplaceSettingsAsync(List<ImpostazioneGenerale> lstImpostazioneDia)
         {
             bool res = true;
-            HttpResponseMessage response = await httpClient.PutAsJsonAsync(URI, lstImpostazioneDia).ConfigureAwait(false);
-            response.EnsureSuccessStatusCode();
 
-            if (response.IsSuccessStatusCode)
+            if (httpClient != null)
             {
-                log.Info($"Done PostImpostazioniAsync con uri [{URI}]");
-            }
-            else
-            {
-                log.Error($"Errore in PostImpostazioniAsync con uri [{URI}]: StatusCode: [{(int)response.StatusCode}], ReasonPhrase: [{response.ReasonPhrase}]");
-                res = false;
-            }
+                HttpResponseMessage response = await httpClient.PutAsJsonAsync(URI, lstImpostazioneDia).ConfigureAwait(false);
+                response.EnsureSuccessStatusCode();
 
+                if (response.IsSuccessStatusCode)
+                {
+                    log.Info($"Done PostImpostazioniAsync con uri [{URI}]");
+                }
+                else
+                {
+                    log.Error($"Errore in PostImpostazioniAsync con uri [{URI}]: StatusCode: [{(int)response.StatusCode}], ReasonPhrase: [{response.ReasonPhrase}]");
+                    res = false;
+                }
+            }
+            else res = false;
             return res ;
 
         }
@@ -127,22 +144,29 @@ namespace Alp.Com.Igu.Connections
             var request = new HttpRequestMessage(HttpMethod.Get, URICOMPLETO);
             request.Headers.Add("Api-json", jsonInput); // Add custom header
 
-            HttpResponseMessage response = await httpClient.SendAsync(request);
-
-            //HttpResponseMessage response = await httpClient.GetAsync(URICOMPLETO,).ConfigureAwait(false); // NB: .ConfigureAwait(false); è necesssario solo se la chiamata avviene da WPF, non da servizio... boh?
-
-            response.EnsureSuccessStatusCode();
-
-            if (response.IsSuccessStatusCode)
+            try
             {
-                log.Info($"Done GetOperationAsync con uri [{URICOMPLETO}]");
-                await Task.Delay(500); // ESPERIMENTO. PARE CHE ALL'ARRIVO DEL SEGNALE IL FILE NON SIA ANCORA SCRITTO CORRETTAMENTE. QUI PERO' ENTRA DOPO...
-            }
-            else
-            {
-                log.Error($"Errore in GetOperationAsync con uri [{URI}]: StatusCode: [{(int)response.StatusCode}], ReasonPhrase: [{response.ReasonPhrase}]");
-            }
+                HttpResponseMessage response = await httpClient.SendAsync(request);
 
+                //HttpResponseMessage response = await httpClient.GetAsync(URICOMPLETO,).ConfigureAwait(false); // NB: .ConfigureAwait(false); è necesssario solo se la chiamata avviene da WPF, non da servizio... boh?
+
+                response.EnsureSuccessStatusCode();
+
+                if (response.IsSuccessStatusCode)
+                {
+                    log.Info($"Done GetOperationAsync con uri [{URICOMPLETO}]");
+                    await Task.Delay(500); // ESPERIMENTO. PARE CHE ALL'ARRIVO DEL SEGNALE IL FILE NON SIA ANCORA SCRITTO CORRETTAMENTE. QUI PERO' ENTRA DOPO...
+                }
+                else
+                {
+                    log.Error($"Errore in GetOperationAsync con uri [{URI}]: StatusCode: [{(int)response.StatusCode}], ReasonPhrase: [{response.ReasonPhrase}]");
+                }
+            }
+            catch (Exception ex) 
+            {
+                log.Error("GetOperationAsync: " + ex.Message);
+
+            }
             return;
 
         }
@@ -156,18 +180,25 @@ namespace Alp.Com.Igu.Connections
         {
             bool res = false;
             string uri = URI + @"/";
-            HttpResponseMessage response = await httpClient.GetAsync(uri + id.ToString());
-            response.EnsureSuccessStatusCode();
 
-            if (response.IsSuccessStatusCode)
+            try
             {
-                res = await response.Content.ReadAsAsync<bool>();
-            }
-            else
-            {
-                log.Error($"Errore in GetOutAsync con id [{id}]: StatusCode: [{(int)response.StatusCode}], ReasonPhrase: [{response.ReasonPhrase}]");
-            }
+                if (httpClient != null)
+                {
+                    HttpResponseMessage response = await httpClient.GetAsync(uri + id.ToString());
+                    response.EnsureSuccessStatusCode();
 
+                    if (response.IsSuccessStatusCode)
+                    {
+                        res = await response.Content.ReadAsAsync<bool>();
+                    }
+                    else
+                    {
+                        log.Error($"Errore in GetOutAsync con id [{id}]: StatusCode: [{(int)response.StatusCode}], ReasonPhrase: [{response.ReasonPhrase}]");
+                    }
+                }
+            }
+            catch { }
             return res;
 
         }
@@ -190,18 +221,20 @@ namespace Alp.Com.Igu.Connections
             string res = string.Empty;
             string uri = URI + @"/" + ip + @"|"  + block.ToString() + @"|" + word + @"|" + type;
 
-            HttpResponseMessage response = await httpClient.GetAsync(uri);
-            response.EnsureSuccessStatusCode();
-
-            if (response.IsSuccessStatusCode)
+            if (httpClient != null)
             {
-                res = await response.Content.ReadAsAsync<string>();
-            }
-            else
-            {
-                log.Error($"Errore in GetOutAddressAsync con uri [{uri}]: StatusCode: [{(int)response.StatusCode}], ReasonPhrase: [{response.ReasonPhrase}]");
-            }
+                HttpResponseMessage response = await httpClient.GetAsync(uri);
+                response.EnsureSuccessStatusCode();
 
+                if (response.IsSuccessStatusCode)
+                {
+                    res = await response.Content.ReadAsAsync<string>();
+                }
+                else
+                {
+                    log.Error($"Errore in GetOutAddressAsync con uri [{uri}]: StatusCode: [{(int)response.StatusCode}], ReasonPhrase: [{response.ReasonPhrase}]");
+                }
+            }
             return res;
 
         }
@@ -211,18 +244,20 @@ namespace Alp.Com.Igu.Connections
             string res = string.Empty;
             string uri = URI + @"/" + idx.ToString() + @"|" + type;
 
-            HttpResponseMessage response = await httpClient.GetAsync(uri);
-            response.EnsureSuccessStatusCode();
-
-            if (response.IsSuccessStatusCode)
+            if (httpClient != null)
             {
-                res = await response.Content.ReadAsAsync<string>();
-            }
-            else
-            {
-                log.Error($"Errore in GetOutAddressAsync con uri [{uri}]: StatusCode: [{(int)response.StatusCode}], ReasonPhrase: [{response.ReasonPhrase}]");
-            }
+                HttpResponseMessage response = await httpClient.GetAsync(uri);
+                response.EnsureSuccessStatusCode();
 
+                if (response.IsSuccessStatusCode)
+                {
+                    res = await response.Content.ReadAsAsync<string>();
+                }
+                else
+                {
+                    log.Error($"Errore in GetOutAddressAsync con uri [{uri}]: StatusCode: [{(int)response.StatusCode}], ReasonPhrase: [{response.ReasonPhrase}]");
+                }
+            }
             return res;
 
         }
@@ -237,18 +272,20 @@ namespace Alp.Com.Igu.Connections
         {
             bool res = false;
             string uri = URI + @"/Status/";
-            HttpResponseMessage response = await httpClient.GetAsync(uri + ip);
-            response.EnsureSuccessStatusCode();
-
-            if (response.IsSuccessStatusCode)
+            if (httpClient != null)
             {
-                res = await response.Content.ReadAsAsync<bool>();
-            }
-            else
-            {
-                log.Error($"Errore in GetOutDevStatusAsync con ip [{ip}]: StatusCode: [{(int)response.StatusCode}], ReasonPhrase: [{response.ReasonPhrase}]");
-            }
+                HttpResponseMessage response = await httpClient.GetAsync(uri + ip);
+                response.EnsureSuccessStatusCode();
 
+                if (response.IsSuccessStatusCode)
+                {
+                    res = await response.Content.ReadAsAsync<bool>();
+                }
+                else
+                {
+                    log.Error($"Errore in GetOutDevStatusAsync con ip [{ip}]: StatusCode: [{(int)response.StatusCode}], ReasonPhrase: [{response.ReasonPhrase}]");
+                }
+            }
             return res;
 
         }

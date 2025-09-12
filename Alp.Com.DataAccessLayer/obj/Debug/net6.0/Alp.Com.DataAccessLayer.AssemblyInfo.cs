@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Alp.Com.DataAccessLayer")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+207e70f1ad38d61682955659095f7cedb096deb7")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5ca7a312ac2e17ae53a6d5f4fa17689a974d7f99")]
 [assembly: System.Reflection.AssemblyProductAttribute("Alp.Com.DataAccessLayer")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Alp.Com.DataAccessLayer")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
