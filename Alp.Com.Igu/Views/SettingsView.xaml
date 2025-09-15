@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="Alp.Com.Igu.Views.StatoDevicesView"
+﻿<Page x:Class="Alp.Com.Igu.Views.SettingsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -14,10 +14,10 @@
         <viewModels:ImpostazioniViewModel/>
     </UserControl.DataContext>-->
 
-    <UserControl.Resources>
+    <Page.Resources>
         <localConverters:BoolToStringItaConverter x:Key="BoolToStringIta" />
         <localConverters:BoolToBrushConverter x:Key="BoolToBrush" />
-    </UserControl.Resources>
+    </Page.Resources>
 
     <Grid HorizontalAlignment="Stretch">
 
@@ -257,7 +257,7 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="0"/>
                     </Grid.RowDefinitions>
 
                     <StackPanel Grid.Row="0"  Grid.Column="0" Margin="10, 15"
@@ -443,4 +443,4 @@
 
     </Grid>
 
-</UserControl>
+</Page>

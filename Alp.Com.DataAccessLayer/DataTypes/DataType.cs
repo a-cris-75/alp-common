@@ -428,6 +428,7 @@ namespace Alp.Com.DataAccessLayer.DataTypes
         }
         public static string? Destinazione { get; set; }
 
+        public static DateTime DataRicezioneDati { get; set; }
     }
 
     [ProtoContract]

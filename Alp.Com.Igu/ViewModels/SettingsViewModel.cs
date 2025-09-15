@@ -17,7 +17,7 @@ namespace Alp.Com.Igu.ViewModels
     /// <summary>
     /// Case in cui sono implementati i metodi che restituiscono i dati da mostrare sull'interfaccia utente (Gui)
     /// </summary>
-    public class StatoDevicesViewModel : ObservableObject
+    public class SettingsViewModel : ObservableObject
     {
         private static readonly log4net.ILog _logger = log4net.LogManager.GetLogger
                            ("Alp.Com.Igu.ViewModels.GetDataDeviceViewModel");
@@ -62,12 +62,12 @@ namespace Alp.Com.Igu.ViewModels
             IsAvvisiVisibleChangedEvent?.Invoke();
         }
 
-        public StatoDevicesViewModel()
+        public SettingsViewModel()
         {
             Init();
         }
 
-        public StatoDevicesViewModel(ApplicationSettings options)
+        public SettingsViewModel(ApplicationSettings options)
         {
             //_logger = logger;
             _options = options;

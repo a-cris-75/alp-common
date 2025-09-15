@@ -132,8 +132,8 @@ namespace Alp.Com.Igu
             services.AddSingleton<ProfilerViewModel>();
             services.AddSingleton<Views.ProfilerView>();
 
-            services.AddSingleton<StatoDevicesViewModel>();
-            services.AddSingleton<Views.StatoDevicesView>();
+            services.AddSingleton<SettingsViewModel>();
+            services.AddSingleton<Views.SettingsView>();
 
             services.AddSingleton<MainWindowViewModel>();
             services.AddSingleton<Views.MainWindowView>();

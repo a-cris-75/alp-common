@@ -21,7 +21,7 @@ namespace Alp.Com.Igu.Views
     /// <summary>
     /// Logica di interazione per HomeView.xaml
     /// </summary>
-    public partial class StatoDevicesView : UserControl
+    public partial class SettingsView : Page
     {
 
         // TODO vedere come fare a passare un logger generico anziché Serilog attraverso la dependency injection
@@ -33,21 +33,21 @@ namespace Alp.Com.Igu.Views
         // ... basato cioè sui DataTemplate DataType=... (vedi il file App.xaml) che richiede un costruttore senza parametri per ImpostazioniView e AnalisiBilletteView.
         // TODO capire se si può usare un costruttore con parametri...
 
-        Serilog.ILogger _logger = Serilog.Log.ForContext<StatoDevicesView>();
+        Serilog.ILogger _logger = Serilog.Log.ForContext<SettingsView>();
 
-        StatoDevicesViewModel vm;
+        SettingsViewModel vm;
 
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         static extern bool SetCursorPos(int x, int y);
 
-        public StatoDevicesView()
+        public SettingsView()
         {
             _logger.Verbose("ImpostazioniView ctor...");
 
             InitializeComponent();
 
-            this.DataContext = App.AppServiceProvider.GetRequiredService<StatoDevicesViewModel>();
-            vm = this.DataContext as StatoDevicesViewModel;
+            this.DataContext = App.AppServiceProvider.GetRequiredService<SettingsViewModel>();
+            vm = this.DataContext as SettingsViewModel;
 
             _logger.Verbose("ImpostazioniView ctor.");
         }

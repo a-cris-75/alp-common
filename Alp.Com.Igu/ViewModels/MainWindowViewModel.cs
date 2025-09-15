@@ -89,10 +89,10 @@ namespace Alp.Com.Igu.ViewModels
                     CurrentPage = new ProfilerView();
                     break;
                 case "Alarms":
-                    CurrentPage = new StatoDevicesView();
+                    CurrentPage = new SettingsView();
                     break;
                 case "Settings":
-                    //CurrentPage = new SettingsView();
+                    CurrentPage = new SettingsView();
                     break;
                 case "Profile":
                     CurrentPage = new ProfilerView();
@@ -106,7 +106,7 @@ namespace Alp.Com.Igu.ViewModels
             , ApplicationSettings options
             )
         {
-            NavigateToPageCommand = new RelayCommand(NavigateToPage);
+            //NavigateToPageCommand = new RelayCommand(NavigateToPage);
             try
             {
                 //CurrentPage = new MainWindowView();
@@ -701,6 +701,17 @@ namespace Alp.Com.Igu.ViewModels
                 //_profilerVM.OnPropertyChanged(nameof(_profilerVM.IsMsgStatoDipSystemVisibile));
                 //_profilerVM.OnPropertyChanged(nameof(_profilerVM.SemaforoDipSystem));
                 //_profilerVM.RefreshAvvisi();
+            }
+        }
+
+        private bool areDatiInAcquisizione = false;
+        public bool AreDatiInAcquisizione
+        {
+            get { return areDatiInAcquisizione; }
+            set
+            {
+                areDatiInAcquisizione = value;
+                OnPropertyChanged();
             }
         }
 
