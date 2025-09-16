@@ -25,28 +25,40 @@ namespace Alp.Com.Igu.ViewModels
 
         public MainWindowViewModel mainWindowVMParent { get; set; }
 
-        //static RemotaInOutWebApi remotaInOutAzioni = new RemotaInOutWebApi(0,);
-
-
-        //public MainWindowViewModel mwvmParent { get; set; }
-
-
         [System.Runtime.InteropServices.DllImport("kernel32.dll")]
         static extern int GetCurrentThreadId();
 
         public string BIND_DATE_ALARM1 => AnalisiLamiera.DataRicezioneDati.ToShortTimeString();
         public string BIND_DATE_ALARM2 => DateTime.MinValue.ToShortTimeString();
+        public string BIND_DATE_ALARM3 => DateTime.MinValue.ToShortTimeString();
+        public string BIND_DATE_ALARM4 => DateTime.MinValue.ToShortTimeString();
+        public string BIND_DATE_ALARM5 => DateTime.MinValue.ToShortTimeString();
+        public string BIND_DATE_ALARM6 => DateTime.MinValue.ToShortTimeString();
+        public string BIND_DATE_ALARM7 => DateTime.MinValue.ToShortTimeString();
+        public string BIND_DATE_ALARM8 => DateTime.MinValue.ToShortTimeString();
 
         // dati da plc
         public string BIND_MSG_ALARM1;
         // dati piano di taglio
         public string BIND_MSG_ALARM2;
+        public string BIND_MSG_ALARM3;
+        public string BIND_MSG_ALARM4;
+        public string BIND_MSG_ALARM5;
+        public string BIND_MSG_ALARM6;
+        public string BIND_MSG_ALARM7;
+        public string BIND_MSG_ALARM8;
 
         public Color BIND_COLOR_ALARM1 => (DateTime.Now.Subtract(AnalisiLamiera.DataRicezioneDati).TotalSeconds <= TEMPO_MASSIMO_ATTESA_DATI_SEC)? Colors.Green: Colors.Red;
         public Color BIND_COLOR_ALARM2 => Colors.Green;
+        public Color BIND_COLOR_ALARM3 => Colors.Green; 
+        public Color BIND_COLOR_ALARM4 => Colors.Green;
+        public Color BIND_COLOR_ALARM5 => Colors.Green;
+        public Color BIND_COLOR_ALARM6 => Colors.Green;
+        public Color BIND_COLOR_ALARM7 => Colors.Green;
+        public Color BIND_COLOR_ALARM8 => Colors.Green;
 
 
-        private readonly ApplicationSettings _options;
+        //private readonly ApplicationSettings _options;
 
         System.Windows.Threading.DispatcherTimer timerCheckStatusDev = new System.Windows.Threading.DispatcherTimer();
 
@@ -68,14 +80,6 @@ namespace Alp.Com.Igu.ViewModels
             Init();
         }
 
-        public AlarmsViewModel(ApplicationSettings options)
-        {
-            //_logger = logger;
-            _options = options;
-
-            Init();
-        }
-
         /// <summary>
         /// Recupera parametri da appsettings.json: qua trovo gli idx dei dispositivi:
         /// - per chiedere informazioni di stato o altro
@@ -93,13 +97,12 @@ namespace Alp.Com.Igu.ViewModels
             //NSottoscrizioniaImmagineDaDiaEvent = 0;
 
             RabbitMqConn.GetInstance.DatiLamieraEvent -= ConnessoneRabbitMq_DataFromDiaEvent;
+            RabbitMqConn.GetInstance.DatiLamieraEvent += ConnessoneRabbitMq_DataFromDiaEvent;
             // Registrazione agli eventi di arrivo immagini
             //RabbitMqConn.GetInstance.ImmagineDaDiaEvent -= ConnessoneRabbitMq_DataFromDiaEvent;
             //RabbitMqConn.GetInstance.ImmagineDaDiaEvent += ConnessoneRabbitMq_DataFromDiaEvent;
-
             //RabbitMqConn.GetInstance.ImmagineDaDipEvent -= ConnessoneRabbitMq_ImmagineDaDipEvent;
             //RabbitMqConn.GetInstance.ImmagineDaDipEvent += ConnessoneRabbitMq_ImmagineDaDipEvent;
-
             //RabbitMqConn.GetInstance.ResetImmaginiEvent -= ConnessoneRabbitMq_ResetImmaginiEvent;
             //RabbitMqConn.GetInstance.ResetImmaginiEvent += ConnessoneRabbitMq_ResetImmaginiEvent;
 
@@ -116,7 +119,7 @@ namespace Alp.Com.Igu.ViewModels
         {
             timerCheckStatusDev.Tick += new EventHandler(timerCheckStatusDev_Tick);
             timerCheckStatusDev.Interval = TimeSpan.FromMilliseconds(1000); // Il tempo oltre il quale, se non arriva alcuna immagine, si mostra l'immagine vuota.
-            _logger.Info("timerVerificaSeStannoArrivandoImmagini: inizializzato.");
+            _logger.Info("InitTimerCheckIsNewData: inizializzato.");
         }
 
         private void timerCheckStatusDev_Tick(object sender, EventArgs e)
@@ -248,24 +251,17 @@ namespace Alp.Com.Igu.ViewModels
 
         private void ConnessoneRabbitMq_DataFromDiaEvent(object sender, DatiLamieraEventArgs e)
         {
-
             Application.Current.Dispatcher.Invoke((Action)delegate
             {
-
-                //_logger.Info("ConnessoneRabbitMq_DataFromDiaEvent: DatiLamieraIntegrationEvent: " + e..ToString());
-
                 System.Threading.Thread thread = System.Threading.Thread.CurrentThread;
                 int threadId = GetCurrentThreadId();
-
-                //_logger.LogTrace($"ConnessoneRabbitMq_ImmagineDaDiaEvent Thread: [{thread?.ManagedThreadId}], Current Thread Id: [{threadId}]"); // TODO ... CANCELLARE..??
-
                 try
                 {
                     DatiLamieraIntegrationEvent iie = e.DatiLamiera;// IntegrationEvent;
                     if (e != null)
                     {
+                        LastDataReceived = DateTime.Now;
                         //FrameRateFromImg = e.CurrentFrameRate;
-                        //LastDataReceived = DateTime.Now;
                         //if (iie.DeviceName.Equals("Dalsa_1"))
                         //    LastDataReceived = DateTime.Now;
                         ////else if (iie.DeviceName.Equals("Dalsa_2"))
@@ -277,32 +273,26 @@ namespace Alp.Com.Igu.ViewModels
                     }
                     else
                     {
-                        _logger.Warn($"ConnessoneRabbitMq_ImmagineDaDiaEvent: e.ImageIntegrationEvent is null!");
+                        _logger.Warn($"ConnessoneRabbitMq_DataFromDiaEvent: e.ImageIntegrationEvent is null!");
                     }
                 }
                 catch (Exception ex)
                 {
-                    _logger.Error("ConnessoneRabbitMq_ImmagineDaDiaEvent - Errore: " + ex.Message);
+                    _logger.Error("ConnessoneRabbitMq_DataFromDiaEvent - Errore: " + ex.Message);
                 }
 
-                _logger.Info($"ConnessoneRabbitMq_ImmagineDaDiaEvent.");
+                _logger.Info($"ConnessoneRabbitMq_DataFromDiaEvent.");
 
             });
         }
 
         #region GESTIONE IMMAGINI (se sono presenti presenti telecamere)
         //private const int N_IMMGINI_IN_BUFFER_MAX_ALARM = 10; // TODO parametrizzare nelle impostazioni?
-
-
         //int NSottoscrizioniaImmagineDaDiaEvent = 0;
-
         //public float FrameRateFromImg { get; set; }
-
         //public double? FramePeriodSec => FrameRateFromImg == 0 ? FramePeriodSec : (1 / FrameRateFromImg);
         //public double? FramePeriodSec => FrameRateFromImg == 0 ? null : (1 / FrameRateFromImg);
-
         //public const int attesaPeriodiMaxImmagineSuccessiva = 10; // Numero di perodi massimi dopo i quali dichiarare interrotta l'acquisizione delle immagini se non ne arrivano più // TODO parametrizzare
-
         #endregion
 
         public void OnPropertyChangedPerAvvisi()

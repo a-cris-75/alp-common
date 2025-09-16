@@ -2,7 +2,7 @@
 using Alp.Com.Igu.Connections;
 using Alp.Com.Igu.Core;
 using Alp.Com.Igu.Views;
-using Crs.Base.CommonUtilsLibrary;
+using Alp.Com.Igu.Utils;
 using log4net;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
@@ -106,7 +106,7 @@ namespace Alp.Com.Igu.ViewModels
             , ApplicationSettings options
             )
         {
-            //NavigateToPageCommand = new RelayCommand(NavigateToPage);
+            NavigateToPageCommand = new RelayCommand(NavigateToPage);
             try
             {
                 //CurrentPage = new MainWindowView();
