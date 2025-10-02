@@ -367,7 +367,7 @@ namespace Alp.Com.Igu.Views {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/Alp.Com.Igu;component/views/profilerview.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/Alp.Com.Igu;V1.0.0.0;component/views/profilerview.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\..\Views\ProfilerView.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

@@ -245,7 +245,7 @@ namespace Alp.Com.Igu.CustomControls {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/Alp.Com.Igu;component/customcontrols/rotarycontrol.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/Alp.Com.Igu;V1.0.0.0;component/customcontrols/rotarycontrol.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\..\CustomControls\RotaryControl.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

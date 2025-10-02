@@ -53,7 +53,7 @@ namespace Alp.Com.Igu.Views {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/Alp.Com.Igu;component/views/uctaskbar.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/Alp.Com.Igu;V1.0.0.0;component/views/uctaskbar.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\..\Views\UcTaskBar.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);
