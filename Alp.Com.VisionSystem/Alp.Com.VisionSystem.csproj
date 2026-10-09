@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Emgu.CV" Version="5.0.0.6584" />
+    <PackageReference Include="Emgu.CV.Bitmap" Version="5.0.0.6584" />
+    <PackageReference Include="log4net" Version="3.3.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="cx3dLib.NET">
+      <HintPath>..\..\crs-base\Dll\atprofiler\net6.0\cx3dLib.NET.dll</HintPath>
+    </Reference>
+    <Reference Include="cxBaseLib.NET">
+      <HintPath>..\..\crs-base\Dll\atprofiler\net6.0\cxBaseLib.NET.dll</HintPath>
+    </Reference>
+    <Reference Include="cxCamLib.NET">
+      <HintPath>..\..\crs-base\Dll\atprofiler\net6.0\cxCamLib.NET.dll</HintPath>
+    </Reference>
+    <Reference Include="Emgu.CV.Platform.NetCore">
+      <HintPath>..\packages\Emgu.CV.4.3.0.3890\lib\netcoreapp3.1\Emgu.CV.Platform.NetCore.dll</HintPath>
+    </Reference>
+    <Reference Include="halcondotnet">
+      <HintPath>..\..\crs-base\Dll\halcon\halcondotnet.dll</HintPath>
+    </Reference>
+    <Reference Include="hdevenginedotnet">
+      <HintPath>..\..\crs-base\Dll\halcon\hdevenginedotnet.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,60 @@
+2026-05-26 14:08:06.759 +02:00 [ERR] While startup - problem with the configuration load, it got null
+2026-05-26 14:08:07.346 +02:00 [ERR] Status profilometer returned: False
+2026-05-26 14:08:07.348 +02:00 [ERR] While execute the procedure - problem with Halcon and the config
+2026-05-26 14:09:48.155 +02:00 [ERR] While startup - problem with the configuration load, it got null
+2026-05-26 14:09:48.226 +02:00 [ERR] Status profilometer returned: False
+2026-05-26 14:09:48.228 +02:00 [ERR] While execute the procedure - problem with Halcon and the config
+2026-05-26 14:10:26.091 +02:00 [INF] While startup - Starting initialization Halcon and Profilometers!
+2026-05-26 14:10:29.945 +02:00 [INF] Halcon engine initialized
+2026-05-26 14:10:29.947 +02:00 [INF] While startup - Halcon Initialized!
+2026-05-26 14:10:35.900 +02:00 [INF] While startup - Profilometers Initialized!
+2026-05-26 14:10:35.904 +02:00 [ERR] Status profilometer returned: False
+2026-05-26 14:10:35.907 +02:00 [INF] Starting grab on: Profilometer1
+2026-05-26 14:10:36.807 +02:00 [INF] Ended grab on: Profilometer1
+2026-05-26 14:10:36.808 +02:00 [INF] Starting grab on: Profilometer2
+2026-05-26 14:10:37.241 +02:00 [INF] Ended grab on: Profilometer2
+2026-05-26 14:10:37.253 +02:00 [ERR] UseProcedureProfilometer error: No external procedure 'model_to_roboidity' found
+2026-05-26 14:10:37.262 +02:00 [INF] Execution ended and everything went well!
+2026-05-26 14:11:13.060 +02:00 [INF] While startup - Starting initialization Halcon and Profilometers!
+2026-05-26 14:11:15.886 +02:00 [INF] Halcon engine initialized
+2026-05-26 14:11:15.889 +02:00 [INF] While startup - Halcon Initialized!
+2026-05-26 14:11:19.948 +02:00 [INF] While startup - Profilometers Initialized!
+2026-05-26 14:11:19.953 +02:00 [ERR] Status profilometer returned: False
+2026-05-26 14:11:19.957 +02:00 [INF] Starting grab on: Profilometer1
+2026-05-26 14:11:20.459 +02:00 [INF] Ended grab on: Profilometer1
+2026-05-26 14:11:20.461 +02:00 [INF] Starting grab on: Profilometer2
+2026-05-26 14:11:20.875 +02:00 [INF] Ended grab on: Profilometer2
+2026-05-26 14:11:20.881 +02:00 [ERR] UseProcedureProfilometer error: No external procedure 'model_to_roboidity' found
+2026-05-26 14:11:20.884 +02:00 [INF] Execution ended and everything went well!
+2026-05-26 14:11:35.622 +02:00 [INF] While startup - Starting initialization Halcon and Profilometers!
+2026-05-26 14:11:38.515 +02:00 [INF] Halcon engine initialized
+2026-05-26 14:11:38.523 +02:00 [INF] While startup - Halcon Initialized!
+2026-05-26 14:11:42.787 +02:00 [INF] While startup - Profilometers Initialized!
+2026-05-26 14:11:42.793 +02:00 [ERR] Status profilometer returned: False
+2026-05-26 14:11:42.797 +02:00 [INF] Starting grab on: Profilometer1
+2026-05-26 14:11:43.259 +02:00 [INF] Ended grab on: Profilometer1
+2026-05-26 14:11:43.262 +02:00 [INF] Starting grab on: Profilometer2
+2026-05-26 14:11:43.681 +02:00 [INF] Ended grab on: Profilometer2
+2026-05-26 14:11:43.687 +02:00 [ERR] UseProcedureProfilometer error: No external procedure 'model_to_roboidity' found
+2026-05-26 14:11:43.690 +02:00 [INF] Execution ended and everything went well!
+2026-05-26 14:12:59.254 +02:00 [INF] While startup - Starting initialization Halcon and Profilometers!
+2026-05-26 14:13:01.956 +02:00 [INF] Halcon engine initialized
+2026-05-26 14:13:01.957 +02:00 [INF] While startup - Halcon Initialized!
+2026-05-26 14:13:05.749 +02:00 [INF] While startup - Profilometers Initialized!
+2026-05-26 14:13:05.754 +02:00 [INF] Starting grab on: Profilometer1
+2026-05-26 14:13:06.194 +02:00 [INF] Ended grab on: Profilometer1
+2026-05-26 14:13:06.197 +02:00 [INF] Starting grab on: Profilometer2
+2026-05-26 14:13:06.605 +02:00 [INF] Ended grab on: Profilometer2
+2026-05-26 14:13:06.610 +02:00 [ERR] UseProcedureProfilometer error: No external procedure 'model_to_roboidity' found
+2026-05-26 14:13:06.613 +02:00 [INF] Execution ended and everything went well!
+2026-05-26 14:13:39.130 +02:00 [INF] While startup - Starting initialization Halcon and Profilometers!
+2026-05-26 14:13:42.056 +02:00 [INF] Halcon engine initialized
+2026-05-26 14:13:42.057 +02:00 [INF] While startup - Halcon Initialized!
+2026-05-26 14:13:46.260 +02:00 [INF] While startup - Profilometers Initialized!
+2026-05-26 14:13:46.268 +02:00 [INF] Starting grab on: Profilometer1
+2026-05-26 14:13:46.720 +02:00 [INF] Ended grab on: Profilometer1
+2026-05-26 14:13:46.721 +02:00 [INF] Starting grab on: Profilometer2
+2026-05-26 14:13:47.129 +02:00 [INF] Ended grab on: Profilometer2
+2026-05-26 14:13:47.239 +02:00 [INF] UseProcedureProfilometer - starting procedure
+2026-05-26 14:13:47.269 +02:00 [INF] UseProcedureProfilometer - procedure finished
+2026-05-26 14:13:47.285 +02:00 [INF] Execution ended and everything went well!

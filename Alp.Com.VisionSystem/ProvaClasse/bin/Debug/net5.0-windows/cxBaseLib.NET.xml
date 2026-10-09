@@ -1,0 +1,511 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>cxBaseLib.NET</name>
+    </assembly>
+    <members>
+        <member name="T:AT.cx.Chunk">
+            <summary>
+            Class Chunk wraps struct cx_chunk_t for easy usage in C++
+            Class does not add any member data nor virtual functions.Therefore struct cx_chunk_t can be casted into cx::Chunk if needed.
+            </summary>
+        </member>
+        <member name="T:AT.cx.Image">
+            <summary>
+            Class Image wraps struct cx_img for easy usage in C++.
+            Class does not add any member data nor virtual functions.Therefore struct cx_img_t can be casted into cx::Image if needed.
+            </summary>
+        </member>
+        <member name="M:AT.cx.Image.#ctor">
+            <summary>
+             Creates empty image
+            </summary>
+        </member>
+        <member name="M:AT.cx.Image.#ctor(Image,System.Boolean)">
+            <summary>
+            Copy constructor
+            </summary>
+            <param name="arg0"></param>
+            <param name="deep">if true copies also data and becomes owner</param>
+        </member>
+        <member name="M:AT.cx.Image.#ctor(System.UInt32,System.UInt32,System.UInt32)">
+            <summary>
+            Constructor allocates image with given size and pixel format
+            </summary>
+            <param name="h">height</param>
+            <param name="w">width</param>
+            <param name="pf">pixel format</param>
+        </member>
+        <member name="M:AT.cx.Image.#ctor(System.UInt32,System.UInt32,System.UInt32,System.IntPtr,System.UInt32,System.UInt32,System.UInt32)">
+            <summary>
+            Constructor creates image with reference to the given buffer. Image is not owner of the buffer.
+            </summary>
+            <param name="h">height</param>
+            <param name="w">width</param>
+            <param name="pf">pixel format</param>
+            <param name="ptr">pointer to unmanaged raw data buffer</param>
+            <param name="sz">size of unmanaged raw data buffer in [bytes]</param>
+            <param name="lineStep">number of bytes between the beginning of two consecutive lines</param>
+            <param name="pageStep">>number of bytes between the beginning of two consecutive pages</param>
+        </member>
+        <member name="M:AT.cx.Image.#ctor(System.UInt32,System.UInt32,System.UInt32,System.IntPtr,System.UInt32,System.UInt32)">
+            <summary>
+            Constructor creates image with reference to the given buffer. Image is not owner of the buffer.
+            </summary>
+            <param name="h">height</param>
+            <param name="w">width</param>
+            <param name="pf">pixel format</param>
+            <param name="ptr">pointer to unmanaged raw data buffer</param>
+            <param name="sz">size of unmanaged raw data buffer in [bytes]</param>
+            <param name="lineStep">number of bytes between the beginning of two consecutive lines</param>
+            <remarks>
+            pageStep is preset to 0.
+            </remarks>
+        </member>
+        <member name="M:AT.cx.Image.#ctor(System.UInt32,System.UInt32,System.UInt32,System.IntPtr,System.UInt32)">
+            <summary>
+            Constructor creates image with reference to the given buffer. Image is not owner of the buffer.
+            </summary>
+            <param name="h">height</param>
+            <param name="w">width</param>
+            <param name="pf">pixel format</param>
+            <param name="ptr">pointer to unmanaged raw data buffer</param>
+            <param name="sz">size of unmanaged raw data buffer in [bytes]</param>
+            <remarks>
+            lineStep and pageStep are preset to 0.
+            </remarks>
+        </member>
+        <member name="M:AT.cx.Image.create(System.UInt32,System.UInt32,System.UInt32)">
+            <summary>
+            Creates image of given pixel format and size
+            If the already allocated image isOwner and matches width, height and pixelFormat the old pixel buffer is used.
+            </summary>
+            <param name="h">height</param>
+            <param name="w">width</param>
+            <param name="pf">pixel format</param>
+        </member>
+        <member name="M:AT.cx.Image.create(System.UInt32,System.UInt32,System.UInt32,System.IntPtr,System.UInt32,System.UInt32,System.UInt32)">
+            <summary>
+            Creates image with reference to the given buffer. 
+            Image is not owner of the buffer.
+            </summary>
+            <param name="h">height</param>
+            <param name="w">width</param>
+            <param name="pf">pixel format</param>
+            <param name="ptr">pointer to unmanaged raw data buffer</param>
+            <param name="sz">size of unmanaged raw data buffer in [bytes]</param>
+            <param name="lineStep">number of bytes between the beginning of two consecutive lines</param>
+            <param name="pageStep">>number of bytes between the beginning of two consecutive pages</param>
+        </member>
+        <member name="M:AT.cx.Image.create(System.UInt32,System.UInt32,System.UInt32,System.IntPtr,System.UInt32,System.UInt32)">
+            <summary>
+            Creates image with reference to the given buffer. 
+            Image is not owner of the buffer.
+            </summary>
+            <param name="h">height</param>
+            <param name="w">width</param>
+            <param name="pf">pixel format</param>
+            <param name="ptr">pointer to unmanaged raw data buffer</param>
+            <param name="sz">size of unmanaged raw data buffer in [bytes]</param>
+            <param name="lineStep">number of bytes between the beginning of two consecutive lines</param>
+            <remarks>
+            pageStep is preset to 0.
+            </remarks>
+        </member>
+        <member name="M:AT.cx.Image.create(System.UInt32,System.UInt32,System.UInt32,System.IntPtr,System.UInt32)">
+            <summary>
+            Creates image with reference to the given buffer. 
+            Image is not owner of the buffer.
+            </summary>
+            <param name="h">height</param>
+            <param name="w">width</param>
+            <param name="pf">pixel format</param>
+            <param name="ptr">pointer to unmanaged raw data buffer</param>
+            <param name="sz">size of unmanaged raw data buffer in [bytes]</param>
+            <remarks>
+            lineStep and pageStep are preset to 0.
+            </remarks>
+        </member>
+        <member name="M:AT.cx.Image.flag">
+            <summary>
+            get image flags
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AT.cx.Image.isSubImage">
+            <summary>
+            returns true if the image is a subimage of another image
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AT.cx.Image.linePitch">
+            <summary>
+            Total number of bytes between the starts of 2 consecutive rows.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AT.cx.Image.planePitch">
+            <summary>
+            Total number of bytes between the starts of 2 consecutive planes. Zero for single plane image.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AT.cx.Image.dataSz">
+            <summary>
+            Total data size of data buffer in bytes
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AT.cx.Image.data">
+            <summary>
+            Raw pointer to unmanaged data buffer.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AT.cx.Image.save(System.String)">
+            <summary>
+            Load image.
+            </summary>
+            <param name="fileName"></param>
+        </member>
+        <member name="M:AT.cx.Image.load(System.String)">
+            <summary>
+            Save image.
+            </summary>
+            <param name="fileName"></param>
+        </member>
+        <member name="T:AT.cx.Point3d">
+            <summary>
+            Class for 3D points specified by its coordinates `x`, `y` and `z`.
+            
+            An instance of the class is interchangeable with the C structure CvPoint2D32f and cv::Point3_X. Similarly to
+            Point_ , the coordinates of 3D points can be converted to another type.The vector arithmetic and
+            comparison operations are also supported.
+            </summary>
+        </member>
+        <member name="M:AT.cx.Point3d.#ctor">
+            <summary>
+            default constructor
+            </summary>
+        </member>
+        <member name="M:AT.cx.Point3d.dot(Point3d)">
+            <summary>
+            dot product
+            </summary>
+            <param name="pt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AT.cx.Point3d.ddot(Point3d)">
+            <summary>
+            dot product computed in double-precision arithmetics
+            </summary>
+            <param name="pt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AT.cx.Point3d.cross(Point3d)">
+            <summary>
+            cross product of the 2 3D points
+            </summary>
+            <param name="pt"></param>
+            <returns></returns>
+        </member>
+        <member name="P:AT.cx.Point3d.x">
+            <summary>
+            x coordinate of the 3D point
+            </summary>
+        </member>
+        <member name="P:AT.cx.Point3d.y">
+            <summary>
+            y coordinate of the 3D point
+            </summary>
+        </member>
+        <member name="P:AT.cx.Point3d.z">
+            <summary>
+            z coordinate of the 3D point
+            </summary>
+        </member>
+        <member name="T:AT.cx.Point3f">
+            <summary>
+            Class for 3D points specified by its coordinates `x`, `y` and `z`.
+            
+            An instance of the class is interchangeable with the C structure CvPoint2D32f and cv::Point3_X. Similarly to
+            Point_ , the coordinates of 3D points can be converted to another type.The vector arithmetic and
+            comparison operations are also supported.
+            </summary>
+        </member>
+        <member name="M:AT.cx.Point3f.#ctor">
+            <summary>
+            default constructor
+            </summary>
+        </member>
+        <member name="M:AT.cx.Point3f.dot(Point3f)">
+            <summary>
+            dot product
+            </summary>
+            <param name="pt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AT.cx.Point3f.ddot(Point3f)">
+            <summary>
+            dot product computed in double-precision arithmetics
+            </summary>
+            <param name="pt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AT.cx.Point3f.cross(Point3f)">
+            <summary>
+            cross product of the 2 3D points
+            </summary>
+            <param name="pt"></param>
+            <returns></returns>
+        </member>
+        <member name="P:AT.cx.Point3f.x">
+            <summary>
+            x coordinate of the 3D point
+            </summary>
+        </member>
+        <member name="P:AT.cx.Point3f.y">
+            <summary>
+            y coordinate of the 3D point
+            </summary>
+        </member>
+        <member name="P:AT.cx.Point3f.z">
+            <summary>
+            z coordinate of the 3D point
+            </summary>
+        </member>
+        <member name="T:AT.cx.Point3i">
+            <summary>
+            Class for 3D points specified by its coordinates `x`, `y` and `z`.
+            
+            An instance of the class is interchangeable with the C structure CvPoint2D32f and cv::Point3_X. Similarly to
+            Point_ , the coordinates of 3D points can be converted to another type.The vector arithmetic and
+            comparison operations are also supported.
+            </summary>
+        </member>
+        <member name="M:AT.cx.Point3i.#ctor">
+            <summary>
+            default constructor
+            </summary>
+        </member>
+        <member name="M:AT.cx.Point3i.dot(Point3i)">
+            <summary>
+            dot product
+            </summary>
+            <param name="pt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AT.cx.Point3i.ddot(Point3i)">
+            <summary>
+            dot product computed in double-precision arithmetics
+            </summary>
+            <param name="pt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AT.cx.Point3i.cross(Point3i)">
+            <summary>
+            cross product of the 2 3D points
+            </summary>
+            <param name="pt"></param>
+            <returns></returns>
+        </member>
+        <member name="P:AT.cx.Point3i.x">
+            <summary>
+            x coordinate of the 3D point
+            </summary>
+        </member>
+        <member name="P:AT.cx.Point3i.y">
+            <summary>
+            y coordinate of the 3D point
+            </summary>
+        </member>
+        <member name="P:AT.cx.Point3i.z">
+            <summary>
+            z coordinate of the 3D point
+            </summary>
+        </member>
+        <member name="T:AT.cx.STD_vector_double.STD_vector_doubleEnumerator">
+            Note that the IEnumerator documentation requires an InvalidOperationException to be thrown
+            whenever the collection is modified. This has been done for changes in the size of the
+            collection but not when one of the elements of the collection is modified as it is a bit
+            tricky to detect unmanaged code that modifies the collection under our feet.
+        </member>
+        <member name="T:AT.cx.Variant">
+            <summary>
+            Class Variant wraps struct cx_variant for easy usage in C++
+            It adds the necessary conversion functions to C++ language types.
+            Class does not add any member data or virtual functions.Therefore if needed struct cx_variant_t can be casted into cx::Variant.
+            </summary>
+        </member>
+        <member name="T:AT.cx.cx_pixel_format">
+            <summary>
+            Definition of supported pixel formats for cx_image functions.
+            Pixelformat definitions according to GenICam SFNC, values according to GenICam PFNC see PFNC.h.
+            XXX_PLANAR means the components are in separate consecutive parts of the images, e.g.AAAAABBBBBCCCCC
+            whereas non planar means, the compnents are stored per pixel, e.g.ABCABCABCABCABC
+            CX_PF_COORD3D_XXX according to Scan3D category. 
+            </summary>
+        </member>
+        <member name="F:AT.cx.cx_pixel_format.CX_PF_MONO_8">
+            <summary>Monochrome 8-bit</summary>
+        </member>
+        <member name="F:AT.cx.cx_pixel_format.CX_PF_MONO_10">
+            <summary>Monochrome 10-bit unpacked</summary>
+        </member>
+        <member name="F:AT.cx.cx_pixel_format.CX_PF_MONO_10p">
+            <summary>Monochrome 10-bit packed, two 10 bit pixels packed into 24 bits</summary>
+        </member>
+        <member name="F:AT.cx.cx_pixel_format.CX_PF_MONO_12">
+            <summary>Monochrome 12-bit unpacked</summary>
+        </member>
+        <member name="F:AT.cx.cx_pixel_format.CX_PF_MONO_12p">
+            <summary> Monochrome 12-bit packed, two 12 bit pixels packed into 24 bits</summary>
+        </member>
+        <member name="F:AT.cx.cx_pixel_format.CX_PF_MONO_14">
+            <summary>Monochrome 14-bit unpacked</summary>
+        </member>
+        <member name="F:AT.cx.cx_pixel_format.CX_PF_MONO_16">
+            <summary>Monochrome 16-bit</summary>
+        </member>
+        <member name="F:AT.cx.cx_pixel_format.CX_PF_MONO_32">
+            <summary>Monochrome 32-bit, AT Extension</summary>
+        </member>
+        <member name="F:AT.cx.cx_pixel_format.CX_PF_MONO_64">
+            <summary>Monochrome 64-bit, AT Extension</summary>
+        </member>
+        <member name="F:AT.cx.cx_pixel_format.CX_PF_COORD3D_C8">
+            <summary>C-Coordinate (if cartesian coordinate system Z-value) 8-bit</summary>
+        </member>
+        <member name="F:AT.cx.cx_pixel_format.CX_PF_COORD3D_C12p">
+            <summary>C-Coordinate (if cartesian coordinate system Z-value) two 12-bit packed into 24 bits</summary>
+        </member>
+        <member name="F:AT.cx.cx_pixel_format.CX_PF_COORD3D_C16">
+            <summary>C-Coordinate (if cartesian coordinate system Z-value) 16-bit</summary>
+        </member>
+        <member name="F:AT.cx.cx_pixel_format.CX_PF_COORD3D_C32f">
+            <summary>C-Coordinate (if cartesian coordinate system Z-value) 32-bit float</summary>
+        </member>
+        <member name="F:AT.cx.cx_pixel_format.CX_PF_COORD3D_ABC8">
+            <summary>ABC-Coordinate pixels (if cartesian coordinate system XYZ tuple) 8-bit per ccordinate value</summary>
+        </member>
+        <member name="F:AT.cx.cx_pixel_format.CX_PF_COORD3D_ABC8_PLANAR">
+            <summary>ABC-Coordinate in three planes (if cartesian coordinate system XYZ) 8-bit per ccordinate value</summary>
+        </member>
+        <member name="F:AT.cx.cx_pixel_format.CX_PF_COORD3D_ABC16">
+            <summary>ABC-Coordinate pixels (if cartesian coordinate system XYZ tuple) 16-bit per ccordinate value</summary>
+        </member>
+        <member name="F:AT.cx.cx_pixel_format.CX_PF_COORD3D_ABC16_PLANAR">
+            <summary>ABC-Coordinate in three planes (if cartesian coordinate system XYZ) 16-bit per ccordinate value</summary>
+        </member>
+        <member name="F:AT.cx.cx_pixel_format.CX_PF_COORD3D_ABC32f">
+            <summary>ABC-Coordinate pixels (if cartesian coordinate system XYZ tuple) 32-bit float per ccordinate value</summary>
+        </member>
+        <member name="F:AT.cx.cx_pixel_format.CX_PF_COORD3D_ABC32f_PLANAR">
+            <summary>ABC-Coordinate in three planes (if cartesian coordinate system XYZ) 32-bit float per ccordinate value</summary>
+        </member>
+        <member name="T:AT.cx.cx_point3r_t">
+            <summary>
+            Point in 3D space with three real coordinates.
+            Can be used for cartesian, spherical and cylindrical coordiantes
+            can be converted to OpenCV CvPoint3D64f, see OpenCV header "types_c.h"
+            </summary>
+        </member>
+        <member name="P:AT.cx.cx_point3r_t.a">
+            <summary>
+            cartesian (x,y,z); sperical(theta,phi,rho); cylindrical(theta,y,rho).
+            </summary>
+        </member>
+        <member name="P:AT.cx.cx_point3r_t.b">
+            <summary>
+            cartesian (x,y,z); sperical(theta,phi,rho); cylindrical(theta,y,rho).
+            </summary>
+        </member>
+        <member name="P:AT.cx.cx_point3r_t.c">
+            <summary>
+            cartesian (x,y,z); sperical(theta,phi,rho); cylindrical(theta,y,rho).
+            </summary>
+        </member>
+        <member name="T:AT.cx.cx_status_t">
+            <summary>
+            Status codes resturned by cx-library functions
+            all failed codes are negative.Positive integer range can be used to return function specific integer values.
+            values are compatible with AT/FndStatus definition
+            </summary>
+        </member>
+        <member name="F:AT.cx.cx_status_t.CX_STATUS_OK">
+            <summary>OK, Success</summary>
+        </member>
+        <member name="F:AT.cx.cx_status_t.CX_STATUS_FAILED">
+            <summary>Generic error</summary>
+        </member>
+        <member name="F:AT.cx.cx_status_t.CX_STATUS_NOT_IMPLEMENTED">
+            <summary>Feature not implemented</summary>
+        </member>
+        <member name="F:AT.cx.cx_status_t.CX_STATUS_OPEN_FAILED">
+            <summary>Device or File open failed</summary>
+        </member>
+        <member name="F:AT.cx.cx_status_t.CX_STATUS_DEVICE_NOT_OPEN">
+            <summary>Device not open or connection lost</summary>
+        </member>
+        <member name="F:AT.cx.cx_status_t.CX_STATUS_OUT_OF_MEMORY">
+            <summary>Out of memory error</summary>
+        </member>
+        <member name="F:AT.cx.cx_status_t.CX_STATUS_TIMEOUT">
+            <summary>Timed out waiting for response</summary>
+        </member>
+        <member name="F:AT.cx.cx_status_t.CX_STATUS_PROTOCOL_ERROR">
+            <summary>Error in protocol</summary>
+        </member>
+        <member name="F:AT.cx.cx_status_t.CX_STATUS_DATA_ERROR">
+            <summary>Data / Message was corrupted during transmission / data extraction.</summary>
+        </member>
+        <member name="F:AT.cx.cx_status_t.CX_STATUS_BAD_DATA_LENGTH">
+            <summary>Data / Message size is not what was expected or allowed.</summary>
+        </member>
+        <member name="F:AT.cx.cx_status_t.CX_STATUS_WRONG_DATA_TYPE">
+            <summary>unsupported data type</summary>
+        </member>
+        <member name="F:AT.cx.cx_status_t.CX_STATUS_INVALID_PARAMETER">
+            <summary>Invalid parameter</summary>
+        </member>
+        <member name="F:AT.cx.cx_status_t.CX_STATUS_CHECKSUM_ERROR">
+            <summary>error in checksum, typically causes a protocol error</summary>
+        </member>
+        <member name="F:AT.cx.cx_status_t.CX_STATUS_WRONG_BUFFER_SIZE">
+            <summary>Given buffer size is not supported</summary>
+        </member>
+        <member name="F:AT.cx.cx_status_t.CX_STATUS_DEVICE_ALREADY_OPEN">
+            <summary>Device open failed because it has been previously opened before</summary>
+        </member>
+        <member name="F:AT.cx.cx_status_t.CX_STATUS_ACCESS_DENIED">
+            <summary>Access to device, file or parameter denied</summary>
+        </member>
+        <member name="F:AT.cx.cx_status_t.CX_STATUS_DEVICE_BUSY">
+            <summary>Request failed </summary>
+        </member>
+        <member name="F:AT.cx.cx_status_t.CX_STATUS_INVALID_ADDRESS">
+            <summary>invalid address</summary>
+        </member>
+        <member name="F:AT.cx.cx_status_t.CX_STATUS_NO_DATA">
+            <summary>No data available</summary>
+        </member>
+        <member name="F:AT.cx.cx_status_t.CX_STATUS_INVALID_HANDLE">
+            <summary>Invalid type of handle (FdnStatus_NotFound)</summary>
+        </member>
+        <member name="F:AT.cx.cx_status_t.CX_STATUS_UNKNOWN_PARAMETER">
+            <summary>Use of unknown parameter (FdnStatus_FreeBufferError)</summary>
+        </member>
+        <member name="F:AT.cx.cx_status_t.CX_STATUS_BAD_FORMAT">
+            <summary>Unknown file or data format</summary>
+        </member>
+        <member name="F:AT.cx.cx_status_t.CX_STATUS_NOT_SUPPORTED">
+            <summary>Unsupported request</summary>
+        </member>
+        <member name="F:AT.cx.cx_status_t.CX_STATUS_ALREADY_REGISTERED">
+            <summary>Registration failed because of previous registration</summary>
+        </member>
+        <member name="F:AT.cx.cx_status_t.CX_STATUS_LOADING_DEVICE_DRIVER_FAILED">
+            <summary>failed loading a required device driver, e.g transportlayer lib was not found</summary>
+        </member>
+    </members>
+</doc>

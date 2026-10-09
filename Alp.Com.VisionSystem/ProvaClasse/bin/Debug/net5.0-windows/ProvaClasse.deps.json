@@ -1,0 +1,259 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v5.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v5.0": {
+      "ProvaClasse/1.0.0": {
+        "dependencies": {
+          "Emgu.CV": "4.3.0.3890",
+          "LibreriaHalconProfiloDalsa": "1.0.0",
+          "Serilog": "4.0.1",
+          "Serilog.Sinks.Console": "4.0.1",
+          "Serilog.Sinks.File": "4.1.0",
+          "System.Text.Json": "5.0.2"
+        },
+        "runtime": {
+          "ProvaClasse.dll": {}
+        }
+      },
+      "Emgu.CV/4.3.0.3890": {
+        "runtime": {
+          "lib/netcoreapp3.1/Emgu.CV.Platform.NetCore.dll": {
+            "assemblyVersion": "4.3.0.3890",
+            "fileVersion": "4.3.0.3890"
+          },
+          "lib/netcoreapp3.1/Emgu.CV.Platform.NetStandard.dll": {
+            "assemblyVersion": "4.3.0.3890",
+            "fileVersion": "4.3.0.3890"
+          }
+        }
+      },
+      "Serilog/4.0.1": {
+        "dependencies": {
+          "System.Diagnostics.DiagnosticSource": "8.0.1",
+          "System.Threading.Channels": "8.0.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Serilog.dll": {
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "4.0.0.0"
+          }
+        }
+      },
+      "Serilog.Sinks.Console/4.0.1": {
+        "dependencies": {
+          "Serilog": "4.0.1"
+        },
+        "runtime": {
+          "lib/net5.0/Serilog.Sinks.Console.dll": {
+            "assemblyVersion": "4.0.1.0",
+            "fileVersion": "4.0.1.0"
+          }
+        }
+      },
+      "Serilog.Sinks.File/4.1.0": {
+        "dependencies": {
+          "Serilog": "4.0.1"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Serilog.Sinks.File.dll": {
+            "assemblyVersion": "2.0.0.0",
+            "fileVersion": "4.1.0.0"
+          }
+        }
+      },
+      "System.Diagnostics.DiagnosticSource/8.0.1": {
+        "dependencies": {
+          "System.Runtime.CompilerServices.Unsafe": "6.0.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/System.Diagnostics.DiagnosticSource.dll": {
+            "assemblyVersion": "8.0.0.0",
+            "fileVersion": "8.0.424.16909"
+          }
+        }
+      },
+      "System.Runtime.CompilerServices.Unsafe/6.0.0": {
+        "runtime": {
+          "lib/netcoreapp3.1/System.Runtime.CompilerServices.Unsafe.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.0.21.52210"
+          }
+        }
+      },
+      "System.Text.Json/5.0.2": {
+        "runtime": {
+          "lib/netcoreapp3.0/System.Text.Json.dll": {
+            "assemblyVersion": "5.0.0.0",
+            "fileVersion": "5.0.521.16609"
+          }
+        }
+      },
+      "System.Threading.Channels/8.0.0": {
+        "runtime": {
+          "lib/netstandard2.1/System.Threading.Channels.dll": {
+            "assemblyVersion": "8.0.0.0",
+            "fileVersion": "8.0.23.53103"
+          }
+        }
+      },
+      "LibreriaHalconProfiloDalsa/1.0.0": {
+        "runtime": {
+          "LibreriaHalconProfiloDalsa.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "halcondotnet/24.11.2.0": {
+        "runtime": {
+          "halcondotnet.dll": {
+            "assemblyVersion": "24.11.2.0",
+            "fileVersion": "24.11.2.0"
+          }
+        }
+      },
+      "cxBaseLib.NET/3.3.493.0": {
+        "runtime": {
+          "cxBaseLib.NET.dll": {
+            "assemblyVersion": "3.3.493.0",
+            "fileVersion": "3.3.493.0"
+          }
+        }
+      },
+      "cxCamLib.NET/3.3.924.0": {
+        "runtime": {
+          "cxCamLib.NET.dll": {
+            "assemblyVersion": "3.3.924.0",
+            "fileVersion": "3.3.924.0"
+          }
+        }
+      },
+      "cx3dLib.NET/3.1.1125.0": {
+        "runtime": {
+          "cx3dLib.NET.dll": {
+            "assemblyVersion": "3.1.1125.0",
+            "fileVersion": "3.1.1125.0"
+          }
+        }
+      },
+      "hdevenginedotnet/24.11.2.0": {
+        "runtime": {
+          "hdevenginedotnet.dll": {
+            "assemblyVersion": "24.11.2.0",
+            "fileVersion": "24.11.2.0"
+          }
+        }
+      },
+      "Newtonsoft.Json/13.0.0.0": {
+        "runtime": {
+          "Newtonsoft.Json.dll": {
+            "assemblyVersion": "13.0.0.0",
+            "fileVersion": "13.0.4.30916"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "ProvaClasse/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Emgu.CV/4.3.0.3890": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-yrENt3ycXeht1bRkPGY05ZpnfywCcL71iVOtBPn9R8x07zSlEOOeuA4kaKX6ZhrSp+J2QXVngUV55igSne9n7w==",
+      "path": "emgu.cv/4.3.0.3890",
+      "hashPath": "emgu.cv.4.3.0.3890.nupkg.sha512"
+    },
+    "Serilog/4.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-pzeDRXdpSLSsgBHpZcmpIDxqMy845Ab4s+dfnBg0sN9h8q/4Wo3vAoe0QCGPze1Q06EVtEPupS+UvLm8iXQmTQ==",
+      "path": "serilog/4.0.1",
+      "hashPath": "serilog.4.0.1.nupkg.sha512"
+    },
+    "Serilog.Sinks.Console/4.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-apLOvSJQLlIbKlbx+Y2UDHSP05kJsV7mou+fvJoRGs/iR+jC22r8cuFVMjjfVxz/AD4B2UCltFhE1naRLXwKNw==",
+      "path": "serilog.sinks.console/4.0.1",
+      "hashPath": "serilog.sinks.console.4.0.1.nupkg.sha512"
+    },
+    "Serilog.Sinks.File/4.1.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-U0b34w+ZikbqWEZ3ui7BdzxY/19zwrdhLtI3o6tfmLdD3oXxg7n2TZJjwCCTlKPgRuYic9CBWfrZevbb70mTaw==",
+      "path": "serilog.sinks.file/4.1.0",
+      "hashPath": "serilog.sinks.file.4.1.0.nupkg.sha512"
+    },
+    "System.Diagnostics.DiagnosticSource/8.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-vaoWjvkG1aenR2XdjaVivlCV9fADfgyhW5bZtXT23qaEea0lWiUljdQuze4E31vKM7ZWJaSUsbYIKE3rnzfZUg==",
+      "path": "system.diagnostics.diagnosticsource/8.0.1",
+      "hashPath": "system.diagnostics.diagnosticsource.8.0.1.nupkg.sha512"
+    },
+    "System.Runtime.CompilerServices.Unsafe/6.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-/iUeP3tq1S0XdNNoMz5C9twLSrM/TH+qElHkXWaPvuNOt+99G75NrV0OS2EqHx5wMN7popYjpc8oTjC1y16DLg==",
+      "path": "system.runtime.compilerservices.unsafe/6.0.0",
+      "hashPath": "system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512"
+    },
+    "System.Text.Json/5.0.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-I47dVIGiV6SfAyppphxqupertT/5oZkYLDCX6vC3HpOI4ZLjyoKAreUoem2ie6G0RbRuFrlqz/PcTQjfb2DOfQ==",
+      "path": "system.text.json/5.0.2",
+      "hashPath": "system.text.json.5.0.2.nupkg.sha512"
+    },
+    "System.Threading.Channels/8.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-CMaFr7v+57RW7uZfZkPExsPB6ljwzhjACWW1gfU35Y56rk72B/Wu+sTqxVmGSk4SFUlPc3cjeKND0zktziyjBA==",
+      "path": "system.threading.channels/8.0.0",
+      "hashPath": "system.threading.channels.8.0.0.nupkg.sha512"
+    },
+    "LibreriaHalconProfiloDalsa/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "halcondotnet/24.11.2.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "cxBaseLib.NET/3.3.493.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "cxCamLib.NET/3.3.924.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "cx3dLib.NET/3.1.1125.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "hdevenginedotnet/24.11.2.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Newtonsoft.Json/13.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

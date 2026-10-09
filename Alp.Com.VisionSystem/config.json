@@ -1,0 +1,22 @@
+{
+  "PROFILOMETERS": {
+    "PROFILOMETER1": {
+      "IP": "192.168.10.110",
+      "CONFIGFILE": "C:\\Users\\r.marseu\\Desktop\\25038\\Configurazioni_Profilometri\\configMaster\\master110.cfg",
+      "CALIBRATIONFILE": "C:\\Users\\r.marseu\\Desktop\\25038\\Configurazioni_Profilometri\\configMaster\\UserData.xml",
+      "ENABLE":  true
+    },
+    "PROFILOMETER2": {
+      "IP": "192.168.10.111",
+      "CONFIGFILE": "C:\\Users\\r.marseu\\Desktop\\25038\\Configurazioni_Profilometri\\configSlave\\slave111.cfg",
+      "CALIBRATIONFILE": "C:\\Users\\r.marseu\\Desktop\\25038\\Configurazioni_Profilometri\\configSlave\\UserData.xml",
+      "ENABLE":  true
+    }
+  },
+  //"DALSAS": {},
+  "HALCON": {
+    "HALCONMAIN": "",
+    "HALCONPROCEDURES": "",
+    "PROCEDURE":  ""
+  }
+}
