@@ -1,5 +1,5 @@
 ﻿using HalconDotNet;
-using Serilog;
+//using Serilog;
 using Alp.Com.VisionSystem.ATProfilerHalcon.Status;
 using System;
 using static Alp.Com.VisionSystem.ATProfilerHalcon.Configurazioni.ConfigurazioneHalcon;
@@ -8,6 +8,9 @@ namespace Alp.Com.VisionSystem.ATProfilerHalcon.Configurazioni
 {
     public class HalconManager
     {
+        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger
+                            ("HalconManager".PadRight(20, ' '));
+
         private HDevEngine _engine;
         private ConfigHalcon _config;
 
@@ -20,7 +23,7 @@ namespace Alp.Com.VisionSystem.ATProfilerHalcon.Configurazioni
                 _engine = new HDevEngine();
                 _engine.SetProcedurePath(_config.HALCONMAIN);
 
-                Log.Information("Halcon engine initialized");
+                Log.Info("Halcon engine initialized");
 
                 return HalconStatus.Status.Initializing;
             }
@@ -53,9 +56,9 @@ namespace Alp.Com.VisionSystem.ATProfilerHalcon.Configurazioni
                     call.SetInputCtrlParamTuple($"ObjectModel3D1", values[1]);
                     call.SetInputCtrlParamTuple($"ObjectModel3D2", values[0]);
 
-                    Log.Information($"{nameof(UseProcedureProfilometer)} - starting procedure");
+                    Log.Info($"{nameof(UseProcedureProfilometer)} - starting procedure");
                     call.Execute();
-                    Log.Information($"{nameof(UseProcedureProfilometer)} - procedure finished");
+                    Log.Info($"{nameof(UseProcedureProfilometer)} - procedure finished");
 
                     var Output1 = call.GetOutputCtrlParamTuple("Diagonale1").ToString();
                     var Output2 = call.GetOutputCtrlParamTuple("Diagonale2").ToString();

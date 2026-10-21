@@ -1,8 +1,4 @@
 using HalconDotNet;
-//using LibreriaHalconProfiloDalsa;
-using Microsoft.Extensions.Logging;
-using Serilog;
-using Serilog.Core;
 using Alp.Com.VisionSystem.ATProfilerHalcon.Status;
 using System;
 using System.Collections.Generic;
@@ -14,6 +10,9 @@ namespace Alp.Com.VisionSystem.ATProfilerHalcon.Configurazioni
 {
     public class ConfigurazioneHalcon
     {
+        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger
+                            ("ConfigurazioneHalcon".PadRight(20, ' '));
+
         private HDevEngine _engine;
 
         public class ProcedureDataOutput
@@ -34,10 +33,7 @@ namespace Alp.Com.VisionSystem.ATProfilerHalcon.Configurazioni
                 _halconData = halcon;
                 _engine = new HDevEngine();
                 _engine.SetProcedurePath(_halconData.HALCONMAIN);
-
-                Log.Information("Prova");
-
-                Log.Information("Init." + System.Reflection.MethodBase.GetCurrentMethod()?.Name + " Engine started!");
+                Log.Info("Init." + System.Reflection.MethodBase.GetCurrentMethod()?.Name + " Engine started!");
                 //return HalconStatus.Status.Initializing;
             }
             catch (Exception ex)
@@ -64,9 +60,9 @@ namespace Alp.Com.VisionSystem.ATProfilerHalcon.Configurazioni
                         call.SetInputCtrlParamTuple($"ObjectModel3D{i+1}", values[i]);
                     }
 
-                    Log.Information($"{nameof(UseProcedureProfilometer)} - starting procedure");
+                    Log.Info($"{nameof(UseProcedureProfilometer)} - starting procedure");
                     call.Execute();
-                    Log.Information($"{nameof(UseProcedureProfilometer)} - procedure finished");
+                    Log.Info($"{nameof(UseProcedureProfilometer)} - procedure finished");
 
                     
 

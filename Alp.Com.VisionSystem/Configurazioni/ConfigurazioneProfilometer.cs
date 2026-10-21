@@ -2,9 +2,7 @@ using AT.cx.NET;
 using Emgu.CV.Flann;
 using HalconDotNet;
 //using LibreriaHalconProfiloDalsa;
-using Microsoft.Extensions.Logging;
-using Serilog;
-using Serilog.Core;
+//using Microsoft.Extensions.Logging;
 using Alp.Com.VisionSystem.ATProfilerHalcon.Status;
 using System;
 using System.Collections.Generic;
@@ -20,6 +18,9 @@ namespace Alp.Com.VisionSystem.ATProfilerHalcon.Configurazioni
 {
     public class ConfigurazioneProfilometer
     {
+        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger
+                            ("ConfigurazioneProfilometer".PadRight(20, ' '));
+
         private readonly object _lockObject = new Object();
         private DeviceInfo _di = null;
         private Device _cam = null;
@@ -103,7 +104,7 @@ namespace Alp.Com.VisionSystem.ATProfilerHalcon.Configurazioni
                 {
                     ConfigurazioneProfilometer prof = new ConfigurazioneProfilometer(item.Value.IP);
 
-                    Log.Information(System.Reflection.MethodBase.GetCurrentMethod()?.Name + " - ProfilometerLib: Init Profilometer " + item.Value.IP + " " + item.Value.CONFIGFILE + " " + item.Value.CALIBRATIONFILE);
+                    Log.Info(System.Reflection.MethodBase.GetCurrentMethod()?.Name + " - ProfilometerLib: Init Profilometer " + item.Value.IP + " " + item.Value.CONFIGFILE + " " + item.Value.CALIBRATIONFILE);
 
                     prof.SetDeviceInfo(item.Value.IP);
                     prof.SetProfConfigurationFile(item.Value.CONFIGFILE);
@@ -117,7 +118,7 @@ namespace Alp.Com.VisionSystem.ATProfilerHalcon.Configurazioni
 
                     profs[index] = _cam;
 
-                    Log.Information(System.Reflection.MethodBase.GetCurrentMethod()?.Name + " - ProfilometerLib: Init Profilometer" + index + " - Completed initializzation!");
+                    Log.Info(System.Reflection.MethodBase.GetCurrentMethod()?.Name + " - ProfilometerLib: Init Profilometer" + index + " - Completed initializzation!");
 
                 }
                 catch (Exception ex)
@@ -137,15 +138,15 @@ namespace Alp.Com.VisionSystem.ATProfilerHalcon.Configurazioni
                 try
                 {
                     _cam = prof;
-                    Log.Information("Start acquisition!");
+                    Log.Info("Start acquisition!");
 
-                    if (_cam == null) Log.Information("Dio cane");
+                    if (_cam == null) Log.Info("Dio cane");
                     _cam.allocAndQueueBuffers();
                     _cam.startAcquisition();
                     //PointCloud pointCloudImage = await prof.SingleAcqPc(prof);
                     //HTuple image = await prof.SingleAcqHimage(pointCloudImage);
                     //prof.StopGrab(prof);
-                    Log.Information("Stop acquisition!");
+                    Log.Info("Stop acquisition!");
 
                     _cam.stopAcquisition();
                     _cam.freeBuffers();
@@ -927,11 +928,11 @@ namespace Alp.Com.VisionSystem.ATProfilerHalcon.Configurazioni
                     catch (Exception ex)
                     {
                         Console.WriteLine("prova: " + ex.Message);
-                        Log.Logger.Error(GetType().FullName + "." + System.Reflection.MethodBase.GetCurrentMethod()?.Name + $" - ProfilometerLib: SingleAcq rangeImg Exception: " + ex.Message + ", " + ex.StackTrace);
+                        Log.Error(GetType().FullName + "." + System.Reflection.MethodBase.GetCurrentMethod()?.Name + $" - ProfilometerLib: SingleAcq rangeImg Exception: " + ex.Message + ", " + ex.StackTrace);
                     }
                     finally
                     {
-                        Console.WriteLine("rangeImg: " + (rangeImg != null) + " " + rangeImg.isEmpty());
+                        Console.WriteLine("rangeImg: " + (rangeImg != null) + " " + rangeImg?.isEmpty());
                         if (rangeImg != null && !rangeImg.isEmpty())
                             rangeImg.Dispose();
                         if (reflectanceImg != null && !reflectanceImg.isEmpty())

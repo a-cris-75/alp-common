@@ -4,7 +4,7 @@ using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
 using System;
 using System.IO;
-using Microsoft.Extensions.Logging;
+//using Microsoft.Extensions.Logging;
 
 namespace Alp.Com.VisionSystem.ATProfilerHalcon.Configurazioni
 {
@@ -318,7 +318,7 @@ namespace Alp.Com.VisionSystem.ATProfilerHalcon.Configurazioni
                 cam.getParam(cxCam.CX_CAM_IMAGE_REVERSE_Y, val);
                 reverseY = ((int)val == 0) ? false : true;
             }
-            catch (Exception e) { }
+            catch (Exception e) {  }
 
             cam.getParam("Height", val);
             int roiHeight = val;
@@ -489,16 +489,16 @@ namespace Alp.Com.VisionSystem.ATProfilerHalcon.Configurazioni
             val.get(ref A_statArray);
             Mat A_stat = new Mat(4, 3, DepthType.Cv64F, 1);
             A_stat.SetTo(A_statArray);
-            Matrix<double> A_stat_tmp = new Matrix<double>(4, 3, A_stat.DataPointer);
-            //A_stat.convertTo(Temp_Mat, CV_32F, 1, 0);
-            sw.WriteLine("X Accuracy statistic:");
-            sw.WriteLine("\tmean: " + A_stat_tmp[0, 0] + sw.NewLine + "\tstd:  " + A_stat_tmp[0, 1] + sw.NewLine + "\tmax:  " + A_stat_tmp[0, 2]);
-            sw.WriteLine("Y Accuracy statistic:");
-            sw.WriteLine("\tmean: " + A_stat_tmp[1, 0] + sw.NewLine + "\tstd:  " + A_stat_tmp[1, 1] + sw.NewLine + "\tmax:  " + A_stat_tmp[1, 2]);
-            sw.WriteLine("Z Accuracy statistic:");
-            sw.WriteLine("\tmean: " + A_stat_tmp[2, 0] + sw.NewLine + "\tstd:  " + A_stat_tmp[2, 1] + sw.NewLine + "\tmax:  " + A_stat_tmp[2, 2]);
-            sw.WriteLine("Residuals Accuracy statistic:");
-            sw.WriteLine("\tmean: " + A_stat_tmp[3, 0] + sw.NewLine + "\tstd:  " + A_stat_tmp[3, 1] + sw.NewLine + "\tmax:  " + A_stat_tmp[3, 2]);
+            //Matrix<double> A_stat_tmp = new Matrix<double>(4, 3, A_stat.DataPointer);
+            ////A_stat.convertTo(Temp_Mat, CV_32F, 1, 0);
+            //sw.WriteLine("X Accuracy statistic:");
+            //sw.WriteLine("\tmean: " + A_stat_tmp[0, 0] + sw.NewLine + "\tstd:  " + A_stat_tmp[0, 1] + sw.NewLine + "\tmax:  " + A_stat_tmp[0, 2]);
+            //sw.WriteLine("Y Accuracy statistic:");
+            //sw.WriteLine("\tmean: " + A_stat_tmp[1, 0] + sw.NewLine + "\tstd:  " + A_stat_tmp[1, 1] + sw.NewLine + "\tmax:  " + A_stat_tmp[1, 2]);
+            //sw.WriteLine("Z Accuracy statistic:");
+            //sw.WriteLine("\tmean: " + A_stat_tmp[2, 0] + sw.NewLine + "\tstd:  " + A_stat_tmp[2, 1] + sw.NewLine + "\tmax:  " + A_stat_tmp[2, 2]);
+            //sw.WriteLine("Residuals Accuracy statistic:");
+            //sw.WriteLine("\tmean: " + A_stat_tmp[3, 0] + sw.NewLine + "\tstd:  " + A_stat_tmp[3, 1] + sw.NewLine + "\tmax:  " + A_stat_tmp[3, 2]);
 
             calib.getParam(cx_3d_calib_param_t.CX_3D_PARAM_L_STAT, val);
             double[] L_statArray = { };

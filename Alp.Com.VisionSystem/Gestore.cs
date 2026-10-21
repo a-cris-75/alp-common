@@ -1,32 +1,23 @@
 ﻿using Emgu.CV.Ocl;
 using Alp.Com.VisionSystem.ATProfilerHalcon.Configurazioni;
-using Newtonsoft.Json;
-using Serilog;
 using Alp.Com.VisionSystem.ATProfilerHalcon.Status;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace Alp.Com.VisionSystem.ATProfilerHalcon
 {
     public class ConfigProfilometer
     {
         public string IP { get; set; }
-        public string CONFIGFILE { get; set; }
-        public string CALIBRATIONFILE { get; set; }
+        public string CONFIGFILE { get; set; } = string.Empty;
+        public string CALIBRATIONFILE { get; set; } = string.Empty;
         public bool ENABLE { get; set; }
 
     }
 
     public class ConfigHalcon
     {
-        public string HALCONMAIN { get; set; }
-        public string HALCONPROCEDURES { get; set; }
-        public string PROCEDURE { get; set; }
+        public string HALCONMAIN { get; set; } = string.Empty;
+        public string HALCONPROCEDURES { get; set; } = string.Empty;
+        public string PROCEDURE { get; set; } = string.Empty;
     }
 
     public class Utilities
@@ -37,6 +28,9 @@ namespace Alp.Com.VisionSystem.ATProfilerHalcon
     }
     public class Gestore
     {
+        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger
+                            ("Gestore".PadRight(20, ' '));
+
         public Utilities Config { get; set; }
         private ProfilometerManager _profilometers = new ProfilometerManager();
         private HalconManager _halcon = new HalconManager();
@@ -44,11 +38,11 @@ namespace Alp.Com.VisionSystem.ATProfilerHalcon
         {
             try
             {
-                Log.Logger = new LoggerConfiguration()
-                    .MinimumLevel.Information()
-                    .WriteTo.Console()
-                    .WriteTo.File("logs/log-dll-.txt", rollingInterval: RollingInterval.Day)
-                    .CreateLogger();
+                //Log.Logger = new LoggerConfiguration()
+                //    .MinimumLevel.Information()
+                //    .WriteTo.Console()
+                //    .WriteTo.File("logs/log-dll-.txt", rollingInterval: RollingInterval.Day)
+                //    .CreateLogger();
 
                 if (!LoadConfig() || Config == null)
                 {
@@ -56,15 +50,15 @@ namespace Alp.Com.VisionSystem.ATProfilerHalcon
                     return false;
                 }
 
-                Log.Information("While startup - Starting initialization Halcon and Profilometers!");
+                Log.Info("While startup - Starting initialization Halcon and Profilometers!");
                 
                 _halcon.Init(Config.HALCON);
 
-                Log.Information("While startup - Halcon Initialized!");
+                Log.Info("While startup - Halcon Initialized!");
 
                 _profilometers.Init(Config.PROFILOMETERS);
 
-                Log.Information("While startup - Profilometers Initialized!");
+                Log.Info("While startup - Profilometers Initialized!");
 
                 return true;
             }
@@ -111,7 +105,7 @@ namespace Alp.Com.VisionSystem.ATProfilerHalcon
                     var data = await _profilometers.Execute();
                     var risultato = _halcon.UseProcedureProfilometer(data);
 
-                    Log.Information("Execution ended and everything went well!");
+                    Log.Info("Execution ended and everything went well!");
 
                     results.Add(risultato);
                 }
@@ -119,7 +113,7 @@ namespace Alp.Com.VisionSystem.ATProfilerHalcon
                 {
                     int i = 0;
 
-                    Log.Information("Execution started for n: " + nCycle + " times!");
+                    Log.Info("Execution started for n: " + nCycle + " times!");
 
                     while (i < nCycle - 1)
                     {

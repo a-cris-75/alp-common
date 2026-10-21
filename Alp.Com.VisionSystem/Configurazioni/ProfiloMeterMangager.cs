@@ -1,6 +1,6 @@
 ﻿//using Configurazioni;
 using HalconDotNet;
-using Serilog;
+using log4net;
 using Alp.Com.VisionSystem.ATProfilerHalcon.Status;
 using System;
 using System.Collections.Generic;
@@ -12,6 +12,10 @@ namespace Alp.Com.VisionSystem.ATProfilerHalcon.Configurazioni
 {
     public class ProfilometerManager
     {
+        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger
+                            ("ProfilometerManager".PadRight(20, ' '));
+
+
         private readonly Dictionary<string, ConfigurazioneProfilometer> _devices = new Dictionary<string, ConfigurazioneProfilometer>();
 
         public void Init(Dictionary<string, ConfigProfilometer> config)
@@ -57,7 +61,7 @@ namespace Alp.Com.VisionSystem.ATProfilerHalcon.Configurazioni
             {
                 try
                 {
-                    Log.Information("Starting grab on: Profilometer" + i);
+                    Log.Info("Starting grab on: Profilometer" + i);
                     isGrabbing = device.StartGrab(device.Device);
 
                     var pc = await device.SingleAcqPc(device.Device);
@@ -70,7 +74,7 @@ namespace Alp.Com.VisionSystem.ATProfilerHalcon.Configurazioni
 
                     var hobj = await device.SingleAcqHimage(pc);
                     isGrabbing = device.StopGrab(device.Device);
-                    Log.Information("Ended grab on: Profilometer" + i);
+                    Log.Info("Ended grab on: Profilometer" + i);
 
                     result.Add(hobj);
                 }
